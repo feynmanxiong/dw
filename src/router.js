@@ -15,7 +15,10 @@ Vue.component('contractPrice',() => import('./views/contract/price.vue'));
 Vue.component('contractCost',() => import('./views/contract/cost.vue'));
 Vue.component('supplierCustomer',() => import('./views/supplier/customer.vue'));
 //审批管理
-Vue.component('approvalContract',() => import('./views/approval/contract.vue'));
+Vue.component('approvalContract',() => import('./views/approval/contract.vue'));//合同审批管理
+// import approvalContractAdd from './views/approval/contract.vue';
+// Vue.component(approvalContractAdd);
+Vue.component('approvalContractAdd',() => import('./views/approval/contractAdd.vue'));//添加合同
 Vue.component('approvalCost',() => import('./views/approval/cost.vue'));
 //基础资料    start
 //基础资料=>商务基础资料  start
