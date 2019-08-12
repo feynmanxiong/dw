@@ -12,18 +12,23 @@ import 'element-ui/lib/theme-chalk/index.css';
 /**字体图标**/
 import router from './router'
 import './assets/app.css'
+import './assets/css/font-awesome/css/font-awesome.min.css'
 window.axios = require('axios');
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 import Tool from './tools.js'
 
-window.baseURL = 'https://cloud-api-dev.jnqueqiao.com';
-axios.defaults.baseURL = window.baseURL + '/shop/v1/erp'
+
+window.baseURL = 'http://demu-dev.dwood365.com';
+axios.defaults.baseURL = window.baseURL + '/api/v1/';
+// window.baseURL = 'https://cloud-api-dev.jnqueqiao.com';
+// axios.defaults.baseURL = window.baseURL + '/shop/v1/erp'
 //
+//axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.interceptors.request.use(function(config){
 	if (localStorage.hasOwnProperty('dw_erp_user_token')) {
-		config.headers.Token = 'Bearer ' + localStorage.getItem("dw_erp_user_token");
+		config.headers.Authorization = 'Bearer ' + localStorage.getItem("dw_erp_user_token");
 	}
 	return config;
 },function(error){
@@ -42,7 +47,8 @@ axios.interceptors.response.use(
 	},
 	error => {
 	    if (error.response) {
-	      console.log(error.response);
+		  console.log(error.response);
+		  
 	      // switch (error.response.status) {
 	      //   case 400:
 	      //       app.$alert('还没有登录', '请登录', {

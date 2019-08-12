@@ -4,6 +4,6 @@
     </div>
 </template>
 
-<style>
-
+<style scope>
+    body{min-width:1000px;}
 </style>

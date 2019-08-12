@@ -6,6 +6,8 @@ import Home from './views/Home.vue'
 //start
 //业务管理
 Vue.component('businessFreight',() => import('./views/business/freight.vue'));
+Vue.component('businessFreightTable',() => import('./views/business/freightTable.vue'));
+//import businessFreightTable from './views/business/freightTable.vue'
 //价格管理
 Vue.component('contractRun',() => import('./views/contract/run.vue'));
 Vue.component('contractPrice',() => import('./views/contract/price.vue'));
@@ -17,13 +19,14 @@ Vue.component('approvalContract',() => import('./views/approval/contract.vue'));
 Vue.component('approvalCost',() => import('./views/approval/cost.vue'));
 //基础资料    start
 //基础资料=>商务基础资料  start
-Vue.component('basicsMerchantInvoice',() => import('./views/basics/merchantInvoice.vue'));
+Vue.component('basicsMerchantInvoice',() => import('./views/basics/merchantInvoice.vue'));//开票类型税率
 Vue.component('basicsMerchantCost',() => import('./views/basics/merchantCost.vue'));
 Vue.component('basicsMerchantTax',() => import('./views/basics/merchantTax.vue'));
 //基础资料=>商务基础资料  end
 Vue.component('basicsOrgani',() => import('./views/basics/organi.vue'));
 //基础资料=>业务基础资料  start
 Vue.component('basicsRecordMain',() => import('./views/basics/recordMain.vue'));
+Vue.component('basicsRecordMain',() => import('./views/basics/packingPointMaintain.vue'));//装箱点维护
 Vue.component('basicsRecordPort',() => import('./views/basics/recordPort.vue'));
 Vue.component('basicsRecordRoute',() => import('./views/basics/recordRoute.vue'));
 Vue.component('basicsRecordCompany',() => import('./views/basics/recordCompany.vue'));
@@ -36,7 +39,7 @@ Vue.component('basicsRecordBox',() => import('./views/basics/recordBox.vue'));
 Vue.component('basicsRecordProfit',() => import('./views/basics/recordProfit.vue'));
 Vue.component('basicsRecordCurrency',() => import('./views/basics/recordCurrency.vue'));
 Vue.component('basicsRecordPrice',() => import('./views/basics/recordPrice.vue'));
-Vue.component('basicsSettle',() => import('./views/basics/settle.vue'));
+Vue.component('basicsSettle',() => import('./views/basics/settle.vue'));//结算公司管理
 //基础资料    end
 //权限管理    start
 Vue.component('powerUser',() => import('./views/power/user.vue'));

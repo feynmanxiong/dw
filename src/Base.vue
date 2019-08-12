@@ -1,8 +1,9 @@
 <template>
 	<el-container class="flex_col_str">
-		<el-header class=" header">
-			<el-menu :default-active="current_tab" class="menu" background-color="#333" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" >						
+		<el-header class="header">
+			<el-menu :default-active="current_tab" class="menu" background-color="#0089d5" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" >						
 				<el-submenu v-for="(item, index) in list" :index="item.title">					
+					<div class="elMenuTriangle"></div>
 					<template slot="title">					
 						<span>{{item.title}}</span>
 					</template>					
@@ -10,7 +11,7 @@
 						<el-menu-item :index="child.title" @click="showTab(child)" v-if="!child.hasOwnProperty('children')">
 							{{child.title}}
 						</el-menu-item>
-						<el-submenu :index="child.title" v-else>
+						<el-submenu class="baseMenu" :index="child.title" v-else>
 							<template slot="title">{{child.title}}</template>
 							<el-menu-item v-for="(i, k) in child.children" :index="i.title" @click="showTab(i)">{{i.title}}</el-menu-item>
 						</el-submenu>
@@ -19,7 +20,7 @@
 				<el-row style="height:60px;line-height: 60px;" class="full_height" type="flex" justify="space-between" align="middle">
 				<el-col :span="6">
 				</el-col>
-				<el-col :span="6" class="text-right ">
+				<el-col  class="text-right ">
 					<el-dropdown @command="handleCommand">
 						<span class="el-dropdown-link white">
 							{{ name }}<i class="el-icon-arrow-down el-icon--right"></i>
@@ -45,15 +46,22 @@
 </template>
 
 <style scoped>
+	.el-dropdown + .el-dropdown {
+		margin-left: 15px;
+	}
+	.el-popper{margin-top:0;}
+	.elMenuTriangle{width: 0;height:0;border-top:6px solid transparent;border-right: 6px solid transparent;border-bottom: 6px solid #00a4ff;border-left:6px solid transparent;position: absolute;top:-12px;left:20px;z-index:1;}
 	.flex_col_str { height: 100%; }
-	.menu { min-height: 100%; background: #333; overflow: hidden; border-right: 0px none; }
-	.header { color: #fff; background: #333;  }
+	.menu { min-height: 100%; background: #333; overflow: hidden; border-right: 0px none;}
+	.header { color: #fff; background: #0089d5;  }
 	.body_tab { height: 100%; display: flex; flex-direction: column; align-items: stretch; }
 	.main { padding: 0; }
 	.tab_content { height: 100%; }
 	.full_height_scrollbar{ height: calc(100% + 17px); background-color: #333333; }
 	.el-menu--popup { min-width: 140px;}
 	.logo_img{width:100px;}
+	.el-submenu{display:inline-block;}
+	.el-submenu__title i{color:initial!important;}
 </style>
 
 <script>
@@ -75,100 +83,14 @@
 										title: "货运管理",
 										content: "businessFreight"
 									},
-
-//									{
-//										title: "船务代理",
-//										content: ""
-//									},
-//
-//									{
-//										title: "仓储物流",
-//										content: ""
-//									},
-//
-//									{
-//										title: "电子商务",
-//										content: ""
-//									},
-//
-//									{
-//										title: "合同管理",
-//										content: ""
-//									}
 								]
 							},
-//							{
-//								title: "业务台账编辑",
-//								content: ""
-//							},
-//							{
-//								title: "应收对账",
-//								content: ""
-//							},
-//							{
-//								title: "应付对账",
-//								content: ""
-//							},
-//							{
-//								title: "收款确认管理",
-//								content: ""
-//							},
-//							{
-//								title: "收款确认编辑",
-//								content: ""
-//							},
-//							{
-//								title: "应收未达帐",
-//								content: ""
-//							},
-//							{
-//								title: "应付未达帐",
-//								content: ""
-//							},
-//							{
-//								title: "分摊费用管理",
-//								content: ""
-//							}
 							
 						]
 					},
-//					{
-//						title: "商务结算",					
-//						children: [
-//							{
-//								title: "",
-//								content: ""
-//							}
-//						]
-//					},
-//					{
-//						title: "财务核销",					
-//						children: [
-//							{
-//								title: "",
-//								content: ""
-//							}
-//						]
-//					},
 					{
 						title: "价格管理",					
 						children: [
-//							{
-//								title: "合同审核管理",
-//								content: ""
-//							},
-//							{
-//								title: "合同审核编辑",
-//								content: ""
-//							},
-//							{
-//								title: "客户供应商管理",
-//								content: ""
-//							},
-//							{
-//								title: "客户供应商编辑",
-//								content: ""
-//							},
 							{
 								title: "合同信控管理",
 								content: "contractRun"
@@ -180,35 +102,7 @@
 							{
 								title: "费用控制管理",
 								content: "contractCost"
-							},
-//							{
-//								title: "合同信控编辑",
-//								content: ""
-//							},
-//							{
-//								title: "价格协议管理",
-//								content: ""
-//							},
-//							{
-//								title: "价格协议编辑",
-//								content: ""
-//							},
-//							{
-//								title: "利润控制管理",
-//								content: ""
-//							},
-//							{
-//								title: "利润控制编辑",
-//								content: ""
-//							},
-//							{
-//								title: "费用报批管理",
-//								content: ""
-//							},
-//							{
-//								title: "费用报批编辑",
-//								content: ""
-//							}							
+							},						
 						]
 					},
 					{
@@ -237,110 +131,28 @@
 						title: "基础资料",					
 						children: [
 							{
-								title: "结算公司管理",
-								content: "basicsSettle"
-							},
-							{
-								title: "公司组织结构",
-								content: "basicsOrgani"
-							},
-							{
-								title: "业务基础数据",
-								children: [
-									{
-										title: "主业务类型维护",
-										content: "basicsRecordMain"
-									},
-									{
-										title: "港口维护",
-										content: "basicsRecordPort"
-									},
-									{
-										title: "航线维护",
-										content: "basicsRecordRoute"
-									},
-									{
-										title: "航公司维护",
-										content: "basicsRecordCompany"
-									},
-									{
-										title: "换单公司维护",
-										content: "basicsRecordChange"
-									},
-									{
-										title: "航名/航次维护",
-										content: "basicsRecordBoat"
-									},
-									{
-										title: "结算公司维护",
-										content: "basicsRecordSettle"
-									},
-									{
-										title: "装箱、送箱地点维护",
-										content: "basicsRecordBoxing"
-									},
-									{
-										title: "打印套版",
-										content: "basicsRecordPrinting"
-									},
-									{
-										title: "箱型对应关系",
-										content: "basicsRecordBox"
-									},
-									{
-										title: "毛利润基准值维护",
-										content: "basicsRecordProfit"
-									},
-									{
-										title: "币别维护",
-										content: "basicsRecordCurrency"
-									},
-									{
-										title: "价格协议中的条件限制字段维护",
-										content: "basicsRecordPrice"
-									},
-									
+								title: "业务基础资料",
+								children:[
+									{title: "结算公司维护",	content: "basicsSettle"},
+									{title: "港口维护",	content: "basicsRecordPort"}
 								]
 							},
-//							{
-//								title: "商务基础数据",
-//								content: ""
-//							},
-//							{
-//								title: "打印套板",
-//								content: ""
-//							},
 							{
-								title: "商务基础数据",
+								title: "商务基础资料",
 								children: [
 									{
-										title: "开票类型维护",
+										title: "开票类型税率",
 										content: "basicsMerchantInvoice"
 									},{
 										title: "费用科目维护",
 										content: "basicsMerchantCost"
 									},{
-										title: "费用科目与税率关系维护",
+										title: "价格条件字段",
 										content: "basicsMerchantTax"
 									}
 								]
 							},
-//							{
-//								title: "打印套版",
-//								children: [
-//									{
-//										title: "打印套板管理",
-//										content: ""
-//									},{
-//										title: "打印套板编辑",
-//										content: ""
-//									},{
-//										title: "驾驶舱",
-//										content: ""
-//									}
-//								]
-//							},
-							
+
 						],
 					},
 					{

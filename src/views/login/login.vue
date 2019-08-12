@@ -6,12 +6,12 @@
 				<p class="login_text2">USER LOGIN</p>
 			</div>
 			<el-form ref="login" label-width="70px" :model="form" size="mini" :rules="rules">
-				<el-form-item label="" prop="username">
+				<el-form-item label="" prop="name">
 					<div class="form_icon">
 						<img class="icon_user" src="../../assets/user.png"/>
 						<span class="span_1">用户名：</span>
 					</div>
-					<el-input class="form_input1" v-model="form.username" @keyup.enter.exact.native="login"></el-input>
+					<el-input class="form_input1" v-model="form.name" @keyup.enter.exact.native="login"></el-input>
 				</el-form-item>
 				<el-form-item label="" prop="password">
 					<div class="form_icon">
@@ -52,7 +52,7 @@
 		data() {
 			return {
 				rules: {
-					username: [
+					name: [
 						{ required: true, message: '请输入用户名', trigger: 'blur' }
 					],
 					password: [
@@ -60,9 +60,8 @@
 					],
 				},
 				form : {
-					username : "admin",
-					password : "111111",
-					company : "zY5Gl",
+					name : "test001",
+					password : "123456"
 				}
 			}
 		},
@@ -77,7 +76,7 @@
 						// axios.post('/admin.login',this.form).then((response) => {
 						// 	if (response.data.code == 0) {
 						// 		localStorage.setItem("dw_erp_user_name",response.data.data.name);
-						// 		localStorage.setItem("dw_erp_user_username",response.data.data.username);
+						// 		localStorage.setItem("dw_erp_user_username",response.data.data.name);
 						// 		localStorage.setItem("dw_erp_user_token",response.data.data.token);
 						// 		self.$router.replace("/console");
 						// 	}

@@ -1,39 +1,50 @@
 <template>
 	<!--业务管理=>业务台账管理-->
-	<el-container>
-		<el-aside width="240px">
-			<div class="cont_t">自定义查询区</div>
-			<el-row class="el-m">
-				<div align="center">					
-					<el-button type="info" size="mini">重置</el-button>
-					<el-button type="success" size="mini">查询</el-button>
+	<el-container :class="['elContianer',isShowAside?'':'contain_box_in']">
+		<transition name = "select_out">
+			<div class="select_out"  v-show="!isShowAside" @click="isShowAside=true">
+				<i class="el-submenu__icon-arrow el-icon-arrow-right"></i>
+			</div>
+		</transition>
+		<transition name = "select_in" >
+			<el-aside width="240px"  v-show="isShowAside" class="select_box">
+
+				<div class="select_in" @click="isShowAside=false">
+					<i class="el-submenu__icon-arrow el-icon-arrow-left"></i>
 				</div>
-			</el-row>
-			<el-row>				
-				<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_box"></el-input>
-			</el-row>
-			<el-row>
-				<span class="span">业务类型</span>
-				<el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-			    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-  				</el-select>
-			</el-row>
-			<el-row>
-				<span class="span">委托日期</span>
-				<div class="block">
-					<el-date-picker class="date_picker" v-model="value1" type="date" placeholder="选择日期" size="mini"></el-date-picker>
-				</div>			
-			</el-row>
-			<el-row>
-				<span class="span">合同编号</span>
-				<div class="block">
-					<el-input v-model="input" placeholder="请输入合同编号" size="mini" class="date_box"></el-input></el-date-picker>
-				</div>			
-			</el-row>
-		</el-aside>
+				<div class="cont_t">自定义查询区</div>
+				<el-row class="el-m">
+					<div align="center">					
+						<el-button type="info" size="mini">重置</el-button>
+						<el-button type="success" size="mini">查询</el-button>
+					</div>
+				</el-row>
+				<el-row>				
+					<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_box"></el-input>
+				</el-row>
+				<el-row>
+					<span class="span">业务类型</span>
+					<el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+						<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+					</el-select>
+				</el-row>
+				<el-row>
+					<span class="span">委托日期</span>
+					<div class="block">
+						<el-date-picker class="date_picker" v-model="value1" type="date" placeholder="选择日期" size="mini"></el-date-picker>
+					</div>			
+				</el-row>
+				<el-row>
+					<span class="span">合同编号</span>
+					<div class="block">
+						<el-input v-model="input" placeholder="请输入合同编号" size="mini" class="date_box"></el-input></el-date-picker>
+					</div>			
+				</el-row>
+			</el-aside>
+		</transition>
 		<el-main>
-			<el-row class="el-m">
-				<el-button type="success" size="mini" @click="dialogVisible = true">新增</el-button>
+			<el-row class="el-m operation_top_margin_bottom">
+				<el-button type="success" size="mini" @click="dialogVisibleAddview">新增</el-button>
 				<el-button type="success" size="mini">复制</el-button>
 				<el-button type="success" size="mini">保存</el-button>
 				<el-button type="danger" size="mini">删除</el-button>
@@ -70,128 +81,23 @@
 				</el-table>
 			</el-row>
 			<!--新增货运代理订单     start-->
-			<el-dialog title="" :visible.sync="dialogVisible" fullscreen :modal="false">
-				<el-form class="cont_top"  :inline="true" :model="params" label-position="right">
-					<el-row class="cont_button cont_border">
-						<el-button type="success" size="mini" @click="dialogVisible = true">新增</el-button>
-						<el-button type="success" size="mini">复制</el-button>
-						<el-button type="success" size="mini">保存</el-button>
-						<el-button type="danger" size="mini">删除</el-button>
-						<el-button type="warning" size="mini">修改历史</el-button>
-						<el-button type="success" size="mini">分摊费用</el-button>
-						<el-button type="success" size="mini">台账业务数据</el-button>
-						<el-button type="success" size="mini">费用预录入</el-button>
-						<el-button type="success" size="mini">单证管理</el-button>
-						<el-button type="success" size="mini">拖车信息</el-button>
-						<el-button type="success" size="mini">堆存信息</el-button>
-						<el-button type="success" size="mini">打印</el-button>
-					</el-row>
-					<el-row class="el-m ">
-						<el-form-item class="el-item" label="合同编号:">
-							<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-		  				</el-form-item>
-		  				<el-form-item class="el-item" label="委托日期">
-							<div class="block">
-							    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
-							</div>
-		  				</el-form-item>
-		  				<el-form-item class="el-item" label="揽货性质:" >
-							<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-						    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-			  				</el-select>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="主业务类型:" >
-							<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-						    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-			  				</el-select>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="子业务类型:" >
-							<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-						    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-			  				</el-select>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="委托单位:" >
-							<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-						    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-			  				</el-select>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="结算单位:" >
-							<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-						    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-			  				</el-select>
-	  					</el-form-item>
-					</el-row>
-					<el-row>
-						<strong class="el-item cont_s">合同编号与价格协议号对应关系</strong>
-						<el-button type="success" size="mini" @click="centerDialogVisible = true">添加合同编号</el-button>
-						<div class="cont_box">
-							<el-row>
-								<el-form-item class="el-item" label="">
-									<el-button type="danger" size="mini">删除</el-button>
-			  					</el-form-item>
-								<el-form-item class="el-item" label="合同编号:">
-									<el-input v-model="input" placeholder="合同编号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="价格协议号:">
-									<el-input v-model="input" placeholder="价格协议号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-							</el-row>
-							<el-row>
-								<el-form-item class="el-item" label="">
-									<el-button type="danger" size="mini">删除</el-button>
-			  					</el-form-item>
-								<el-form-item class="el-item" label="合同编号:">
-									<el-input v-model="input" placeholder="合同编号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="价格协议号:">
-									<el-input v-model="input" placeholder="价格协议号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-							</el-row>
-							<el-row>
-								<el-form-item class="el-item" label="">
-									<el-button type="danger" size="mini">删除</el-button>
-			  					</el-form-item>
-								<el-form-item class="el-item" label="合同编号:">
-									<el-input v-model="input" placeholder="合同编号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="价格协议号:">
-									<el-input v-model="input" placeholder="价格协议号" size="mini" class="date_box"></el-input>
-			  					</el-form-item>
-			  				</el-row>
-						</div>
-					</el-row>
-					<el-row>
-						<el-form-item class="el-item" label="操作人:">
-							<el-input v-model="input" placeholder="" size="mini" class="date_box"></el-input>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="客服角色：">
-							<el-input v-model="input" placeholder="" size="mini" class="date_box"></el-input>
-	  					</el-form-item>
-	  					<el-form-item class="el-item" label="销售角色：">
-							<el-input v-model="input" placeholder="" size="mini" class="date_box"></el-input>
-	  					</el-form-item>
-					</el-row>
-					<el-row>
-						<span>操作时间：</span>
-					</el-row>
-				</el-form>
-			</el-dialog>
+			<businessFreightTable ref="freightTable"></businessFreightTable>
 			<!--新增货运代理订单     end-->
 			<!--添加合同编号    start-->
 			<el-row>
 				<el-dialog title="" :visible.sync="centerDialogVisible" width="25%" center>
 					<span class="cont_span_t">合同归档</span>
-					 <el-form  :inline="true" :model="params" label-position="right">
+					<el-form  :inline="true" :model="params" label-position="right">
 						<el-row class="cont_center">
 							<el-form-item label="价格协议类型:">
 								<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-							    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-				  				</el-select>
-			  				</el-form-item>
+									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+								</el-select>
+							</el-form-item>
 						</el-row>
 					</el-form>
 					<span slot="footer" class="dialog-footer">
-					    <el-button type="success" size="mini" @click="centerDialogVisible = false">确 定</el-button>
+						<el-button type="success" size="mini" @click="centerDialogVisible = false">确 定</el-button>
 					</span>
 				</el-dialog>
 			</el-row>
@@ -211,16 +117,16 @@
 					<el-row class="el-forms">
 						<span>业务动态:</span>
 						<el-steps class="cont_size"  :active="1" finish-status="success" align-center >
-						  <el-step title="接单"></el-step>
-						  <el-step title="订舱"></el-step>
-						  <el-step title="空箱出场"></el-step>
-						  <el-step title="重箱进场"></el-step>
-						  <el-step title="报关"></el-step>
-						  <el-step title="查验"></el-step>
-						  <el-step title="放行"></el-step>
-						  <el-step title="装船"></el-step>
-						  <el-step title="离港"></el-step>
-						  <el-step title="签提单"></el-step>
+						<el-step title="接单"></el-step>
+						<el-step title="订舱"></el-step>
+						<el-step title="空箱出场"></el-step>
+						<el-step title="重箱进场"></el-step>
+						<el-step title="报关"></el-step>
+						<el-step title="查验"></el-step>
+						<el-step title="放行"></el-step>
+						<el-step title="装船"></el-step>
+						<el-step title="离港"></el-step>
+						<el-step title="签提单"></el-step>
 						</el-steps>
 					</el-row>					
 					<el-row>
@@ -231,60 +137,60 @@
 							<el-row class="cont_bottom">
 								<el-form-item class="el-item" label="业务号:">
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-				  				</el-form-item>
-				  				<el-form-item class="el-item" label="委托日期">
+								</el-form-item>
+								<el-form-item class="el-item" label="委托日期">
 									<div class="block">
-									    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+										<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 									</div>
-				  				</el-form-item>
-				  				<el-form-item class="el-item" label="揽货性质:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="揽货性质:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="业务日期">
+								</el-form-item>
+								<el-form-item class="el-item" label="业务日期">
 									<div class="block">
-									    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+										<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 									</div>
-				  				</el-form-item>
-			  					<el-form-item class="el-item" label="主业务类型:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="主业务类型:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="子业务类型:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="子业务类型:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="结算单位:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="结算单位:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="委托单位:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="委托单位:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="合同编号:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="合同编号:" >
 									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="价格协议号:" >
+										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+									</el-select>
+								</el-form-item>
+								<el-form-item class="el-item" label="价格协议号:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="合同编号:" >
+								</el-form-item>
+								<el-form-item class="el-item" label="合同编号:" >
 									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="价格协议号:" >
+										<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+									</el-select>
+								</el-form-item>
+								<el-form-item class="el-item" label="价格协议号:" >
 									<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
+								</el-form-item>
 								
 							</el-row>
 							<el-row>
 								<el-form-item class="el-item" label="操作人:">
 									<el-input v-model="input" placeholder="" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="客服角色：">
+								</el-form-item>
+								<el-form-item class="el-item" label="客服角色：">
 									<el-input v-model="input" placeholder="" size="mini" class="date_input"></el-input>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="销售角色：">
+								</el-form-item>
+								<el-form-item class="el-item" label="销售角色：">
 									<el-input v-model="input" placeholder="" size="mini" class="date_input"></el-input>
-			  					</el-form-item>		
+								</el-form-item>		
 							</el-row>
 						</div>
 					</el-row>
@@ -293,212 +199,212 @@
 							<!--tab切换-->
 							<el-tabs v-model="activeName" type="card" @tab-click="handleClick">
 								<!--基本信息       start-->
-							    <el-tab-pane label="基本信息" name="first">
-							    	<b class="cont_m_b">船港信息</b>
-							  		<div class="cont_borders">
-							  			<el-row>
+								<el-tab-pane label="基本信息" name="first">
+									<b class="cont_m_b">船港信息</b>
+									<div class="cont_borders">
+										<el-row>
 											<el-form-item class="el-item" label="业务号:">
 												<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="航线:" >
+											</el-form-item>
+											<el-form-item class="el-item" label="航线:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="船次/航线:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="船次/航线:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item><el-form-item class="el-item" label="船公司:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item><el-form-item class="el-item" label="船公司:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-							  			</el-row>
-							  			<el-row>
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+										</el-row>
+										<el-row>
 											<el-form-item class="el-item" label="到港日期：">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="离港日期：">
+											</el-form-item>
+											<el-form-item class="el-item" label="离港日期：">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="中转日期：">
+											</el-form-item>
+											<el-form-item class="el-item" label="中转日期：">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
-							  				</el-form-item>
-							  			</el-row>
-							  			<el-row>											
-							  				<el-form-item class="el-item" label="卸货港/国家:" >
+											</el-form-item>
+										</el-row>
+										<el-row>											
+											<el-form-item class="el-item" label="卸货港/国家:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="装货港/国家:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="装货港/国家:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item><el-form-item class="el-item" label="中转港/国家:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item><el-form-item class="el-item" label="中转港/国家:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-							  			</el-row>
-							  		</div>
-							  		<b class="cont_m_b cont_top">货物信息</b>
-							  		<div class="cont_borders">
-							  			<el-row>											
-							  				<el-form-item class="el-item" label="货物品名:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+										</el-row>
+									</div>
+									<b class="cont_m_b cont_top">货物信息</b>
+									<div class="cont_borders">
+										<el-row>											
+											<el-form-item class="el-item" label="货物品名:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="单证箱量/单证箱型:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="单证箱量/单证箱型:" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> 20GP
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> 20HC
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> 40GP
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> 40HC
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> 45GP
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input>45HC
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="" >
+											</el-form-item>
+											<el-form-item class="el-item" label="" >
 												<el-input v-model="input" placeholder="" size="mini" class="date_samll_input"></el-input> LCL
-						  					</el-form-item>						  					
-							  			</el-row>
-							  			<el-row >
-							  				<el-form-item class="el-item" label="品名明细:" >
+											</el-form-item>						  					
+										</el-row>
+										<el-row >
+											<el-form-item class="el-item" label="品名明细:" >
 												<el-input v-model="input" placeholder="请填写明细说明 20个字内" size="mini" class="date_in"></el-input>
-						  					</el-form-item>						  					
-							  			</el-row>
-							  			<el-row>
+											</el-form-item>						  					
+										</el-row>
+										<el-row>
 											<el-form-item class="el-item" label="发货人:">
 												<el-input v-model="input" placeholder="请填写发货人，200个字" size="mini" class="date_box"></el-input>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="收货人:">
+											</el-form-item>
+											<el-form-item class="el-item" label="收货人:">
 												<el-input v-model="input" placeholder="请填写收货人，200个字" size="mini" class="date_box"></el-input>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="通知人:">
+											</el-form-item>
+											<el-form-item class="el-item" label="通知人:">
 												<el-input v-model="input" placeholder="请填写通知人，200个字" size="mini" class="date_box"></el-input>
-							  				</el-form-item>							  				
-							  			</el-row>
-							  		</div>
-							  		<b class="cont_m_b cont_top">业务信息</b>
-							  		<div class="cont_borders">
-							  			<el-row>
+											</el-form-item>							  				
+										</el-row>
+									</div>
+									<b class="cont_m_b cont_top">业务信息</b>
+									<div class="cont_borders">
+										<el-row>
 											<el-form-item class="el-item" label="订舱日期:">
 												<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input"></el-input>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="订舱公司:" >
+											</el-form-item>
+											<el-form-item class="el-item" label="订舱公司:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="申报方式:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="申报方式:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="报关单号:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="报关单号:" >
 												<el-input v-model="input" placeholder="选填报关单号" size="mini" class="date_input"></el-input>
-						  					</el-form-item>
-							  			</el-row>
-							  			<el-row>
+											</el-form-item>
+										</el-row>
+										<el-row>
 											<el-form-item class="el-item" label="提单票数:">
 												<el-input v-model="input" placeholder="请填写提单票数" size="mini" class="date_input"></el-input>
-							  				</el-form-item>
-							  				<el-form-item class="el-item" label="订舱公司:" >
+											</el-form-item>
+											<el-form-item class="el-item" label="订舱公司:" >
 												<el-input v-model="input" placeholder="请填写报关票数" size="mini" class="date_input"></el-input> 份
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="装箱方式:" >
+											</el-form-item>
+											<el-form-item class="el-item" label="装箱方式:" >
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
-						  					</el-form-item>
-						  					<el-form-item class="el-item" label="商检单号:" >
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
+											</el-form-item>
+											<el-form-item class="el-item" label="商检单号:" >
 												<el-input v-model="input" placeholder="请填写商检单号" size="mini" class="date_input"></el-input>
-						  					</el-form-item>
-							  			</el-row>
-							  			
-							  			<el-row>
-							  				<el-row>
-							  					<el-form-item class="el-item" label="是否监管：" >
-									  				<el-radio-group class="el-item" v-model="radio">
-													    <el-radio :label="1">是</el-radio>
-													    <el-radio :label="2">否</el-radio>
+											</el-form-item>
+										</el-row>
+										
+										<el-row>
+											<el-row>
+												<el-form-item class="el-item" label="是否监管：" >
+													<el-radio-group class="el-item" v-model="radio">
+														<el-radio :label="1">是</el-radio>
+														<el-radio :label="2">否</el-radio>
 													</el-radio-group>
 												</el-form-item>
 												<el-form-item class="el-item" label="是否电放：" >
-									  				<el-radio-group class="el-item" v-model="radio">
-													    <el-radio :label="1">是</el-radio>
-													    <el-radio :label="2">否</el-radio>
+													<el-radio-group class="el-item" v-model="radio">
+														<el-radio :label="1">是</el-radio>
+														<el-radio :label="2">否</el-radio>
 													</el-radio-group>
 												</el-form-item>
 												<el-form-item class="el-item" label="是否查检：" >
-									  				<el-radio-group class="el-item" v-model="radio">
-													    <el-radio :label="1">是</el-radio>
-													    <el-radio :label="2">否</el-radio>
+													<el-radio-group class="el-item" v-model="radio">
+														<el-radio :label="1">是</el-radio>
+														<el-radio :label="2">否</el-radio>
 													</el-radio-group>
 												</el-form-item>
 												<el-form-item class="el-item" label="是否改单：" >
-									  				<el-radio-group class="el-item" v-model="radio">
-													    <el-radio :label="1">是</el-radio>
-													    <el-radio :label="2">否</el-radio>
+													<el-radio-group class="el-item" v-model="radio">
+														<el-radio :label="1">是</el-radio>
+														<el-radio :label="2">否</el-radio>
 													</el-radio-group>
 												</el-form-item>
 											</el-row>
 											<el-row >
-								  				<el-form-item class="el-item" label="单证备注:" >
+												<el-form-item class="el-item" label="单证备注:" >
 													<el-input v-model="input" placeholder="请填写明细说明 100个字内" size="mini" class="date_in"></el-input>
-							  					</el-form-item>						  					
-							  				</el-row>
-							  				<el-row>
-								  				<el-form-item class="el-item" label="开票要求:" >
+												</el-form-item>						  					
+											</el-row>
+											<el-row>
+												<el-form-item class="el-item" label="开票要求:" >
 													<el-input v-model="input" placeholder="自己录入最多输入 100个字内" size="mini" class="date_input5"></el-input>
-							  					</el-form-item>	
-							  					<el-form-item class="el-item" label="业务要求:" >
+												</el-form-item>	
+												<el-form-item class="el-item" label="业务要求:" >
 													<el-input v-model="input" placeholder="自己录入最多输入 100个字内" size="mini" class="date_input5"></el-input>
-							  					</el-form-item>	
-							  				</el-row>
-							  			</el-row>
-							  			<el-row>
-							  				<el-row class="cont_border">
+												</el-form-item>	
+											</el-row>
+										</el-row>
+										<el-row>
+											<el-row class="cont_border">
 												<div class="flex w">
 													<div class="flex_1">
-								  						<el-form-item class="cont_block" label="创建人:">
+														<el-form-item class="cont_block" label="创建人:">
 															<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_box"></el-input>									
-									  					</el-form-item>
-									  					<el-form-item  label="创建时间：">2019-6-17</el-form-item>
-								  					</div>
-								  					<div class="flex_1">
-								  						<el-form-item class="cont_block" label="修改人:">
+														</el-form-item>
+														<el-form-item  label="创建时间：">2019-6-17</el-form-item>
+													</div>
+													<div class="flex_1">
+														<el-form-item class="cont_block" label="修改人:">
 															<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_box"></el-input>									
-									  					</el-form-item>
-									  					<el-form-item  label="修改时间：">2019-6-17</el-form-item>
-								  					</div>
-							  					</div>
+														</el-form-item>
+														<el-form-item  label="修改时间：">2019-6-17</el-form-item>
+													</div>
+												</div>
 											</el-row>
-							  			</el-row>
+										</el-row>
 	
-							  		</div>
-							    </el-tab-pane>
-							    <!--基本信息       end-->
-							    <!--单证信息       start-->
-							    <el-tab-pane label="单证信息" name="second">
-							    	<el-row class="">
+									</div>
+								</el-tab-pane>
+								<!--基本信息       end-->
+								<!--单证信息       start-->
+								<el-tab-pane label="单证信息" name="second">
+									<el-row class="">
 										<el-button type="success" size="mini" @click="add">新增单据</el-button>
 										<el-button type="success" size="mini">复制</el-button>
 										<el-button type="danger" size="mini" @click="handleDelete">删除</el-button>
@@ -512,28 +418,28 @@
 											</el-table-column>
 											<el-table-column prop="test" label="单据状态" align="center">
 												<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-											    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-								  				</el-select>
+													<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+												</el-select>
 											</el-table-column>
 											<el-table-column prop="test" label="单据编号" align="center"></el-table-column>
 											<el-table-column prop="test" label="份数" align="center"></el-table-column>
 											<el-table-column prop="test" label="状态日期" align="center">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
 											</el-table-column>
 											<el-table-column prop="test" label="上传附件" align="center">
 												<el-upload class="upload-demo" action="" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
-												  <el-button size="small" type="primary">点击上传</el-button>
+												<el-button size="small" type="primary">点击上传</el-button>
 												</el-upload>
 											</el-table-column>										
 										</el-table>
 									</el-row>
-							    </el-tab-pane>
-							    <!--单证信息       end-->
-							    <!--拖车信息       start-->
-							    <el-tab-pane label="角色管理" name="third">
-							    	<el-row class="">
+								</el-tab-pane>
+								<!--单证信息       end-->
+								<!--拖车信息       start-->
+								<el-tab-pane label="角色管理" name="third">
+									<el-row class="">
 										<el-button type="success" size="mini" @click="add">新增</el-button>
 										<el-button type="success" size="mini">复制</el-button>
 										<el-button type="success" size="mini">保存</el-button>
@@ -551,24 +457,24 @@
 											<el-table-column prop="test" label="装箱地点" align="center"></el-table-column>
 											<el-table-column prop="test" label="装箱日期" align="center">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
 											</el-table-column>
 											<el-table-column prop="test" label="装箱备注" align="center"></el-table-column>
 											<el-table-column prop="test" label="装箱地点" align="center"></el-table-column>
 											<el-table-column prop="test" label="送箱日期" align="center">
 												<div class="block">
-												    <el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
+													<el-date-picker v-model="value1" type="date" placeholder="选择日期" size="mini" class="date_input"> </el-date-picker>
 												</div>
 											</el-table-column>
 											<el-table-column prop="test" label="送箱备注" align="center"></el-table-column>									
 										</el-table>
 									</el-row>
-							    </el-tab-pane>
-							    <!--拖车信息       end-->
-							     <!--费用信息       start-->
-							    <el-tab-pane label="定时任务补偿" name="fourth">
-							    	<el-row class="">
+								</el-tab-pane>
+								<!--拖车信息       end-->
+								<!--费用信息       start-->
+								<el-tab-pane label="定时任务补偿" name="fourth">
+									<el-row class="">
 										<el-button type="warning" size="mini">导入价格协议号</el-button>
 										<el-button type="warning" size="mini">通知开票</el-button>
 										<el-button type="danger" size="mini">取消开票通知</el-button>
@@ -712,8 +618,8 @@
 											<el-table-column prop="test" label="不含税毛利率" align="center"></el-table-column>						
 										</el-table>
 									</el-row>
-							    </el-tab-pane>
-							    <!--费用信息  end-->
+								</el-tab-pane>
+								<!--费用信息  end-->
 							</el-tabs>								
 						</div>							
 					</el-row>
@@ -759,79 +665,88 @@
 	</el-container>
 </template>
 
-<script>export default {
-	data() {
-		return {
-			input:'',
-			radio: 1,
-			activeName: 'first',
-			active: 0,
-			dialogVisible:false,
-			centerDialogVisible:false,
-			innerVisible:false,
-			centerDialogVisibleInfo:false,
-			centerDialogVisibleTwo:false,
-			options: [{
-				value: '选项1',
-				label: '黄金糕'
-			}, {
-				value: '选项2',
-				label: '双皮奶'
-			}, {
-				value: '选项3',
-				label: '蚵仔煎'
-			}, {
-				value: '选项4',
-				label: '龙须面'
-			}, {
-				value: '选项5',
-				label: '北京烤鸭'}],
-			tableData: [{
-				test:'test',
-				name:'外贸出口'
-			},
-			{
-				test:'test',
-				name:'外贸进口'
-			},
-			{
-				test:'test',
-				name:'内贸进港/站'
-			}],
-			value:'',
-			pickerOptions: {
-					disabledDate(time) {
-						return time.getTime() > Date.now();
-					},
-					shortcuts: [{
-						text: '今天',
-						onClick(picker) {
-							picker.$emit('pick', new Date());
-						}
-					}, {
-						text: '昨天',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24);
-							picker.$emit('pick', date);
-						}
-					}, {
-						text: '一周前',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-							picker.$emit('pick', date);
-						}
-					}]
+<script>
+	import businessFreightTable from './freightTable.vue'
+	export default {
+		data() {
+			return {
+				isShowAside:true,//是否展示侧边栏
+				fileList:"",
+				params:"",
+				input:'',
+				radio: 1,
+				activeName: 'first',
+				active: 0,
+				dialogVisible:false,
+				centerDialogVisible:false,
+				innerVisible:false,
+				centerDialogVisibleInfo:false,
+				centerDialogVisibleTwo:false,
+				options: [{
+					value: '选项1',
+					label: '黄金糕'
+				}, {
+					value: '选项2',
+					label: '双皮奶'
+				}, {
+					value: '选项3',
+					label: '蚵仔煎'
+				}, {
+					value: '选项4',
+					label: '龙须面'
+				}, {
+					value: '选项5',
+					label: '北京烤鸭'}],
+				tableData: [{
+					test:'test',
+					name:'外贸出口'
 				},
-				value1: '',
-				value2: '',
-			}
+				{
+					test:'test',
+					name:'外贸进口'
+				},
+				{
+					test:'test',
+					name:'内贸进港/站'
+				}],
+				value:'',
+				pickerOptions: {
+						disabledDate(time) {
+							return time.getTime() > Date.now();
+						},
+						shortcuts: [{
+							text: '今天',
+							onClick(picker) {
+								picker.$emit('pick', new Date());
+							}
+						}, {
+							text: '昨天',
+							onClick(picker) {
+								const date = new Date();
+								date.setTime(date.getTime() - 3600 * 1000 * 24);
+								picker.$emit('pick', date);
+							}
+						}, {
+							text: '一周前',
+							onClick(picker) {
+								const date = new Date();
+								date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+								picker.$emit('pick', date);
+							}
+						}]
+					},
+					value1: '',
+					value2: '',
+				}
+				
 		},
 		computed: {},
 		created() {},
 		mounted() {},
 		methods: {
+			dialogVisibleAddview(){
+				this.$refs.freightTable.showAndHideDialog()
+			},
 			next() {
 				if(this.active++ > 2) this.active = 0;
 			},
@@ -839,12 +754,12 @@
 				console.log(tab, event);
 			},
 			handleRemove(file, fileList) {
-		        console.log(file, fileList);
-		    },
-		    handlePreview(file) {
-		        console.log(file);
-		    },
-		    handleDelete(index, row) {
+				console.log(file, fileList);
+			},
+			handlePreview(file) {
+				console.log(file);
+			},
+			handleDelete(index, row) {
 				console.log(index)
 				console.log(row)
 				this.$confirm("此操作将永久删除该店铺和其下所有数据,是否继续?", "提示", {
@@ -865,16 +780,39 @@
 
 				});
 			}
-			 
+			
+		},
+		components:{
+			businessFreightTable:businessFreightTable
 		}
-
 	}
 </script>
 
 <style scoped>
-	.el-aside {background-color:#E4E4E4;padding:10px  20px;margin:10px 0 10px 10px;}	
+	.el-aside {background-color:#afc9c7;padding:10px  20px;margin:10px 0 10px 10px;border-radius: 3px;}	
 	.el-main{padding:0 10px;}
 	.cont_block{display: block;}
 	.date_picker{width:200px;}
 	.el-item{margin-right:20px;}
+	.el-button{margin-bottom:10px;margin-right:10px;margin-left:0;}
+	.elContianer{position: relative;padding-left: 260px!important;}
+	.select_box{position: absolute;overflow-x: hidden;box-sizing: border-box;top:0px;left:10px;}
+	/* .select_overflow{width:240px;} */
+	.select_in{width:20px;height:50px;background-color: #e4e4e4;border-radius: 10px;position: absolute;top:0;bottom:0;right:-10px;margin:auto;cursor: pointer;}
+	.select_in .el-icon-arrow-left{position: absolute;top:50%;transform:translateY(-50%);left:0;margin:auto;}
+	.select_out{width:20px;height:50px;background-color: #e4e4e4;border-radius: 10px;position: fixed;top:0;bottom:0;left:-10px;margin:auto;cursor: pointer;}
+	.select_out .el-icon-arrow-right{position: absolute;top:50%;transform:translateY(-50%);right:0;margin:auto;}
+	.operation_top{padding-bottom:0;}
+	.operation_top_margin_bottom{margin-bottom:5px;}
+	.select_in-enter, .select_in-leave-to{transform: translateX(-240px);}
+	.select_in-enter-active,.select_in-leave-active {transition: all .5s ease;}
+	.select_in-enter, .select_in-leave-to{transform: translateX(-20px);opacity: 0;}
+	.select_in-enter-active,.select_in-leave-active {transition: all .5s ease;}
+	.contain_box_in{animation: goin .5s;animation-fill-mode: forwards;}
+	 @keyframes goin
+	{
+		0% {padding-left:260px;}
+		100%{padding-left:0px;}
+
+	}
 </style>

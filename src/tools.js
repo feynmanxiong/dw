@@ -1,5 +1,6 @@
 import { Message, Loading  } from 'element-ui';
 
+
 function install(Vue) {
     Vue.mixin({
         created: function () {
@@ -13,12 +14,17 @@ function install(Vue) {
     })
 
     Vue.prototype.$login = function (param) {
-        axios.post('/admin.login',param).then((response) => {
-            if (response.data.code == 0) {
+        var _this=this;
+        axios.post('/login',param).then((response) => {
+            console.log(response)
+            if (response.data.code == 200) {
+                // localStorage.setItem("dw_erp_user_name",response.data.data.name);
+                // localStorage.setItem("dw_erp_user_username",response.data.data.username);
+                // localStorage.setItem("dw_erp_user_token",response.data.data.token);
                 localStorage.setItem("dw_erp_user_name",response.data.data.name);
-                localStorage.setItem("dw_erp_user_username",response.data.data.username);
-                localStorage.setItem("dw_erp_user_token",response.data.data.token);
-                this.$router.replace("/console");
+                //localStorage.setItem("dw_erp_user_username",response.data.data.username);
+                localStorage.setItem("dw_erp_user_token",response.data.data.api_token);
+                _this.$router.replace("/console");
             }
         }).catch((error) => {
             console.log(error);
@@ -109,6 +115,35 @@ function install(Vue) {
 
     Vue.prototype.$getAdminList = function(){
         return axios.post("/admin.port");
+    }
+
+    //laughing
+    //json迭代
+    Vue.prototype.$getJsonFunc=function(json){
+        let data="";
+        for(let i in json){
+            data+=i+"="+json[i]+"&";
+        }
+        return data
+    }
+
+    Vue.prototype.$getFunc=function(url,data,success,errorF){
+        axios.get(url,data).then(response=>{
+            if(response.status==200&&response.data.code==200){
+                success(response)
+            }
+        }).catch(error=>{
+            errorF(error)
+        })
+    }
+    Vue.prototype.$postFunc=function(url,data,success,errorF){
+        axios.post(url,data).then(response=>{
+            if(response.status==200&&response.data.code==200){
+                success(response)
+            }
+        }).catch(error=>{
+            errorF(error)
+        })
     }
 }
 
