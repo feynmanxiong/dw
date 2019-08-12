@@ -134,3 +134,4 @@ input{outline: none;}
 .select_box .el-row .span{float: left;font-size: 14px;line-height: 28px;} 
 .select_box .el-row .el-select{float: right;width:160px;} 
 .select_box .el-input__inner{height:30px;line-height: 30px;font-size: 12px;} 
+.select_box .date_input{width:100%;margin-top:10px;}

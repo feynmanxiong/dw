@@ -116,7 +116,51 @@
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
-
+					<el-row>
+						<span class="span">业务申请人</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+						<el-date-picker type="date" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
+						<el-date-picker type="date" placeholder="申请结束时间" size="mini" class="date_input"> </el-date-picker>
+					</el-row>
+					<el-row>
+						<span class="span">商务会签人</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+						<el-date-picker type="date" placeholder="商务会签开始时间" size="mini" class="date_input"> </el-date-picker>
+						<el-date-picker type="date" placeholder="商务会签结束时间" size="mini" class="date_input"> </el-date-picker>
+					</el-row>
+					<el-row>
+						<span class="span">业务会签人</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+						<el-date-picker type="date" placeholder="业务开始时间" size="mini" class="date_input"> </el-date-picker>
+						<el-date-picker type="date" placeholder="业务结束时间" size="mini" class="date_input"> </el-date-picker>
+					</el-row>
+					<el-row>
+						<span class="span">审批人</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+						<el-date-picker type="date" placeholder="审批开始时间" size="mini" class="date_input"> </el-date-picker>
+						<el-date-picker type="date" placeholder="审批结束时间" size="mini" class="date_input"> </el-date-picker>
+					</el-row>
+					<el-row>
+						<span class="span">归档人</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+						<el-date-picker type="date" placeholder="归档开始时间" size="mini" class="date_input"> </el-date-picker>
+						<el-date-picker type="date" placeholder="归档结束时间" size="mini" class="date_input"> </el-date-picker>
+					</el-row>
 					
 				</el-aside>
 			</transition>
