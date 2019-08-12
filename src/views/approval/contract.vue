@@ -1,370 +1,323 @@
+<!--审批管理  =>合同审批管理(子流程3)-->
 <template>
-	<!--审批管理  =>合同审批管理(子流程3)-->
-	<el-container>
-		<el-aside width="280px">
-			<el-form :inline="true" :model="params" label-position="right">
-				<div class="cont_t">自定义查询区</div>
-				<el-row class="row_s">
-					<div class="cont_btns">					
-						<el-button type="info" size="mini">重置</el-button>
-						<el-button type="success" size="mini">查询</el-button>
+	<div>
+		<div class="container">
+			
+		</div>
+		<el-container :class="['elContianer',isShowAside?'':'contain_box_in']">
+			<transition name = "select_out">
+				<div class="select_out"  v-show="!isShowAside" @click="isShowAside=true">
+					<i class="el-submenu__icon-arrow el-icon-arrow-right"></i>
+				</div>
+			</transition>
+			<transition name = "select_in" >
+				<el-aside width="320px"  v-show="isShowAside" class="select_box">
+					<div class="select_in" @click="isShowAside=false">
+						<i class="el-submenu__icon-arrow el-icon-arrow-left"></i>
 					</div>
-				</el-row>
-				<el-row>				
-					<el-input v-model="input" placeholder="请输入内容" size="mini" class="date_input2"></el-input>
+					<div class="cont_t">自定义查询区</div>
+					<el-row class="el-m publicSelect">
+						<div align="center">					
+							<el-button type="info" plain size="mini">重置</el-button>
+							<el-button type="success" plain size="mini">查询</el-button>
+						</div>
+					</el-row>
+					<el-row>
+						<input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
+					</el-row>
+					<el-row>
+						<span class="span">办理状态</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">办理结果</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">办理步骤</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">结算公司</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">客户</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">供应商</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">合同类型</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">合同编号</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">价格协议号</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">业务板块</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">主业务板块</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">子业务板块</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+					<el-row>
+						<span class="span">合同状态</span>
+						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+							<el-option :label="'启用'" :value="1"></el-option>
+							<el-option :label="'禁用'" :value="0"></el-option>
+						</el-select>
+					</el-row>
+
+					
+				</el-aside>
+			</transition>
+			<el-main>
+				<el-row class="cont_block">
+					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
+					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
+					<el-button size="mini" plain  type="danger" @click="handleDelete">删除</el-button>
 				</el-row>
 				<el-row>
-	  				<el-form-item label="价格协议状态:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="价格协议类型:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="结算公司:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="业务板块:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="主业务板块:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="申请人:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="">
-						<div class="block">
-						    <el-date-picker v-model="value1" type="date" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
-						</div>
-	  				</el-form-item>
-	  				<el-form-item label="">
-	  					<div class="block">
-							<el-date-picker v-model="value1" type="date" placeholder="申请结束时间" size="mini" class="date_input"> </el-date-picker>
-						</div>						
-	  				</el-form-item>
-	  				<el-form-item label="商务会签人:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="">
-						<div class="block">
-						    <el-date-picker v-model="value1" type="date" placeholder="商务会签开始时间" size="mini" class="date_input"> </el-date-picker>
-						</div>
-	  				</el-form-item>
-	  				<el-form-item label="">
-	  					<div class="block">
-							<el-date-picker v-model="value1" type="date" placeholder="商务会签结束时间" size="mini" class="date_input"> </el-date-picker>
-						</div>						
-	  				</el-form-item>
-	  				<el-form-item label="业务会签人:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="">
-						<div class="block">
-						    <el-date-picker v-model="value1" type="date" placeholder="业务会签开始时间" size="mini" class="date_input"> </el-date-picker>
-						</div>
-	  				</el-form-item>
-	  				<el-form-item label="">
-	  					<div class="block">
-							<el-date-picker v-model="value1" type="date" placeholder="业务会签结束时间" size="mini" class="date_input"> </el-date-picker>
-						</div>						
-	  				</el-form-item>
-	  				<el-form-item label="审批人:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="">
-						<div class="block">
-						    <el-date-picker v-model="value1" type="date" placeholder="审批开始时间" size="mini" class="date_input"> </el-date-picker>
-						</div>
-	  				</el-form-item>
-	  				<el-form-item label="">
-	  					<div class="block">
-							<el-date-picker v-model="value1" type="date" placeholder="审批结束时间" size="mini" class="date_input"> </el-date-picker>
-						</div>						
-	  				</el-form-item>
-	  				<el-form-item label="归档人:">
-						<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-					    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-		  				</el-select>
-	  				</el-form-item>
-	  				<el-form-item label="">
-						<div class="block">
-						    <el-date-picker v-model="value1" type="date" placeholder="归档开始时间" size="mini" class="date_input"> </el-date-picker>
-						</div>
-	  				</el-form-item>
-	  				<el-form-item label="">
-	  					<div class="block">
-							<el-date-picker v-model="value1" type="date" placeholder="归档结束时间" size="mini" class="date_input"> </el-date-picker>
-						</div>						
-	  				</el-form-item>
+					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange" @row-click="mainTableTrClick">
+						<el-table-column type="selection" prop="Id" align="center" width="55"></el-table-column>
+						<el-table-column align="center" type="index" label="编辑" prop="Id" width="80">
+							<template slot-scope="scope">
+								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.Id)"></i>
+								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.Id)"></i>
+							</template>
+						</el-table-column>
+						<el-table-column align="center" prop="status" label="状态"></el-table-column>
+						<el-table-column align="center" prop="mnemonicCode" label="助记码"></el-table-column>
+						<el-table-column align="center" prop="Port" label="港口"></el-table-column>
+						<el-table-column align="center" prop="Country" label="国家"></el-table-column>
+						<el-table-column align="center" prop="operator" label="操作人"></el-table-column>
+						<el-table-column align="center" prop="time" label="操作时间"></el-table-column>
+					</el-table>
+					<el-pagination background
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page="currentPage"
+						:page-sizes="[10, 50, 100, 200]"
+						:page-size="pageSize"
+						layout="total, sizes, prev, pager, next, jumper"
+						:total="total">
+					</el-pagination>
 				</el-row>
-			</el-form>
-		</el-aside>
-		<el-main>
-			<el-row>
-				<el-button type="success" size="mini" @click="dialogVisible = true">新增</el-button>
-				<el-button type="success" size="mini">复制</el-button>
-				<el-button type="success" size="mini">保存</el-button>
-				<el-button type="danger" size="mini">删除</el-button>
-				<el-button type="warning" size="mini">提交审核</el-button>
-				<el-button type="warning" size="mini">审核</el-button>
-				<el-button type="danger" size="mini">批量取消审核</el-button>
-				<el-button type="warning" size="mini">批量同意</el-button>
-				<el-button type="warning" size="mini">批量退签</el-button>
-				<el-button type="success" size="mini">归档</el-button>
-				<el-button type="success" size="mini">短信提示</el-button>
-			</el-row>
-			<el-row>
-				<el-table :data="tableData" border stripe style="width: 100%" size="mini" show-summary>
-					<el-table-column type="selection" align="center" width="55"></el-table-column>
-					<el-table-column label="序号" type="index" width="50" align="center"></el-table-column>					
-					<el-table-column prop="test" label="您的办理结果" align="center"></el-table-column>
-					<el-table-column prop="test" label="您的办理状态" align="center"></el-table-column>
-					<el-table-column prop="test" label="合同审批过程详情" align="center">
-					  <el-link type="primary" @click="newDialogVisible = true">查看</el-link>
-					</el-table-column>
-					<el-table-column prop="test" label="合同编号" align="center"></el-table-column>
-					<el-table-column prop="test" label="合同序号" align="center"></el-table-column>
-					<el-table-column prop="test" label="甲方" align="center"></el-table-column>
-					<el-table-column prop="test" label="乙方" align="center"></el-table-column>
-					<el-table-column prop="test" label="丙方" align="center"></el-table-column>
-					<el-table-column prop="test" label="业务板块" align="center"></el-table-column>
-					<el-table-column prop="test" label="主业务类型" align="center"></el-table-column>
-					<el-table-column prop="test" label="步骤一" align="center"></el-table-column>
-					<el-table-column prop="test" label="审核情况" align="center"></el-table-column>
-				</el-table>
-			</el-row>
-			<!--合同审批过程详情 start-->
-			<el-row>
-				<el-dialog title="审核过程记录：" :visible.sync="newDialogVisible" width="50%" :before-close="handleClose">
-				  <el-table :data="list" border stripe style="width: 100%" size="mini" show-summary>
-					<el-table-column type="selection" align="center" width="55"></el-table-column>
-					<el-table-column label="序号" type="index" width="50" align="center"></el-table-column>					
-					<el-table-column prop="test" label="步骤" align="center"></el-table-column>
-					<el-table-column prop="test" label="办理人" align="center"></el-table-column>
-					<el-table-column prop="test" label="办理状态" align="center"></el-table-column>
-					<el-table-column prop="test" label="办理结果" align="center"></el-table-column>
-					<el-table-column prop="test" label="办理意见" align="center"></el-table-column>
-					<el-table-column prop="test" label="办理时间" align="center"></el-table-column>
-				</el-table>
-				</el-dialog>
-			</el-row>
-			<!--合同审批过程详情 start-->
-			<!--新增合同 start-->
-			<el-row class="dialog">
-				<el-dialog  title="" :visible.sync="dialogVisible" :modal="false" fullscreen >
-					<el-form  :inline="true" :model="params" label-position="right">
-						<el-row class="cont_button">
-							<div class="cont_border cont_top cont_bm">
-								<el-button type="success" size="mini" >新增</el-button>
-								<el-button type="success" size="mini">复制</el-button>
-								<el-button type="success" size="mini">保存</el-button>
-								<el-button type="warning" size="mini">编辑</el-button>
-								<el-button type="danger" size="mini" >删除</el-button>
-								<el-button type="warning" size="mini">提交审核</el-button>
-								<el-button type="warning" size="mini" @click="newCenterDialogVisible = true">审核</el-button>
-								<el-button type="success" size="mini" @click="centerDialogVisible = true">归档</el-button>
-								<el-button type="success" size="mini" @click="centerDialogVisibleInfo = true">短信</el-button>
-							</div>
-						</el-row>					
-						<el-row class="cont_border cont_bottom_b">
-							<el-form-item class="el-item" label="合同编号:" >
-								<el-input v-model="input" placeholder="请填写合同编号" size="mini" class="date_input"></el-input>
-		  					</el-form-item>
-		  					<el-form-item class="el-item" label="对方合同号:" >
-								<el-input v-model="input" placeholder="请填写对方合同号" size="mini" class="date_input"></el-input>
-		  					</el-form-item>
-		  					<el-form-item class="el-item" label="合同名称:" >
-								<el-input v-model="input" placeholder="请填写合同名称" size="mini" class="date_input"></el-input>
-		  					</el-form-item>
-		  					<el-form-item class="el-item" label="合同类型:" >
-								<el-input v-model="input" placeholder="客户合同" size="mini" class="date_input"></el-input>
-		  					</el-form-item>
-		  					<el-form-item class="el-item" label="结算公司:" >
-									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  				</el-form-item>
-		  					<el-row>
-		  						<el-form-item class="el-item" label="合同甲方:" >
-									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="合同乙方:" >
-									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="合同丙方:" >
-									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  					<el-form-item class="el-item" label="揽货性质:" >
-									<el-select  v-model="value" placeholder="请选择" size="mini" class="date_input">
-								    	<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"> </el-option>
-					  				</el-select>
-			  					</el-form-item>
-			  				</el-row>
-	  					</el-row>
-	  					<el-row>
-	  						<el-row>
-								<el-button type="success" size="mini" @click="add">新增</el-button>
-								<el-button type="danger" size="mini" @click="handleDelete">删除</el-button>
-							</el-row>
-	  						<el-row class="">
-								<el-table :data="tableData" border stripe style="width: 100%" size="mini" show-summary>
-									<el-table-column type="selection" align="center" width="55"></el-table-column>
-									<el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
-									<el-table-column prop="test" label="业务板块" align="center" ></el-table-column>
-									<el-table-column prop="test" label="主业务板块" align="center"></el-table-column>
-									<el-table-column prop="test" label="子业务板块" align="center"></el-table-column>
-									<el-table-column prop="test" label="价格协议号" align="center"></el-table-column>
-								</el-table>
-							</el-row>
-	  					</el-row>
-	  					<el-row class="cont_border">
-	  						<el-form-item class="el-item" label="上传合同附件:" >
-								<el-upload class="upload-demo" action="" :on-remove="handleRemove" :file-list="fileList" list-type="picture">
-								  <el-button size="mini" type="primary">点击上传</el-button>
-								</el-upload>
-							</el-form-item>
-	  						<el-form-item class="el-item" label="申请人:" >
-								<el-input v-model="input" placeholder="请填写合同编号" size="mini" class="date_input"></el-input>
-		  					</el-form-item>
-		  					<el-form-item  label="申请时间：">2019-6-17</el-form-item>
-	  					</el-row>
-	  					<el-row>
-	  						<span class="cont_m_b">审核过程记录</span>
-							<el-table :data="tableData" border stripe style="width: 100%" size="mini" show-summary>
-								<el-table-column type="selection" align="center" width="55"></el-table-column>
-								<el-table-column label="序号" type="index" width="50" align="center"></el-table-column>					
-								<el-table-column prop="test" label="步骤" align="center"></el-table-column>
-								<el-table-column prop="test" label="办理人" align="center"></el-table-column>
-								<el-table-column prop="test" label="办理状态" align="center"></el-table-column>
-								<el-table-column prop="test" label="办理结果" align="center"></el-table-column>
-								<el-table-column prop="test" label="办理意见" align="center"></el-table-column>
-								<el-table-column prop="test" label="办理时间" align="center"></el-table-column>
-							</el-table>
-						</el-row>
-					</el-form>
-				</el-dialog>
-			</el-row>
-			<!--新增合同 end-->
-			<!--审核 start-->
-			<el-row>
-				<el-dialog title="" :visible.sync="newCenterDialogVisible" width="25%" center>
-					<span class="cont_span_t">审核</span>
-					<el-row class="">
-						<span class="cont_m_b">您的意见是什么？</span>
-						<el-input type="textarea" :rows="2" placeholder="请输入内容" v-model="textarea"> </el-input>
-					</el-row>
-					<span slot="footer" class="dialog-footer">
-						<el-button type="danger"   size="mini" @click="newCenterDialogVisible = false">退 签</el-button>
-					    <el-button type="success" size="mini" @click="newCenterDialogVisible = false">同 意</el-button>
-					</span>
-				</el-dialog>
-			</el-row>
-			<!--审核 end-->
-			<!--归档 start-->
-			<el-row>
-				<el-dialog title="" :visible.sync="centerDialogVisible" width="25%" center>
-					<span class="cont_span_t">合同归档</span>
-					 <el-form  :inline="true" :model="params" label-position="right">
-						<el-row class="cont_center">
-							<el-form-item class="el-item cont_bm" label="综合序号:" >
-								<el-input v-model="input" placeholder="请填写合同编号" size="mini" class="date_input2"></el-input>
-		  					</el-form-item>
-		  					<el-row>
-			  					<el-form-item class="el-item" label="客户标示：" >
-					  				<el-radio-group class="el-item" v-model="radio">
-									    <el-radio :label="3">是</el-radio>
-									    <el-radio :label="6">否</el-radio>
-									</el-radio-group>
-								</el-form-item>
-							</el-row>
-						</el-row>
-					</el-form>
-					<span slot="footer" class="dialog-footer">
-					    <el-button size="mini" type="success" @click="centerDialogVisible = false">确 定</el-button>
-					</span>
-				</el-dialog>
-			</el-row>
-			<!--归档 end-->
-			<!--短信 start-->
-			<el-row>
-				<el-dialog title="" :visible.sync="centerDialogVisibleInfo" width="50%" center>
-					<span class="cont_span_t">短信提示</span>
-					<el-row class="">
-						<span class="cont_m_b">提示人选择</span>
-						<el-table :data="tableData" border stripe style="width: 100%" size="mini" show-summary>
-							<el-table-column type="selection" align="center" width="55"></el-table-column>
-							<el-table-column label="序号" type="index" width="50" align="center"></el-table-column>					
-							<el-table-column prop="test" label="提示人姓名" align="center"></el-table-column>
-							<el-table-column prop="test" label="提示人手机号码" align="center"></el-table-column>
-							<el-table-column prop="test" label="发送短信模板" align="center"></el-table-column>
+				<div class="STable" v-show="sonTableIsShow">
+					<div class="STableTitle clearfix">
+						<span>港口业务板块类型关系 &nbsp;&nbsp;&nbsp;港口：{{checkPort}}</span>
+						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="innerVisibleSon=true">编辑</el-button>
+					</div>
+					  <template>
+						<el-table :data="PortData" border size="mini" :header-cell-style="{background:'#e0f4ff',color:'#000'}">
+							<el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
+							<el-table-column align="center" prop="businessMoudle" label="业务模块"></el-table-column>
+							<el-table-column align="center" prop="MBusinessClass" label="主业务类型"></el-table-column>
+							<el-table-column align="center" prop="SBusinessClass" label="子业务类型"></el-table-column>
+							<el-table-column align="center" prop="operator" label="操作人"></el-table-column>
+							<el-table-column align="center" prop="time" label="操作时间"></el-table-column>
 						</el-table>
-					</el-row>
-					<span slot="footer" class="dialog-footer">
-						<el-button  size="mini" type="danger" @click="centerDialogVisibleInfo = false">取  消</el-button>
-					    <el-button  size="mini" type="success" @click="centerDialogVisibleInfo = false">确  定</el-button>
-					</span>
-				</el-dialog>
-			</el-row>
-			<!--短信 end-->
-		</el-main>
-	</el-container>
+					</template>
+				</div>
+			</el-main>
+			<!--港口维护主表添加start-->
+			<el-dialog title="新建港口" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
+				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
+					<el-form-item label="助记码" prop="mnemonicCode">
+						<el-input v-model="buildSettlementCompany.mnemonicCode"></el-input>
+					</el-form-item>
+					<el-form-item label="国家" prop="Country">
+						<el-input v-model="buildSettlementCompany.Country"></el-input>
+					</el-form-item>
+					<el-form-item label="港口" prop="Port">
+						<el-input v-model="buildSettlementCompany.Port"></el-input>
+					</el-form-item>
+					<el-form-item label="状态" prop="status">
+						<el-select v-model="buildSettlementCompany.status" placeholder="请选择状态">
+							<el-option label="启用" value="1"></el-option>
+							<el-option label="禁用" value="0"></el-option>
+						</el-select>
+					</el-form-item>
+					 <el-form-item size="small">
+						<el-button type="primary" @click="onSubmit">{{innerVisibleType?"添加":"保存"}}</el-button>
+						<el-button @click="handleDialogClose">取消</el-button>
+					</el-form-item>
+				</el-form>
+			</el-dialog>
+			<!--港口维护主表添加end-->
+			<!--港口维护子表添加start-->
+			<el-dialog :title="'港口业务板块类型关系 港口：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
+				<el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
+					<el-table-column align="center" prop="Id" label="操作" width="80">
+						<template slot-scope="scope">
+							<i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.Id)"></i>
+							<i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.Id)"></i>
+						</template>
+					</el-table-column>
+					<el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
+					<el-table-column align="center" prop="businessMoudle" label="业务模块">
+						<template slot-scope="scope">
+							<el-select v-model="scope.row.businessModule" placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in businessModule" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+							</el-select>
+						</template>
+					</el-table-column>
+					<el-table-column align="center" prop="MBusinessClass" label="主业务类型">
+						<template slot-scope="scope">
+							<el-select v-model="scope.row.MBusinessClass" placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in MBusinessClassMoudle" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+							</el-select>
+						</template>
+					</el-table-column>
+					<el-table-column align="center" prop="SBusinessClass" label="子业务类型">
+						<template slot-scope="scope">
+							<el-select v-model="scope.row.SBusinessClass" placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in SBusinessClass" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+							</el-select>
+						</template>
+					</el-table-column>
+				</el-table>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="handleDialogCloseSon" size="small">取 消</el-button>
+					<el-button type="primary" @click="handleDialogCloseSon" size="small">确 定</el-button>
+				</span>
+			</el-dialog>
+			<!--港口维护子表添加end-->
+		</el-container>
+	</div>
 </template>
 
-<script>export default {
-	data() {
-		return {
-			input:'',
-			textarea:'',
-			radio: '0',
-			dialogVisible:false,
-			newDialogVisible:false,
-			centerDialogVisible:false,
-			newCenterDialogVisible:false,
-			centerDialogVisibleInfo:false,
-			options: [{
-				value: '选项1',
-				label: '黄金糕'
-			}, {
-				value: '选项2',
-				label: '双皮奶'
-			}, {
-				value: '选项3',
-				label: '蚵仔煎'
-			}, {
-				value: '选项4',
-				label: '龙须面'
-			}, {
-				value: '选项5',
-				label: '北京烤鸭'}],
-			tableData: [{
-				test:'test'
-			}],
-			value:'',
-			pickerOptions: {
+<script>
+	export default {
+		data() {
+			return {
+				isShowAside:true,//是否展示侧边栏
+				selectStatus:"",//状态查询
+				selectPerson:"",//操作人查询
+				Country:"",//国家查询
+				Port:"",//港口查询
+				businessModule:"",//业务模块查询
+				MBusinessClass:"",//主业务类型查询
+				SBusinessClass:"",//子业务类型查询
+				innerVisible:false,//港口维护主表添加弹框是否显示
+				innerVisibleSon:false,//港口维护子表添加弹框是否显示，
+				innerVisibleType:true,//港口维护主表添加弹框是添加还是删除状态  添加:true  删除:false
+				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
+				businessModule:[//业务板块List数据
+					{name:"货运代理2",Id:2},
+					{name:"货运代理",Id:1},
+					{name:"货运代理3",Id:3}
+				],
+				MBusinessClassMoudle:[//主业务类型List
+					{name:"外贸出口2",Id:2},
+					{name:"外贸出口",Id:1},
+					{name:"外贸出口3",Id:3}
+				],
+				SBusinessClass:[//子业务类型List
+					{name:"外贸集装箱本港进口2",Id:2},
+					{name:"外贸集装箱本港进口",Id:1},
+					{name:"外贸集装箱本港进口3",Id:3}
+				],
+				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
+				checkPort:"上海",//港口业务板块类型关系    港口{{checkPort}}数据展示
+				newid:1,////港口业务板块类型关系编辑弹框新增数据 模拟id(自增)
+				fileList:"",
+				params:"",
+				total: 7,
+                currentPage: 1,
+　　　　　　　　　pageSize: 10,
+				radio:'1',
+				buildSettlementCompany:{//新增修改弹框数据
+					mnemonicCode:"",
+					descName:"",
+					name:"",
+					status:"",
+				},
+				PortDataSon:[//港口业务板块类型关系编辑 数据
+					{Id:1,businessModule:1,MBusinessClass:2,SBusinessClass:3},
+					{Id:2,businessModule:2,MBusinessClass:2,SBusinessClass:3},
+					{Id:3,businessModule:1,MBusinessClass:2,SBusinessClass:3}
+				],
+				rules: {
+					mnemonicCode: [
+						{ required: true, message: '请输入助记码', trigger: 'blur' },
+					],
+					Country: [
+						{required: true, message: '请输入国家', trigger: 'blur'  }
+					],
+					Port: [
+						{ required: true, message: '请输入港口', trigger: 'blur' }
+					],
+					status: [
+						{required: true, message: '请选择状态',  trigger: 'change' }
+					]
+				},
+				tableData: [//列表数据
+					{Id:1,mnemonicCode: 'CH1',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:2,mnemonicCode: 'CH2',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:3,mnemonicCode: 'CH3',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:4,mnemonicCode: 'CH4',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:5,mnemonicCode: 'CH5',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:6,mnemonicCode: 'CH6',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
+					{Id:7,mnemonicCode: 'CH7',Port:"龙达",Country:"龙达集团",status:"禁用",operator:"person",time:"2019-09-19"}
+				],
+				PortData:[//港口业务板块类型关系  数据
+					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
+				],
+				value:'',
+				pickerOptions: {
 					disabledDate(time) {
 						return time.getTime() > Date.now();
 					},
@@ -391,40 +344,163 @@
 				},
 				value1: '',
 				value2: '',
+				optionStatus:[
+					{value:1,label:"启用"},{value:0,label:"禁用"}
+				],
+				optionPerson:[
+					{value:1,label:"启用"},{value:0,label:"禁用"}
+				]
+				
 			}
 		},
 		computed: {},
 		created() {},
 		mounted() {},
 		methods: {
-			handleDelete(index, row) {
-				console.log(index)
+			//主表格单条修改
+			mainTableEdit(id){
+				this.tableData.forEach((it,index)=>{
+					if(id==it.Id){
+						this.buildSettlementCompany=it;
+						this.innerVisibleType=false;
+						this.innerVisible=true;
+					}
+				})
+			},
+			//主表格单条删除
+			mainTableSingleDelete(id){
+				this.$confirm("是否确定删除？", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消"
+				})
+				.then(() => {
+					this.tableData.forEach((it,index)=>{
+						if(id==it.Id){
+							this.tableData.splice(index,1)
+						}
+					})
+				}).catch(()=>{})
+			},
+			//主表格tr点击展示次表格
+			mainTableTrClick(row,event,column){
 				console.log(row)
-				this.$confirm("此操作将永久删除该店铺和其下所有数据,是否继续?", "提示", {
+				this.sonTableIsShow=true;
+			},
+			//主表格选择框点击
+			MainTableSelectChange(e){
+				this.MainTableSelectChangeIdList=[];
+				e.forEach(item=>{
+					this.MainTableSelectChangeIdList.push(item)
+				})
+			},
+			//次表格编辑弹框复制
+			PortDataSonCopy(id){
+				this.PortDataSon.forEach((item,index)=>{
+					if(item.Id==id){
+						let data=JSON.parse(JSON.stringify(this.PortDataSon[index]));
+						data.Id="N"+this.newid;
+						this.newid++;
+						this.PortDataSon.push(data);
+					}
+				})
+			},
+			//次表格编辑弹框删除
+			PortDataSonDelete(id){
+				this.$confirm("是否确认删除？","提示",{
+					confirmButtonText: '确定',
+					cancelButtonText: '取消'
+				}).then(()=>{
+					this.PortDataSon.forEach((item,index)=>{
+						if(item.Id==id){
+							this.PortDataSon.splice(index,1)
+						}
+					})
+				}).catch(()=>{
+					
+				})
+			},
+			//主表格数据新增和修改提交
+			onSubmit(formName){
+				this.$refs.buildSettlementCompany.validate(vail=>{
+					if(vail){
+						console.log(this.buildSettlementCompany)
+						console.log("表单数据正确")
+						if(innerVisibleType){
+							//新增
+						}else{
+							//修改
+						}
+					}else{
+						console.log("表单错误")
+						return false;
+					}
+				})
+			},
+			//主表格多条删除
+			handleDelete() {
+				if(this.MainTableSelectChangeIdList.length>0){
+					this.$confirm("是否确定删除？", "提示", {
 						confirmButtonText: "确定",
-						cancelButtonText: "取消",
-						type: "warning"
+						cancelButtonText: "取消"
 					})
 					.then(() => {
-						this.tableData.splice(index, 1)
-					})
+						this.MainTableSelectChangeIdList.forEach(item=>{
+							this.tableData.forEach((it,index)=>{
+								if(item.Id==it.Id){
+									this.tableData.splice(index,1)
+								}
+							})
+						})
+					}).catch(()=>{})
+				}else{
+					this.$message({type:'error',message:'请选择删除的数据'});
+				}
 			},
 			add() {
-				this.n++;
-				this.tableData.push({
-					id: this.n,
-					test: 'test',
-					state: false
-				});
-			}
+				
+			},
+			//分页
+			handleSizeChange(val){
+              this.pageSize = val;
+              this.currentPage = 1;
+              //this.fetchData(1, val);
+              // console.log(`每页 ${val} 条`);
+			},
+			//分页
+            handleCurrentChange(val){
+              this.currentPage = val;
+              //this.fetchData(val, this.pageSize);
+              // console.log(`当前页: ${val}`);
+			},
+			//主表格新增和修改关闭
+			handleDialogClose(){
+				this.$refs.buildSettlementCompany.resetFields();
+				this.innerVisible=false;
+			},
+			//次表格编辑关闭
+			handleDialogCloseSon(){
+				//this.PortDataSon=[];
+				this.innerVisibleSon=false;
+			},
+			// handleChange(){
+			// 	if(this.MainTableSelectChangeIdList.length==1){
+			// 		this.innerVisibleType=false;
+			// 		this.innerVisible=true;
+			// 		console.log(this.buildSettlementCompany);
+			// 		console.log(this.MainTableSelectChangeIdList[0])
+			// 		this.buildSettlementCompany=this.MainTableSelectChangeIdList[0]
+			// 	}else{
+			// 		this.$message({type:'error',message:'修改数据仅可选择一条'});
+			// 	}
+			// }
 		}
 	}
 </script>
 
 <style scoped>
-	.el-aside {background-color:#E4E4E4;padding:10px;margin:10px 0 10px 10px;text-align: right;}
-	.el-main{padding:10px;}
-	.el-item{margin-right:20px;}
-	.el-form-item{margin-right:0;}
-	.el-item{margin-right:20px;}
+	.container { padding: 10px; width:100%;}  
+	.cont_border { border-bottom: 2px solid #eeeeee; padding-bottom: 10px; width: 100%; }
+	.cont_block{display: block;}
+	.STable{}
+	.STableTitle_btn{float: right;margin-bottom:0;}
 </style>

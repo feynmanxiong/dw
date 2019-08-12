@@ -71,7 +71,7 @@
 				activeIndex: '1',
         		activeIndex2: '1',
 				name : localStorage.getItem("dw_erp_user_name"),
-				list: [													
+				list: [												
 //					业务管理
 					{
 						title: "业务管理",

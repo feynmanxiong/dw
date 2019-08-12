@@ -36,7 +36,7 @@
 						<span class="span">操作人</span>
 						<div class="block">
 							<el-select v-model="getKeyList.operate_user_id" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in optionPerson" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+								<el-option v-for="item in optionPerson" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
@@ -111,7 +111,7 @@
 				isShowAside:true,//是否展示侧边栏
 				innerVisible:false,//结算公司添加弹框是否显示
 				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
-				innerVisibleType:true,//港口维护主表添加弹框是添加还是删除状态  添加:true  删除:false
+				innerVisibleType:true,//港口维护主表添加弹框是添加还是修改状态  添加:true  修改:false
 				fileList:"",
 				params:"",
 				total: 1,
@@ -131,7 +131,7 @@
 				},
 				rules: {
 					name_code: [
-						{ required: true, message: '请输入助记码', trigger: 'blur' },
+						{ required: true, message: '请输入助记码', trigger: 'blur' }
 					],
 					name_abbreviation: [
 						{required: true, message: '请输入简称', trigger: 'blur'  }
@@ -218,7 +218,7 @@
 			},
 			//重置查询
 			resetSelect(){
-				this.getKeyList={search:"",	status:"",operate_user_id:"",current_page: 1,per_page: 10}
+				this.getKeyList={search:"",	status:null,operate_user_id:null,current_page: 1,per_page: 10}
 				this.getMessage()
 			},
 			//获取主表数据
@@ -227,14 +227,15 @@
 				var obj = new Object();
 				// obj.params={search:_this.getKeyList.search,page:_this.getKeyList.current_page,status:_this.getKeyList.status};
 				// obj.params=this.getKeyList;
-				this.$postFunc("/clearCompanies/index",this.getKeyList,function(response){
+				this.$postFunc("/clearCompanies/list",this.getKeyList,function(response){
 					//_this.getKeyList.search=response.data.search;
 					//_this.getKeyList.user_id=response.data.user_id;
-					_this.getKeyList.current_page=response.data.current_page;
-					_this.getKeyList.per_page=response.data.per_page;
-					_this.total=response.data.total;
-					_this.tableData=response.data.data;
-					_this.optionPerson=response.data.users;
+					console.log(response)
+					_this.getKeyList.current_page=response.data.data.current_page;
+					_this.getKeyList.per_page=response.data.data.per_page;
+					_this.total=response.data.data.total;
+					_this.tableData=response.data.data.result;
+					_this.optionPerson=response.data.data.users;
 					console.log(response.data.data)
 					
 				},function(error){
@@ -264,12 +265,18 @@
 				this.$refs.buildSettlementCompany.validate(vail=>{
 					if(vail){
 						console.log(this.buildSettlementCompany)
-						this.$postFunc("/clearCompanies",this.buildSettlementCompany,function(response){
-							console.log(response)
-							
-						},function(error){
-							console.log(error)
-						})
+						if(this.innerVisibleType){
+							this.$postFunc("/clearCompanies/store",this.buildSettlementCompany,function(response){
+								console.log(response)
+								this.tableData.unshift(this.buildSettlementCompany);
+								this.buildSettlementCompany={name_code:"",name_abbreviation:"",name:"",status:"" }
+								this.innerVisible=false;
+							},function(error){
+								console.log(error)
+							})
+						}else{
+
+						}
 					}else{
 						console.log("表单错误")
 						return false;

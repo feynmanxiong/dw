@@ -140,6 +140,8 @@ function install(Vue) {
         axios.post(url,data).then(response=>{
             if(response.status==200&&response.data.code==200){
                 success(response)
+            }else{
+                
             }
         }).catch(error=>{
             errorF(error)

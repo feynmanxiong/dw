@@ -96,7 +96,7 @@ body, #app{ height: 100%;}
 .date_picker{width:200px;}
 .el-item{margin-right:20px;}
 .el-button{margin-bottom:10px;margin-right:10px;margin-left:0;}
-.elContianer{position: relative;padding-left: 260px!important;}
+.elContianer{position: relative;padding-left: 340px!important;}
 .select_box{position: absolute;overflow-x: hidden;box-sizing: border-box;top:0px;left:10px;margin:0;height: 100%;padding-bottom:55px;box-sizing: border-box;}
 .select_in{width:20px;height:50px;background-color: #e4e4e4;border-radius: 10px;position: absolute;top:0;bottom:0;right:-10px;margin:auto;cursor: pointer;z-index: 2;}
 .select_in .el-icon-arrow-left{position: absolute;top:50%;transform:translateY(-50%);left:0;margin:auto;color:#039ec9; }
@@ -129,5 +129,8 @@ input{outline: none;}
 .STableTitle{line-height: 32px;background-color: #fff;padding:10px 0 10px 10px;box-sizing: 100%;border-radius: 5px 5px 0 0;}
 .baseMenu{display:block!important;}
 .mainTable .el-table__body tr:hover{cursor: pointer;}
-.publicSelect{width:225px;position: fixed;bottom:0;left: 10px;background-color:#e0f4ff; z-index: 1;margin:0;padding-top:10px;}
+.publicSelect{width:305px;position: fixed;bottom:0;left: 10px;background-color:#e0f4ff; z-index: 1;margin:0;padding-top:10px;}
 .fa-edit {cursor: pointer;font-size: 16px!important;margin-right:10px;}
+.select_box .el-row .span{float: left;font-size: 14px;line-height: 28px;} 
+.select_box .el-row .el-select{float: right;width:160px;} 
+.select_box .el-input__inner{height:30px;line-height: 30px;font-size: 12px;} 
