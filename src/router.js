@@ -8,9 +8,13 @@ import Home from './views/Home.vue'
 Vue.component('businessFreight',() => import('./views/business/freight.vue'));
 Vue.component('businessFreightTable',() => import('./views/business/freightTable.vue'));
 //import businessFreightTable from './views/business/freightTable.vue'
+
 //价格管理
-Vue.component('contractRun',() => import('./views/contract/run.vue'));
-Vue.component('contractPrice',() => import('./views/contract/price.vue'));
+Vue.component('priceManagement',() => import('./views/price/price-management.vue'));
+Vue.component('priceEdit',() => import('./views/price/price-edit.vue'));
+Vue.component('rateManagement',() => import('./views/price/rate-management.vue'));
+Vue.component('rateEdit',() => import('./views/price/rate-edit.vue'));
+
 //供应商管理
 Vue.component('contractCost',() => import('./views/contract/cost.vue'));
 Vue.component('supplierCustomer',() => import('./views/supplier/customer.vue'));
