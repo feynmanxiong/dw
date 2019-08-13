@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui';
-import { Message, Loading  } from 'element-ui';
+// import { Message, Loading  } from 'element-ui';
 window.moment = require('moment');
 window.moment.locale('zh-cn');
 let axios = require('axios');
@@ -13,6 +13,8 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import './assets/app.css'
 import './assets/css/font-awesome/css/font-awesome.min.css'
+// iconfont图标样式
+// import './assets/css/font/iconfont.css'
 window.axios = require('axios');
 
 Vue.use(ElementUI);

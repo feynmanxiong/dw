@@ -10,7 +10,7 @@ Vue.component('businessFreightTable',() => import('./views/business/freightTable
 //import businessFreightTable from './views/business/freightTable.vue'
 
 //价格管理
-Vue.component('priceManagement',() => import('./views/price/price-management.vue'));
+Vue.component('priceManagement',() => import('./views/price/price-manage.vue'));
 Vue.component('priceEdit',() => import('./views/price/price-edit.vue'));
 Vue.component('rateManagement',() => import('./views/price/rate-management.vue'));
 Vue.component('rateEdit',() => import('./views/price/rate-edit.vue'));
