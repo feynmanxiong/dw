@@ -141,10 +141,19 @@ function install(Vue) {
             if(response.status==200&&response.data.code==200){
                 success(response)
             }else{
-                
+                console.log(response)
             }
         }).catch(error=>{
             errorF(error)
+        })
+    }
+    Vue.prototype.$getBusinessModule=function(id){
+        return new Promise((resolve, reject) => {     
+            this.$getFunc("/businesses/list/result",{params:{parent_id:id}},function(response){
+                resolve(response.data.data)
+            },function(){
+    
+            })                                           
         })
     }
 }

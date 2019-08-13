@@ -11,20 +11,23 @@
 				</div>
 			</transition>
 			<transition name = "select_in" >
-				<el-aside width="240px"  v-show="isShowAside" class="select_box">
+				<el-aside width="320px"  v-show="isShowAside" class="select_box">
 					<div class="select_in" @click="isShowAside=false">
 						<i class="el-submenu__icon-arrow el-icon-arrow-left"></i>
 					</div>
 					<div class="cont_t">自定义查询区</div>
 					<el-row class="el-m publicSelect">
 						<div align="center">					
-							<el-button type="info" plain size="mini">重置</el-button>
-							<el-button type="success" plain size="mini">查询</el-button>
+							<el-button type="info" plain size="mini" @click="reset">重置</el-button>
+							<el-button type="success" plain size="mini" @click="select">查询</el-button>
 						</div>
 					</el-row>
 					<el-row>
+						<input type="text" v-model="getKeyList.search" placeholder="请输入内容" class="el-input__inner">
+					</el-row>
+					<el-row>
 						<span class="span">状态</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.status" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -32,40 +35,40 @@
 					<el-row>
 						<span class="span">港口</span>
 						<div class="block">
-							<el-select v-model="selectPerson" filterable placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in Port" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
 						<span class="span">国家</span>
 						<div class="block">
-							<el-select v-model="selectPerson" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in optionPerson" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+							<el-select v-model="getKeyList.country" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in countryList" :key="item.value" :label="item.key" :value="item.value"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
-						<span class="span">业务模块</span>
+						<span class="span">业务板块</span>
 						<div class="block">
-							<el-select v-model="selectPerson" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in businessModule" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+							<el-select @change="bussinessMouble" v-model="getKeyList.segment_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in businessModule" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
 						<span class="span">主业务类型</span>
 						<div class="block">
-							<el-select v-model="selectPerson" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in MBusinessClass" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+							<el-select @change="MBussinessClassFunc" v-model="getKeyList.master_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in MBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
 						<span class="span">子业务类型</span>
 						<div class="block">
-							<el-select v-model="selectPerson" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in SBusinessClass" :key="item.value" :label="item.label" :value="item.value"> </el-option>
+							<el-select v-model="getKeyList.slaver_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in SBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
@@ -79,26 +82,28 @@
 				</el-row>
 				<el-row>
 					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange" @row-click="mainTableTrClick">
-						<el-table-column type="selection" prop="Id" align="center" width="55"></el-table-column>
-						<el-table-column align="center" type="index" label="编辑" prop="Id" width="80">
+						<el-table-column type="selection" prop="id" align="center" width="55"></el-table-column>
+						<el-table-column align="center" type="index" label="编辑" prop="id" width="80">
 							<template slot-scope="scope">
-								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.Id)"></i>
-								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.Id)"></i>
+								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id)"></i>
+								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="status" label="状态"></el-table-column>
-						<el-table-column align="center" prop="mnemonicCode" label="助记码"></el-table-column>
-						<el-table-column align="center" prop="Port" label="港口"></el-table-column>
-						<el-table-column align="center" prop="Country" label="国家"></el-table-column>
-						<el-table-column align="center" prop="operator" label="操作人"></el-table-column>
-						<el-table-column align="center" prop="time" label="操作时间"></el-table-column>
+						<el-table-column align="center" prop="status" label="状态">
+							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
+						</el-table-column>
+						<el-table-column align="center" prop="name_code" label="助记码"></el-table-column>
+						<el-table-column align="center" prop="name" label="港口"></el-table-column>
+						<el-table-column align="center" prop="country" label="国家"></el-table-column>
+						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
+						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange"
-						:current-page="currentPage"
+						:current-page="getKeyList.page"
 						:page-sizes="[10, 50, 100, 200]"
-						:page-size="pageSize"
+						:page-size="getKeyList.per_page"
 						layout="total, sizes, prev, pager, next, jumper"
 						:total="total">
 					</el-pagination>
@@ -123,19 +128,19 @@
 			<!--港口维护主表添加start-->
 			<el-dialog title="新建港口" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="助记码" prop="mnemonicCode">
-						<el-input v-model="buildSettlementCompany.mnemonicCode"></el-input>
+					<el-form-item label="助记码" prop="name_code">
+						<el-input v-model="buildSettlementCompany.name_code"></el-input>
 					</el-form-item>
-					<el-form-item label="国家" prop="Country">
-						<el-input v-model="buildSettlementCompany.Country"></el-input>
+					<el-form-item label="国家" prop="country">
+						<el-input v-model="buildSettlementCompany.country"></el-input>
 					</el-form-item>
-					<el-form-item label="港口" prop="Port">
-						<el-input v-model="buildSettlementCompany.Port"></el-input>
+					<el-form-item label="港口" prop="name">
+						<el-input v-model="buildSettlementCompany.name"></el-input>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">
 						<el-select v-model="buildSettlementCompany.status" placeholder="请选择状态">
-							<el-option label="启用" value="1"></el-option>
-							<el-option label="禁用" value="0"></el-option>
+							<el-option label="启用" :value="1"></el-option>
+							<el-option label="禁用" :value="0"></el-option>
 						</el-select>
 					</el-form-item>
 					 <el-form-item size="small">
@@ -155,7 +160,7 @@
 						</template>
 					</el-table-column>
 					<el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
-					<el-table-column align="center" prop="businessMoudle" label="业务模块">
+					<el-table-column align="center" prop="businessMoudle" label="业务板块">
 						<template slot-scope="scope">
 							<el-select v-model="scope.row.businessModule" placeholder="请选择" class="selectInTable">
 								<el-option v-for="item in businessModule" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
@@ -165,7 +170,7 @@
 					<el-table-column align="center" prop="MBusinessClass" label="主业务类型">
 						<template slot-scope="scope">
 							<el-select v-model="scope.row.MBusinessClass" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in MBusinessClassMoudle" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+								<el-option v-for="item in MBusinessClass" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
 							</el-select>
 						</template>
 					</el-table-column>
@@ -191,35 +196,34 @@
 	export default {
 		data() {
 			return {
+				getKeyList:{
+					page:1,//第几页，默认第一页
+					per_page:10,//每页记录数，默认是10
+					search:"",//模糊搜索
+					status:"",//状态0:禁用，1:启用
+					id:"",//港口id
+					country:"",//国家
+					user_id:"",//操作人
+					segment_business_id:"",//主业务板块
+					master_business_id:"",//主业务类型
+					slaver_business_id:""//子业务类型
+				},
 				isShowAside:true,//是否展示侧边栏
-				selectStatus:"",//状态查询
-				selectPerson:"",//操作人查询
-				Country:"",//国家查询
-				Port:"",//港口查询
-				businessModule:"",//业务模块查询
-				MBusinessClass:"",//主业务类型查询
-				SBusinessClass:"",//子业务类型查询
 				innerVisible:false,//港口维护主表添加弹框是否显示
 				innerVisibleSon:false,//港口维护子表添加弹框是否显示，
 				innerVisibleType:true,//港口维护主表添加弹框是添加还是删除状态  添加:true  删除:false
 				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
+				countryList:[],//国家列表
+				Port:[],//港口列表
 				businessModule:[//业务板块List数据
-					{name:"货运代理2",Id:2},
-					{name:"货运代理",Id:1},
-					{name:"货运代理3",Id:3}
 				],
-				MBusinessClassMoudle:[//主业务类型List
-					{name:"外贸出口2",Id:2},
-					{name:"外贸出口",Id:1},
-					{name:"外贸出口3",Id:3}
+				MBusinessClass:[//主业务类型List
 				],
 				SBusinessClass:[//子业务类型List
-					{name:"外贸集装箱本港进口2",Id:2},
-					{name:"外贸集装箱本港进口",Id:1},
-					{name:"外贸集装箱本港进口3",Id:3}
 				],
 				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
-				checkPort:"上海",//港口业务板块类型关系    港口{{checkPort}}数据展示
+				checkPort:"",//港口业务板块类型关系    港口{{checkPort}}数据展示
+				chekcPortId:"",//港口业务板块类型关系id
 				newid:1,////港口业务板块类型关系编辑弹框新增数据 模拟id(自增)
 				fileList:"",
 				params:"",
@@ -228,10 +232,10 @@
 　　　　　　　　　pageSize: 10,
 				radio:'1',
 				buildSettlementCompany:{//新增修改弹框数据
-					mnemonicCode:"",
-					descName:"",
-					name:"",
-					status:"",
+					name:"",//港口名称
+					name_code:"",//港口助记码
+					country:"",//国家
+					status:""//状态
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
 					{Id:1,businessModule:1,MBusinessClass:2,SBusinessClass:3},
@@ -239,13 +243,13 @@
 					{Id:3,businessModule:1,MBusinessClass:2,SBusinessClass:3}
 				],
 				rules: {
-					mnemonicCode: [
+					name_code: [
 						{ required: true, message: '请输入助记码', trigger: 'blur' },
 					],
-					Country: [
+					country: [
 						{required: true, message: '请输入国家', trigger: 'blur'  }
 					],
-					Port: [
+					name: [
 						{ required: true, message: '请输入港口', trigger: 'blur' }
 					],
 					status: [
@@ -253,65 +257,63 @@
 					]
 				},
 				tableData: [//列表数据
-					{Id:1,mnemonicCode: 'CH1',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:2,mnemonicCode: 'CH2',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:3,mnemonicCode: 'CH3',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:4,mnemonicCode: 'CH4',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:5,mnemonicCode: 'CH5',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:6,mnemonicCode: 'CH6',Port:"龙达",Country:"龙达集团",status:"启用",operator:"person",time:"2019-09-19"},
-					{Id:7,mnemonicCode: 'CH7',Port:"龙达",Country:"龙达集团",status:"禁用",operator:"person",time:"2019-09-19"}
+					
 				],
 				PortData:[//港口业务板块类型关系  数据
 					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
 					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
 					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
 					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
-				],
-				value:'',
-				pickerOptions: {
-					disabledDate(time) {
-						return time.getTime() > Date.now();
-					},
-					shortcuts: [{
-						text: '今天',
-						onClick(picker) {
-							picker.$emit('pick', new Date());
-						}
-					}, {
-						text: '昨天',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24);
-							picker.$emit('pick', date);
-						}
-					}, {
-						text: '一周前',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-							picker.$emit('pick', date);
-						}
-					}]
-				},
-				value1: '',
-				value2: '',
-				optionStatus:[
-					{value:1,label:"启用"},{value:0,label:"禁用"}
-				],
-				optionPerson:[
-					{value:1,label:"启用"},{value:0,label:"禁用"}
 				]
 				
 			}
 		},
 		computed: {},
-		created() {},
+		created() {
+			this.getMessage();
+			this.$getBusinessModule(0).then(item=>{
+				this.businessModule=item;
+			});
+		},
 		mounted() {},
 		methods: {
+			//查询按钮
+			select(){
+				this.getMessage()
+			},
+			//重置按钮
+			reset(){
+				this.getKeyList={page:1,per_page:10,search:"",status:"",id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
+				this.getMessage()
+			},
+			//主业务类型change事件
+			MBussinessClassFunc(){
+				this.$getBusinessModule(this.getKeyList.master_business_id).then(item=>{
+					this.SBusinessClass=item;
+				});
+			},
+			//业务板块change事件
+			bussinessMouble(){
+				this.$getBusinessModule(this.getKeyList.segment_business_id).then(item=>{
+					this.MBusinessClass=item;
+				});
+			},
+			//获取数据
+			getMessage(){
+				var _this=this;
+				this.$postFunc("/ports/list",this.getKeyList,function(respones){
+					_this.tableData=respones.data.data.result;
+					_this.countryList=respones.data.data.country;
+					_this.Port=respones.data.data.name;
+					_this.total=respones.data.data.total;
+				},function(){
+
+				})
+			},
 			//主表格单条修改
 			mainTableEdit(id){
 				this.tableData.forEach((it,index)=>{
-					if(id==it.Id){
+					if(id==it.id){
 						this.buildSettlementCompany=it;
 						this.innerVisibleType=false;
 						this.innerVisible=true;
@@ -325,16 +327,26 @@
 					cancelButtonText: "取消"
 				})
 				.then(() => {
-					this.tableData.forEach((it,index)=>{
-						if(id==it.Id){
-							this.tableData.splice(index,1)
-						}
-					})
+					var _this=this;
+					_this.$postFunc("/ports/destroy",{ids:id},function(res){
+						_this.tableData.forEach((it,index)=>{
+							if(id==it.id){
+								_this.tableData.splice(index,1)
+							}
+						})
+					},function(){})
 				}).catch(()=>{})
 			},
 			//主表格tr点击展示次表格
 			mainTableTrClick(row,event,column){
 				console.log(row)
+				this.$postFunc("/ports/show/business/"+row.id,{},function(res){
+					console.log(res)
+				},function(r){
+					console.log(r)
+				})
+				this.checkPort=row.name;
+				this.chekcPortId=row.id;
 				this.sonTableIsShow=true;
 			},
 			//主表格选择框点击
@@ -374,12 +386,34 @@
 			onSubmit(formName){
 				this.$refs.buildSettlementCompany.validate(vail=>{
 					if(vail){
-						console.log(this.buildSettlementCompany)
-						console.log("表单数据正确")
-						if(innerVisibleType){
+						var _this=this;
+						if(this.innerVisibleType){
 							//新增
+							this.$postFunc("/ports/store",this.buildSettlementCompany,function(respones){
+								let mess=respones.data.data;
+								mess.user_name=mess.users.name;
+								_this.tableData.unshift(mess)
+								_this.handleDialogClose();
+							},function(){
+
+							})
 						}else{
 							//修改
+							this.$postFunc("/ports/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
+								console.log(respones)
+								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
+								tabledata.forEach((item,index)=>{
+									if(item.id==_this.buildSettlementCompany.id){
+										let mess=respones.data.data;
+										mess.user_name=mess.users.name;
+										console.log(mess)
+										tabledata[index]=mess;
+									}
+								})
+								_this.tableData=tabledata;
+								_this.handleDialogClose();
+							},function(){
+							})
 						}
 					}else{
 						console.log("表单错误")
@@ -395,13 +429,15 @@
 						cancelButtonText: "取消"
 					})
 					.then(() => {
+						var ids="";
 						this.MainTableSelectChangeIdList.forEach(item=>{
-							this.tableData.forEach((it,index)=>{
-								if(item.Id==it.Id){
-									this.tableData.splice(index,1)
-								}
-							})
+							ids+=item.id+",";
 						})
+						ids=ids.substring(0,ids.length-1);
+						var _this=this;
+						_this.$postFunc("/ports/destroy",{ids:ids},function(res){
+							_this.getMessage();
+						},function(){})
 					}).catch(()=>{})
 				}else{
 					this.$message({type:'error',message:'请选择删除的数据'});
@@ -412,20 +448,24 @@
 			},
 			//分页
 			handleSizeChange(val){
-              this.pageSize = val;
-              this.currentPage = 1;
-              //this.fetchData(1, val);
-              // console.log(`每页 ${val} 条`);
+              this.getKeyList.per_page = val;
+			  this.getKeyList.page = 1;
+			  this.getMessage();
 			},
 			//分页
             handleCurrentChange(val){
-              this.currentPage = val;
-              //this.fetchData(val, this.pageSize);
-              // console.log(`当前页: ${val}`);
+			  this.getKeyList.page = val;
+			  this.getMessage();
 			},
 			//主表格新增和修改关闭
 			handleDialogClose(){
 				this.$refs.buildSettlementCompany.resetFields();
+				this.buildSettlementCompany={//新增修改弹框数据
+					name:"",//港口名称
+					name_code:"",//港口助记码
+					country:"",//国家
+					status:""//状态
+				}
 				this.innerVisible=false;
 			},
 			//次表格编辑关闭

@@ -135,3 +135,15 @@ input{outline: none;}
 .select_box .el-row .el-select{float: right;width:160px;} 
 .select_box .el-input__inner{height:30px;line-height: 30px;font-size: 12px;} 
 .select_box .date_input{width:100%;margin-top:10px;}
+.el-dialog{background-color:#f1f4f5!important;}
+.dialogFormItem{width:350px;float: left;}
+.dialogFormItem .el-form-item__label{width:auto!important; float: left;}
+.dialogFormItem .el-form-item__content{margin-left:0!important;float: left;}
+.dialogFormItem .selectInTable{width:190px;}
+.coustomerList{background-color: #f1f4f5;padding:10px;box-sizing: border-box;}
+.coustomerList .el-form-item{margin-bottom:5px;}
+.dialogFormItemList .el-form-item__content{width:100%;}
+.coustomerList .selectInTable{width:150px;float: left;}
+.coustomerList .el-form-item__label{width:auto!important; float: left;font-size: 12px;}
+.coustomerList .el-form-item__content{margin-left:0!important;float: left;width:auto;}
+.coustomerList .el-form-item__label:before{content: '*';color: #F56C6C;margin-right: 4px;}
