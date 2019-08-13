@@ -166,7 +166,7 @@
 			</transition>
 			<el-main>
 				<el-row class="cont_block">
-					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
+					<el-button type="primary" plain @click="dialogVisibleAddview" size="mini">新增</el-button>
 					<el-button type="primary" plain size="mini">批量同意</el-button>
 					<el-button type="primary" plain size="mini">批量取消同意</el-button>
 					<el-button type="primary" plain size="mini">批量退签</el-button>
@@ -223,7 +223,7 @@
 					</el-pagination>
 				</el-row>
 			</el-main>
-			<approvalcontractadd></approvalcontractadd>
+			<approvalcontractadd ref="addDialog"></approvalcontractadd>
 		</el-container>
 	</div>
 </template>
@@ -352,6 +352,10 @@
 		created() {},
 		mounted() {},
 		methods: {
+			//新增框弹出
+			dialogVisibleAddview(){
+				this.$refs.addDialog.showAndHideDialog()
+			},
 			//主表格单条修改
 			mainTableEdit(id){
 				this.tableData.forEach((it,index)=>{
