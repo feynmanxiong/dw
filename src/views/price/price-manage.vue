@@ -25,7 +25,13 @@
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box" filterable >
+            <el-select
+              v-model="selectStatus"
+              placeholder="请选择"
+              size="mini"
+              class="date_box"
+              filterable
+            >
               <el-option :label="'启用'" :value="1"></el-option>
               <el-option :label="'禁用'" :value="0"></el-option>
             </el-select>
@@ -128,7 +134,7 @@
       </transition>
       <el-main>
         <el-row class="cont_block">
-          <el-button type="primary" plain size="mini">编辑</el-button>
+          <el-button type="primary" plain size="mini" @click="toPriceEdit">编辑</el-button>
           <el-button type="danger" plain size="mini">删除</el-button>
           <el-button type="primary" plain size="mini">批量审核</el-button>
           <el-button type="danger" plain size="mini">批量取消审核</el-button>
@@ -145,9 +151,9 @@
             class="mainTable"
             :header-cell-style="{background:'#e0f4ff',color:'#000'}"
           >
-            <el-table-column type="selection" align="center" width="55" prop="Id"></el-table-column>
+            <el-table-column type="selection" align="center" width="55" prop="price_id"></el-table-column>
             <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
-            <el-table-column align="center" type="index" label="操作" prop="id" width="80">
+            <el-table-column align="center" type="index" label="操作" prop="price_id" width="80">
               <template slot-scope="scope">
                 <i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id)"></i>
                 <i
@@ -157,19 +163,19 @@
                 ></i>
               </template>
             </el-table-column>
-            <el-table-column prop="test" label="审核状态" align="center"></el-table-column>
-            <el-table-column prop="test" label="价格协议号" align="center"></el-table-column>
-            <el-table-column prop="test" label="价格协议内容" align="center"></el-table-column>
-            <el-table-column prop="test" label="结算公司" align="center"></el-table-column>
-            <el-table-column prop="test" label="业务板块" align="center"></el-table-column>
-            <el-table-column prop="test" label="主业务类型" align="center"></el-table-column>
-            <el-table-column prop="test" label="子业务类型" align="center"></el-table-column>
-            <el-table-column prop="test" label="创建人" align="center"></el-table-column>
-            <el-table-column prop="test" label="创建时间" align="center"></el-table-column>
-            <el-table-column prop="test" label="修改人" align="center"></el-table-column>
-            <el-table-column prop="test" label="修改时间" align="center"></el-table-column>
-            <el-table-column prop="test" label="审核人" align="center"></el-table-column>
-            <el-table-column prop="test" label="审核时间" align="center"></el-table-column>
+            <el-table-column prop="status" label="审核状态" align="center"></el-table-column>
+            <el-table-column prop="price_id" label="价格协议号" align="center"></el-table-column>
+            <el-table-column prop="price_con" label="价格协议内容" align="center"></el-table-column>
+            <el-table-column prop="settle_com" label="结算公司" align="center"></el-table-column>
+            <el-table-column prop="business_type" label="业务板块" align="center"></el-table-column>
+            <el-table-column prop="main_business" label="主业务类型" align="center"></el-table-column>
+            <el-table-column prop="child_business" label="子业务类型" align="center"></el-table-column>
+            <el-table-column prop="createman" label="创建人" align="center"></el-table-column>
+            <el-table-column prop="createdDate" label="创建时间" align="center"></el-table-column>
+            <el-table-column prop="modifyman" label="修改人" align="center"></el-table-column>
+            <el-table-column prop="modifiedDate" label="修改时间" align="center"></el-table-column>
+            <el-table-column prop="checkman" label="审核人" align="center"></el-table-column>
+            <el-table-column prop="checkedDate" label="审核时间" align="center"></el-table-column>
           </el-table>
         </el-row>
         <el-pagination
@@ -188,36 +194,15 @@
 </template>
 
 <script>
-// import approvalContractAdd from './contractAdd.vue';
+import getData from "./tool/ajax";
 export default {
   data() {
     return {
       selectStatus: "1",
       isShowAside: true, //是否展示侧边栏
-      tableData: [
-        {
-          id: 1,
-          test: "王小虎"
-        },
-        {
-          id: 2,
-          test: "王小虎"
-        },
-        {
-          id: 3,
-          test: "王小虎"
-        },
-        {
-          id: 4,
-          test: "王小虎"
-        },
-        {
-          id: 5,
-          test: "王小虎"
-        }
-      ],
+      tableData: [],
       MainTableSelectChangeIdList: [], //列表页多选框，选中的id
-      newid: 1, 
+      newid: 1,
       fileList: "",
       params: "",
       total: 5,
@@ -229,18 +214,64 @@ export default {
         descName: "",
         name: "",
         status: ""
-      },
-  
-     
-   
-      
+      }
     };
   },
   computed: {},
-  created() {},
-  mounted() {},
+  created() {
+    console.log(getData());
+  },
+  mounted() {
+    // this.tableData = getData();
+    this.tableData = [
+      {
+        status: "已审核",
+        price_id: 1,
+        price_con: "船代系统",
+        settle_com: "张三结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        status: "未审核",
+        price_id: 2,
+        price_con: "船代系统",
+        settle_com: "赵六结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        status: "已审核",
+        price_id: 3,
+        price_con: "船代系统",
+        settle_com: "王五结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      }
+    ];
+  },
   methods: {
-  
     //主表格单条修改
     mainTableEdit(id) {
       this.tableData.forEach((it, index) => {
@@ -266,7 +297,7 @@ export default {
         })
         .catch(() => {});
     },
-    
+
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -281,6 +312,9 @@ export default {
       // console.log(`当前页: ${val}`);
     },
 
+    toPriceEdit(){
+      this.$router.push({ path: 'priceEdit' })
+    }
   }
 };
 </script>
@@ -303,5 +337,4 @@ export default {
   float: right;
   margin-bottom: 0;
 }
-
 </style>

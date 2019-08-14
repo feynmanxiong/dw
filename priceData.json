@@ -1,0 +1,47 @@
+[
+    {   
+        "status": "已审核",
+        "price_id": 1,
+        "price_con": "船代系统",
+        "settle_com": "张三结算公司",
+        "business_type": "货运代理",
+        "main_business": "外贸出口",
+        "child_business": "外贸散货出口",
+        "createman": "刘一",
+        "createdDate": "2019-08-14",
+        "modifyman": "牛二",
+        "modifiedDate": "2019-08-14",
+        "checkman": "李四",
+        "checkedDate": "2019-08-14"
+    },
+    {
+        "status": "未审核",
+        "price_id": 2,
+        "price_con": "船代系统",
+        "settle_com": "赵六结算公司",
+        "business_type": "货运代理",
+        "main_business": "外贸出口",
+        "child_business": "外贸散货出口",
+        "createman": "刘一",
+        "createdDate": "2019-08-14",
+        "modifyman": "牛二",
+        "modifiedDate": "2019-08-14",
+        "checkman": "李四",
+        "checkedDate": "2019-08-14"
+    },
+    {
+        "status": "已审核",
+        "price_id": 3,
+        "price_con": "船代系统",
+        "settle_com": "王五结算公司",
+        "business_type": "货运代理",
+        "main_business": "外贸出口",
+        "child_business": "外贸散货出口",
+        "createman": "刘一",
+        "createdDate": "2019-08-14",
+        "modifyman": "牛二",
+        "modifiedDate": "2019-08-14",
+        "checkman": "李四",
+        "checkedDate": "2019-08-14"
+    }
+]

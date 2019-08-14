@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import ElementUI from 'element-ui';
-// import { Message, Loading  } from 'element-ui';
+import { Message, Loading  } from 'element-ui';
 window.moment = require('moment');
 window.moment.locale('zh-cn');
 let axios = require('axios');
@@ -21,6 +21,8 @@ Vue.use(ElementUI);
 Vue.config.productionTip = false
 import Tool from './tools.js'
 
+// window.baseURL = 'http://localhost:8081';
+// axios.defaults.baseURL = window.baseURL + '/api';
 
 window.baseURL = 'http://demu-dev.dwood365.com';
 axios.defaults.baseURL = window.baseURL + '/api/v1/';
