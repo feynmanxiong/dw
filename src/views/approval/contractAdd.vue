@@ -1,12 +1,25 @@
 <template>
     <div class="box">
         <el-dialog title="" class="dialogBackground" :visible.sync="dialogVisible" fullscreen :modal="true" :append-to-body="true">
-            <el-steps :active="active"  class="steps" align-center finish-status="success">
-                <el-step title="步骤1" description="这是一段很长很长很长的描述性文字"></el-step>
-                <el-step title="步骤2" description="这是一段很长很长很长的描述性文字"></el-step>
-                <el-step title="步骤3" description="这是一段很长很长很长的描述性文字"></el-step>
-                <el-step title="步骤4" description="这是一段很长很长很长的描述性文字"></el-step>
-            </el-steps>
+            <div class="buttonList">
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">保存</el-button>
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">合同预览</el-button>
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">提交</el-button>
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">短信呼</el-button>
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">打印审评记录</el-button>
+                <el-button size="mini" plain  type="primary" @click="handleProhibit">启用</el-button>
+                <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
+            </div>
+            <div class="registrationInformation" style="margin-top:10px;padding-bottom:10px;margin-bottom:10px;">
+                <div class="STableTitle">合同审批进度</div>
+                <el-steps :active="active"  class="steps" align-center finish-status="success">
+                    <el-step title="合同草拟" description="2019-09-19"></el-step>
+                    <el-step title="商务会签" description="2019-09-19"></el-step>
+                    <el-step title="业务会签" description="2019-09-19"></el-step>
+                    <el-step title="领导审评" description="2019-09-19"></el-step>
+                    <el-step title="合同归档" description="2019-09-19"></el-step>
+                </el-steps>
+            </div>
             <div class="registrationInformation">
                 <div class="STableTitle">登记信息</div>
                 <el-form ref="registrationInformation" class="registrationInformation clearfix" :rules="rules" :model="registrationInformation"  label-width="100%"  size="small">
@@ -117,8 +130,67 @@
 							</el-select>
                         </el-form-item>
                     </div>
-                    
-                    
+                    <div class="dialogFormItem dialogFormItem_form_radio">
+                        <el-form-item label="" class="form_radio_box">
+                            <el-radio-group v-model="controlInformation.controlType">
+                                <el-radio :label="3" class="form_radio">
+                                    <span>延后月份:</span>
+                                    <el-select placeholder="请选择" v-model="controlInformation.controlTA.mouth" class="selectInTable" style="margin-right:10px;">
+                                        <el-option label="次月" :value="1"></el-option>
+                                        <el-option label="次月月底" :value="2"></el-option>
+                                        <el-option label="次月月" :value="3"></el-option>
+                                        <el-option label="次月月月底" :value="4"></el-option>
+                                    </el-select>
+                                    <span>延后月份结算日:</span>
+                                    <el-input-number v-model="controlInformation.controlTA.date" :min="1"  class="selectInTable"></el-input-number>
+                                </el-radio>
+                                <el-radio :label="6" class="form_radio">
+                                    <span>延后自然日数:</span>
+                                    <el-input-number v-model="controlInformation.controlTBTime" :min="1" class="selectInTable"></el-input-number>
+                                </el-radio>
+                                <el-radio :label="9" class="form_radio">
+                                    <span>延后工作日数:</span>
+                                    <el-input-number v-model="controlInformation.controlTCTime" :min="1" class="selectInTable"></el-input-number>
+                                </el-radio>
+                            </el-radio-group>
+                        </el-form-item>
+                    </div>
+                    <div class="dialogFormItem dialogFormItemList">
+                        <el-form-item label="合同/业务板块类型/价格协议关系">
+                            <div class="itemBox">
+                                <el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
+                                    <el-table-column align="center" prop="id" label="操作" width="80">
+                                        <template slot-scope="scope">
+                                            <i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.id)"></i>
+                                            <i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.id)"></i>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
+                                    <el-table-column align="center" prop="segment_business_id" label="业务板块">
+                                        <template slot-scope="scope">
+                                            <el-select v-model="scope.row.segment_business_id" @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"  placeholder="请选择" class="selectInTable">
+                                                <el-option v-for="item in businessModule" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column align="center" prop="master_business_id" label="主业务类型">
+                                        <template slot-scope="scope">
+                                            <el-select v-model="scope.row.master_business_id" @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)" placeholder="请选择" class="selectInTable">
+                                                <el-option v-for="item in PortDataSon[scope.$index].master_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-table-column>
+                                    <el-table-column align="center" prop="slaver_business_id" label="子业务类型">
+                                        <template slot-scope="scope"> 
+                                            <el-select v-model="scope.row.slaver_business_id" placeholder="请选择" class="selectInTable">
+                                                <el-option v-for="item in PortDataSon[scope.$index].slaver_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                            </el-select>
+                                        </template>
+                                    </el-table-column>
+                                </el-table>
+                            </div>
+                        </el-form-item>
+                    </div>
 				</el-form>
             </div>
         </el-dialog>
@@ -128,6 +200,7 @@
     export default {
         data(){
             return {
+                
                 fileList:"",
                 uploadSectionFile:"",
                 customernew:1,//客户及结算信息新增下标
@@ -153,8 +226,14 @@
                     contractStart:"",//合同生效日
                     contractInvalid:"",//合同失效日
                     controlDate:"",//信控基准日
-                    controlType:"",//延后方式
+                    controlType:null,//延后方式
                     controlTime:"",//延后时间
+                    controlTA:{//延后方式月份
+                        mouth:null,//月数
+                        date:null//日数
+                    },
+                    controlTBTime:null,//延后方式自然日
+                    controlTCTime:null,//延后方式工作日
                     controlTable:null//合同/业务板块类型/价格协议关系
                 },
                 controlDateList:[//信控基准日列表

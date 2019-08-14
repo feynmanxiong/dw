@@ -133,8 +133,11 @@
 							{
 								title: "业务基础资料",
 								children:[
-									{title: "结算公司维护",	content: "basicsSettle"},
-									{title: "港口维护",	content: "basicsRecordPort"}
+									// {title: "结算公司维护",	content: "basicsSettle"},
+									{title: "港口维护",	content: "basicsRecordPort"},
+									{title: "航线维护",	content: "basicsRecordRoute"},
+									{title: "品名维护",	content: "productName"},
+									{title: "装箱点维护", content:"packingPointMaintain"},
 								]
 							},
 							{

@@ -23,102 +23,102 @@
 						</div>
 					</el-row>
 					<el-row>
-						<input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
+						<input type="text" v-model="getKeyList.search" autocomplete="off" placeholder="请输入内容" class="el-input__inner">
 					</el-row>
 					<el-row>
 						<span class="span">办理状态</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.processingStatus" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">办理结果</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.processingResult" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">办理步骤</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.processingSteps" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">结算公司</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.clear_company_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">客户</span>
-						<el-select v-model="selectStatus" filterable placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.customer" filterable placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">供应商</span>
-						<el-select v-model="selectStatus" filterable placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.supplier" filterable placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">合同类型</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.type" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">合同编号</span>
-						<el-select v-model="selectStatus" filterable placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.sn" filterable placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">价格协议号</span>
-						<el-select v-model="selectStatus" filterable placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.priceCartel" filterable placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">业务板块</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.segment_business_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">主业务板块</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.master_business_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">子业务板块</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.slaver_business_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">合同状态</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.contractStatus" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
 					</el-row>
 					<el-row>
 						<span class="span">业务申请人</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.process0_user_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -127,7 +127,7 @@
 					</el-row>
 					<el-row>
 						<span class="span">商务会签人</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.process1_user_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -136,7 +136,7 @@
 					</el-row>
 					<el-row>
 						<span class="span">业务会签人</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.process2_user_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -145,7 +145,7 @@
 					</el-row>
 					<el-row>
 						<span class="span">审批人</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.process3_user_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -154,7 +154,7 @@
 					</el-row>
 					<el-row>
 						<span class="span">归档人</span>
-						<el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
+						<el-select v-model="getKeyList.process4_user_id" placeholder="请选择" size="mini" class="date_box">
 							<el-option :label="'启用'" :value="1"></el-option>
 							<el-option :label="'禁用'" :value="0"></el-option>
 						</el-select>
@@ -233,6 +233,38 @@
 	export default {
 		data() {
 			return {
+				getKeyList:{
+                    search:"",//模糊查询框
+                    processingStatus:null,//办理状态
+                    processingResult:null,//办理结果
+                    processingSteps:null,//办理步骤
+                    clear_company_id:null,//结算公司id
+                    customer:null,//客户
+                    supplier:null,//供应商
+                    type:null,//合同类型customer:客户合同、supplier:供应商合同
+                    sn:null,//合同编号
+                    priceCartel:null,//价格协议编号
+                    segment_business_id:null,//业务板块
+                    master_business_id:null,//主业务类型
+                    slaver_business_id:null,//子业务类型
+                    contractStatus:null,//合同状态
+                    process0_user_id:null,//业务申请人Id
+                    //业务申请人开始时间
+                    //业务申请人结束时间
+                    process1_user_id:null,//商务会签人id
+                    //商务会签人开始时间
+                    //商务会签人结束时间
+                    process2_user_id:null,//业务会签人id
+                    //业务会签人开始时间
+                    //业务会签人结束时间
+                    process3_user_id:null,//审批人id
+                    //审批人开始时间
+                    //审批人结束时间
+                    process4_user_id:null,//归档人id
+                    //归档人开始时间
+                    //归档人结束时间
+
+                },
 				selectStatus:"1",
 				isShowAside:true,//是否展示侧边栏
 				businessModule:[//业务板块List数据

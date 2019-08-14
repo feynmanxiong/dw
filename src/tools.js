@@ -147,10 +147,10 @@ function install(Vue) {
             errorF(error)
         })
     }
-    Vue.prototype.$getBusinessModule=function(id){
+    Vue.prototype.$getBusinessModule=function(id,otherid){
         return new Promise((resolve, reject) => {     
             this.$getFunc("/businesses/list/result",{params:{parent_id:id}},function(response){
-                resolve(response.data.data)
+                resolve(response.data.data,otherid)
             },function(){
     
             })                                           

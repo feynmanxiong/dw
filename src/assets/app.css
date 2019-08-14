@@ -147,3 +147,8 @@ input{outline: none;}
 .coustomerList .el-form-item__label{width:auto!important; float: left;font-size: 12px;}
 .coustomerList .el-form-item__content{margin-left:0!important;float: left;width:auto;}
 .coustomerList .el-form-item__label:before{content: '*';color: #F56C6C;margin-right: 4px;}
+.form_radio{margin-bottom:5px;}
+.form_radio .selectInTable{width:100px;margin-left:10px;}
+.dialogFormItem .form_radio_box{background-color:#f1f4f5;padding:10px 20px;}
+.dialogFormItem_form_radio{width:100%;}
+.dialogFormItem .form_radio{display: block;}

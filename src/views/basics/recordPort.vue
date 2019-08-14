@@ -79,6 +79,8 @@
 					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
 					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
 					<el-button size="mini" plain  type="danger" @click="handleDelete">删除</el-button>
+					<el-button size="mini" plain  type="primary" @click="handleStart">启用</el-button>
+                    <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
 				</el-row>
 				<el-row>
 					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange" @row-click="mainTableTrClick">
@@ -111,16 +113,16 @@
 				<div class="STable" v-show="sonTableIsShow">
 					<div class="STableTitle clearfix">
 						<span>港口业务板块类型关系 &nbsp;&nbsp;&nbsp;港口：{{checkPort}}</span>
-						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="innerVisibleSon=true">编辑</el-button>
+						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="editTableSon">编辑</el-button>
 					</div>
 					  <template>
 						<el-table :data="PortData" border size="mini" :header-cell-style="{background:'#e0f4ff',color:'#000'}">
 							<el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
-							<el-table-column align="center" prop="businessMoudle" label="业务模块"></el-table-column>
-							<el-table-column align="center" prop="MBusinessClass" label="主业务类型"></el-table-column>
-							<el-table-column align="center" prop="SBusinessClass" label="子业务类型"></el-table-column>
-							<el-table-column align="center" prop="operator" label="操作人"></el-table-column>
-							<el-table-column align="center" prop="time" label="操作时间"></el-table-column>
+							<el-table-column align="center" prop="segment_business_name" label="业务模块"></el-table-column>
+							<el-table-column align="center" prop="master_business_name" label="主业务类型"></el-table-column>
+							<el-table-column align="center" prop="slaver_business_name" label="子业务类型"></el-table-column>
+							<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
+							<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
 						</el-table>
 					</template>
 				</div>
@@ -153,38 +155,38 @@
 			<!--港口维护子表添加start-->
 			<el-dialog :title="'港口业务板块类型关系 港口：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
 				<el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
-					<el-table-column align="center" prop="Id" label="操作" width="80">
+					<el-table-column align="center" prop="id" label="操作" width="80">
 						<template slot-scope="scope">
-							<i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.Id)"></i>
-							<i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.Id)"></i>
+							<i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.id)"></i>
+							<i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.id)"></i>
 						</template>
 					</el-table-column>
 					<el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
-					<el-table-column align="center" prop="businessMoudle" label="业务板块">
+					<el-table-column align="center" prop="segment_business_id" label="业务板块">
 						<template slot-scope="scope">
-							<el-select v-model="scope.row.businessModule" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in businessModule" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+							<el-select v-model="scope.row.segment_business_id" @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"  placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in businessModule" :label="item.name" :key="item.id" :value="item.id"></el-option>
 							</el-select>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="MBusinessClass" label="主业务类型">
+					<el-table-column align="center" prop="master_business_id" label="主业务类型">
 						<template slot-scope="scope">
-							<el-select v-model="scope.row.MBusinessClass" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in MBusinessClass" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+							<el-select v-model="scope.row.master_business_id" @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)" placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in PortDataSon[scope.$index].master_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
 							</el-select>
 						</template>
 					</el-table-column>
-					<el-table-column align="center" prop="SBusinessClass" label="子业务类型">
-						<template slot-scope="scope">
-							<el-select v-model="scope.row.SBusinessClass" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in SBusinessClass" :label="item.name" :key="item.Id" :value="item.Id"></el-option>
+					<el-table-column align="center" prop="slaver_business_id" label="子业务类型">
+						<template slot-scope="scope"> 
+							<el-select v-model="scope.row.slaver_business_id" placeholder="请选择" class="selectInTable">
+								<el-option v-for="item in PortDataSon[scope.$index].slaver_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
 							</el-select>
 						</template>
 					</el-table-column>
 				</el-table>
 				<span slot="footer" class="dialog-footer">
 					<el-button @click="handleDialogCloseSon" size="small">取 消</el-button>
-					<el-button type="primary" @click="handleDialogCloseSon" size="small">确 定</el-button>
+					<el-button type="primary" @click="handleDialogCommitSon" size="small">确 定</el-button>
 				</span>
 			</el-dialog>
 			<!--港口维护子表添加end-->
@@ -196,6 +198,7 @@
 	export default {
 		data() {
 			return {
+
 				getKeyList:{
 					page:1,//第几页，默认第一页
 					per_page:10,//每页记录数，默认是10
@@ -238,9 +241,15 @@
 					status:""//状态
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
-					{Id:1,businessModule:1,MBusinessClass:2,SBusinessClass:3},
-					{Id:2,businessModule:2,MBusinessClass:2,SBusinessClass:3},
-					{Id:3,businessModule:1,MBusinessClass:2,SBusinessClass:3}
+					// {
+					// 	id:"N0",
+					// 	segment_business_id:null,
+					// 	segment_business_list:[],
+					// 	master_business_id:null,
+					// 	master_business_list:[],
+					// 	slaver_business_id:null,
+					// 	slaver_business_list:[]
+					// }
 				],
 				rules: {
 					name_code: [
@@ -260,10 +269,10 @@
 					
 				],
 				PortData:[//港口业务板块类型关系  数据
-					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					{businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
+					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
+					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
 				]
 				
 			}
@@ -271,7 +280,7 @@
 		computed: {},
 		created() {
 			this.getMessage();
-			this.$getBusinessModule(0).then(item=>{
+			this.$getBusinessModule(0).then((item,otherid)=>{
 				this.businessModule=item;
 			});
 		},
@@ -280,11 +289,13 @@
 			//查询按钮
 			select(){
 				this.getMessage()
+				this.sonTableIsShow=false;
 			},
 			//重置按钮
 			reset(){
 				this.getKeyList={page:1,per_page:10,search:"",status:"",id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
 				this.getMessage()
+				this.sonTableIsShow=false;
 			},
 			//主业务类型change事件
 			MBussinessClassFunc(){
@@ -297,6 +308,28 @@
 				this.$getBusinessModule(this.getKeyList.segment_business_id).then(item=>{
 					this.MBusinessClass=item;
 				});
+			},
+			//主业务类型列表change事件
+			businessModuleChange(id,listid){
+				var _this=this;
+				_this.$getBusinessModule(id).then((item)=>{
+					_this.PortDataSon.forEach((each,index)=>{
+						if(each.id==listid){
+							_this.PortDataSon[index].master_business_list=item;
+						}
+					})
+				})
+			},
+			//子业务板块列表change事件
+			MBusinessClassChange(id,listid){
+				var _this=this;
+				_this.$getBusinessModule(id).then((item)=>{
+					_this.PortDataSon.forEach((each,index)=>{
+						if(each.id==listid){
+							_this.PortDataSon[index].slaver_business_list=item;
+						}
+					})
+				})
 			},
 			//获取数据
 			getMessage(){
@@ -314,7 +347,7 @@
 			mainTableEdit(id){
 				this.tableData.forEach((it,index)=>{
 					if(id==it.id){
-						this.buildSettlementCompany=it;
+						this.buildSettlementCompany=JSON.parse(JSON.stringify(it));
 						this.innerVisibleType=false;
 						this.innerVisible=true;
 					}
@@ -337,17 +370,56 @@
 					},function(){})
 				}).catch(()=>{})
 			},
-			//主表格tr点击展示次表格
-			mainTableTrClick(row,event,column){
-				console.log(row)
-				this.$postFunc("/ports/show/business/"+row.id,{},function(res){
-					console.log(res)
+			//获取tr的表格数据
+			getTRMessage(trid,name){
+				var _this=this;
+				_this.$postFunc("/ports/show/business/"+trid,{},function(res){
+					var data=res.data.data;
+					console.log(data)
+					var dataT=new Array();
+					data.forEach(item=>{
+						item.id="N"+_this.newid;
+						_this.newid++;
+						var obj=new Object();
+						obj.master_business_name=item.master_business_name;
+						obj.segment_business_name=item.segment_business_name;
+						obj.slaver_business_name=item.slaver_business_name;
+						obj.user_name=item.user_name;
+						obj.updated_at=item.updated_at;
+						dataT.push(obj)
+					})
+					_this.PortDataSon=data;
+					_this.PortData=dataT;
 				},function(r){
 					console.log(r)
 				})
-				this.checkPort=row.name;
-				this.chekcPortId=row.id;
-				this.sonTableIsShow=true;
+				_this.checkPort=name;
+				_this.chekcPortId=trid;
+				_this.sonTableIsShow=true;
+			},
+			//主表格tr点击展示次表格
+			mainTableTrClick(row){
+				this.getTRMessage(row.id,row.name)
+			},
+			//子表格点击编辑
+			editTableSon(){
+				this.innerVisibleSon=true;
+				if(this.PortDataSon.length<=0){
+					var obj={	
+							id:"N0",
+							segment_business_id:null,
+							segment_business_name:"",
+							segment_business_list:[],
+							master_business_id:null,
+							master_business_name:"",
+							master_business_list:[],
+							slaver_business_id:null,
+							slaver_business_name:"",
+							slaver_business_list:[]
+						}
+					this.PortDataSon.push(obj)
+				}
+					
 			},
 			//主表格选择框点击
 			MainTableSelectChange(e){
@@ -359,9 +431,9 @@
 			//次表格编辑弹框复制
 			PortDataSonCopy(id){
 				this.PortDataSon.forEach((item,index)=>{
-					if(item.Id==id){
+					if(item.id==id){
 						let data=JSON.parse(JSON.stringify(this.PortDataSon[index]));
-						data.Id="N"+this.newid;
+						data.id="N"+this.newid;
 						this.newid++;
 						this.PortDataSon.push(data);
 					}
@@ -374,7 +446,7 @@
 					cancelButtonText: '取消'
 				}).then(()=>{
 					this.PortDataSon.forEach((item,index)=>{
-						if(item.Id==id){
+						if(item.id==id){
 							this.PortDataSon.splice(index,1)
 						}
 					})
@@ -400,13 +472,11 @@
 						}else{
 							//修改
 							this.$postFunc("/ports/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
-								console.log(respones)
 								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
 								tabledata.forEach((item,index)=>{
 									if(item.id==_this.buildSettlementCompany.id){
 										let mess=respones.data.data;
 										mess.user_name=mess.users.name;
-										console.log(mess)
 										tabledata[index]=mess;
 									}
 								})
@@ -468,11 +538,81 @@
 				}
 				this.innerVisible=false;
 			},
+			//次表格编辑确定
+			handleDialogCommitSon(){
+				var list=new Array();
+				var _this=this;
+				var flag=true;
+				_this.PortDataSon.forEach(each=>{
+					var obj=new Object();
+					if(each.segment_business_id==null||each.master_business_id==null||each.slaver_business_id==null){
+						_this.$message({
+							message:"请完善选择数据",
+							type:"warning"
+						})
+						flag=false;
+					}
+					obj.segment_business_id=each.segment_business_id;
+					obj.master_business_id=each.master_business_id;
+					obj.slaver_business_id=each.slaver_business_id;
+					list.push(obj)
+				})
+				if(flag){
+					_this.$postFunc("/ports/updateOrInsert/"+_this.chekcPortId,list,function(res){
+						_this.getTRMessage(_this.chekcPortId,_this.chekcPort)
+						_this.innerVisibleSon=false;
+					},function(){})
+				}
+			},
 			//次表格编辑关闭
 			handleDialogCloseSon(){
 				//this.PortDataSon=[];
 				this.innerVisibleSon=false;
 			},
+			 //批量启用
+            handleStart(){
+                if(this.MainTableSelectChangeIdList.length>0){
+					this.$confirm("是否确定启用？", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消"
+					})
+					.then(() => {
+						var ids="";
+						this.MainTableSelectChangeIdList.forEach(item=>{
+							ids+=item.id+",";
+						})
+						ids=ids.substring(0,ids.length-1);
+						var _this=this;
+						_this.$postFunc("/ports/status",{ids:ids,status:1},function(res){
+							_this.getMessage();
+						},function(){})
+					}).catch(()=>{})
+				}else{
+					this.$message({type:'error',message:'请选择启用的数据'});
+				}
+            },
+            //批量禁止
+            handleProhibit(){
+                 if(this.MainTableSelectChangeIdList.length>0){
+					this.$confirm("是否确定禁用？", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消"
+					})
+					.then(() => {
+						var ids="";
+						this.MainTableSelectChangeIdList.forEach(item=>{
+							ids+=item.id+",";
+						})
+						ids=ids.substring(0,ids.length-1);
+						var _this=this;
+						_this.$postFunc("/ports/status",{ids:ids,status:0},function(res){
+							_this.getMessage();
+						},function(){})
+					}).catch(()=>{})
+				}else{
+					this.$message({type:'error',message:'请选择启用的数据'});
+				}
+            },
 			// handleChange(){
 			// 	if(this.MainTableSelectChangeIdList.length==1){
 			// 		this.innerVisibleType=false;

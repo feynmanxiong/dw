@@ -1,4 +1,4 @@
-<!--基础资料=>业务基础数据=>航线维护   recordRoute -->
+<!--品名维护-->
 <template>
 	<div>
 		<div class="container">
@@ -33,7 +33,7 @@
 						</el-select>
 					</el-row>
 					<el-row>
-						<span class="span">航线</span>
+						<span class="span">品名</span>
 						<div class="block">
 							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
 								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
@@ -79,7 +79,7 @@
 					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
 					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
 					<el-button size="mini" plain  type="danger" @click="handleDelete">删除</el-button>
-					<el-button size="mini" plain  type="primary" @click="handleStart">启用</el-button>
+                    <el-button size="mini" plain  type="primary" @click="handleStart">启用</el-button>
                     <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
 				</el-row>
 				<el-row>
@@ -94,7 +94,7 @@
 						<el-table-column align="center" prop="status" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="name" label="航线"></el-table-column>
+						<el-table-column align="center" prop="name" label="品名"></el-table-column>
 						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
 						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
@@ -110,7 +110,7 @@
 				</el-row>
 				<div class="STable" v-show="sonTableIsShow">
 					<div class="STableTitle clearfix">
-						<span>航线/业务板块类型关系 &nbsp;&nbsp;&nbsp;航线：{{checkPort}}</span>
+						<span>品名/业务板块类型关系 &nbsp;&nbsp;&nbsp;航线：{{checkPort}}</span>
 						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="editTableSon">编辑</el-button>
 					</div>
 					  <template>
@@ -126,9 +126,9 @@
 				</div>
 			</el-main>
 			<!--港口维护主表添加start-->
-			<el-dialog title="新建航线" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
+			<el-dialog title="新建品名" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="航线" prop="name">
+					<el-form-item label="品名" prop="name">
 						<el-input v-model="buildSettlementCompany.name"></el-input>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">
@@ -145,7 +145,7 @@
 			</el-dialog>
 			<!--港口维护主表添加end-->
 			<!--港口维护子表添加start-->
-			<el-dialog :title="'航线/业务板块类型关系 航线：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
+			<el-dialog :title="'品名/业务板块类型关系 航线：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
 				<el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
 					<el-table-column align="center" prop="id" label="操作" width="80">
 						<template slot-scope="scope">
@@ -217,9 +217,9 @@
 				SBusinessClass:[//子业务类型List
 				],
 				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
-				checkPort:"",//航线/业务板块类型关系    航线{{checkPort}}数据展示
-				chekcPortId:"",//航线/业务板块类型关系id
-				newid:1,////航线/业务板块类型关系编辑弹框新增数据 模拟id(自增)
+				checkPort:"",//品名/业务板块类型关系    品名{{checkPort}}数据展示
+				chekcPortId:"",//品名/业务板块类型关系id
+				newid:1,////品名/业务板块类型关系编辑弹框新增数据 模拟id(自增)
 				fileList:"",
 				params:"",
 				total: 7,
@@ -324,7 +324,7 @@
 			//获取数据
 			getMessage(){
 				var _this=this;
-				this.$postFunc("/routes/list",this.getKeyList,function(respones){
+				this.$postFunc("/products/list",this.getKeyList,function(respones){
 					_this.tableData=respones.data.data.result;
 					_this.userlist=respones.data.data.user;
 					_this.Port=respones.data.data.name;
@@ -351,7 +351,7 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postFunc("/routes/destroy",{ids:id},function(res){
+					_this.$postFunc("/products/destroy",{ids:id},function(res){
 						_this.tableData.forEach((it,index)=>{
 							if(id==it.id){
 								_this.tableData.splice(index,1)
@@ -363,7 +363,7 @@
 			//获取tr的表格数据
 			getTRMessage(trid,name){
 				var _this=this;
-				_this.$postFunc("/routes/show/business/"+trid,{},function(res){
+				_this.$postFunc("/products/show/business/"+trid,{},function(res){
 					var data=res.data.data;
 					var dataT=new Array();
 					data.forEach(item=>{
@@ -450,7 +450,7 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postFunc("/routes/store",this.buildSettlementCompany,function(respones){
+							this.$postFunc("/products/store",this.buildSettlementCompany,function(respones){
 								let mess=respones.data.data;
 								mess.user_name=mess.users.name;
 								_this.tableData.unshift(mess)
@@ -460,11 +460,8 @@
 							})
 						}else{
 							//修改
-							this.$postFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
-								console.log(respones)
+							this.$postFunc("/products/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
 								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								console.log(tabledata)
-								console.log(_this.buildSettlementCompany)
 								tabledata.forEach((item,index)=>{
 									if(item.id==_this.buildSettlementCompany.id){
 										let mess=respones.data.data;
@@ -473,7 +470,6 @@
 									}
 								})
 								_this.tableData=tabledata;
-								console.log(tabledata)
 								_this.handleDialogClose();
 							},function(){
 							})
@@ -498,7 +494,7 @@
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/routes/destroy",{ids:ids},function(res){
+						_this.$postFunc("/products/destroy",{ids:ids},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})
@@ -549,7 +545,7 @@
 					list.push(obj)
 				})
 				if(flag){
-					_this.$postFunc("/routes/updateOrInsert/"+_this.chekcPortId,list,function(res){
+					_this.$postFunc("/products/updateOrInsert/"+_this.chekcPortId,list,function(res){
 						_this.getTRMessage(_this.chekcPortId,_this.chekcPort)
 						_this.innerVisibleSon=false;
 					},function(){})
@@ -559,8 +555,8 @@
 			handleDialogCloseSon(){
 				//this.PortDataSon=[];
 				this.innerVisibleSon=false;
-			},
-			 //批量启用
+            },
+            //批量启用
             handleStart(){
                 if(this.MainTableSelectChangeIdList.length>0){
 					this.$confirm("是否确定启用？", "提示", {
@@ -574,7 +570,7 @@
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/routes/status",{ids:ids,status:1},function(res){
+						_this.$postFunc("/products/status",{ids:ids,status:1},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})
@@ -596,7 +592,7 @@
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/routes/status",{ids:ids,status:0},function(res){
+						_this.$postFunc("/products/status",{ids:ids,status:0},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})
