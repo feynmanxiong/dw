@@ -231,15 +231,6 @@
 					status:""//状态
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
-					// {
-					// 	id:"N0",
-					// 	segment_business_id:null,
-					// 	segment_business_list:[],
-					// 	master_business_id:null,
-					// 	master_business_list:[],
-					// 	slaver_business_id:null,
-					// 	slaver_business_list:[]
-					// }
 				],
 				rules: {
 					name_code: [
@@ -259,10 +250,6 @@
 					
 				],
 				PortData:[//港口业务板块类型关系  数据
-					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
-					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
 				]
 				
 			}

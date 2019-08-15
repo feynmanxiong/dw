@@ -181,7 +181,7 @@
 						<el-table-column type="selection" prop="Id" align="center" width="55"></el-table-column>
 						<el-table-column align="center" type="index" label="操作" prop="id" width="80">
 							<template slot-scope="scope">
-								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id)"></i>
+								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id,scope.row.sn)"></i>
 								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
 							</template>
 						</el-table-column>
@@ -223,13 +223,11 @@
 					</el-pagination>
 				</el-row>
 			</el-main>
-			<approvalcontractadd ref="addDialog"></approvalcontractadd>
 		</el-container>
 	</div>
 </template>
 
 <script>
-	import approvalContractAdd from './contractAdd.vue';
 	export default {
 		data() {
 			return {
@@ -341,43 +339,46 @@
 						contractEffective:"2019-09-19",//合同生效日
 						contractFailure:"2019-09-19",//合同失效日
 						contractStatus:"启用",//合同状态
+					},
+					{
+						id:"2",
+						sn:"编号002",//合同编号
+						type:"customer",//合同类型customer:客户合同、supplier:供应商合同
+						name:"编号002",//合同名称
+						clear_company_id:"结算公司",//结算公司id
+						process1_status:"合同草拟",//办理步骤
+						inner_sn:"1",//合同序号
+						segment_business_id:"1",//业务板块
+						master_business_id:"1",//主业务类型
+						slaver_business_id:"1",//子业务类型
+						process0_user_id:"1",//申请人Id
+						process0_time:"2019-09-19",//申请人时间
+						process1_user_id:"1",//商务会签人id
+						process1_time:"2019-09-19",//商务会签人时间
+						process2_user_id:"1",//业务会签人id
+						process2_time:"2019-09-19",//业务会签时间
+						process3_user_id:"1",//审批人id
+						process3_time:"2019-09-19",//审批会签时间
+						process4_user_id:"1",//归档人id
+						process4_time:"2019-09-19",//归档时间
+						processingSteps:"办理步骤",//办理步骤
+						processingStatus:"办理状态",//办理状态
+						processingResult:"办理结果",//办理结果
+						customer:"客户",//客户
+						supplier:"供应商",//供应商
+						priceCartel:"1",//价格协议编号
+						contractEffective:"2019-09-19",//合同生效日
+						contractFailure:"2019-09-19",//合同失效日
+						contractStatus:"启用",//合同状态
 					}
 				],
-				value:'',
-				pickerOptions: {
-					disabledDate(time) {
-						return time.getTime() > Date.now();
-					},
-					shortcuts: [{
-						text: '今天',
-						onClick(picker) {
-							picker.$emit('pick', new Date());
-						}
-					}, {
-						text: '昨天',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24);
-							picker.$emit('pick', date);
-						}
-					}, {
-						text: '一周前',
-						onClick(picker) {
-							const date = new Date();
-							date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
-							picker.$emit('pick', date);
-						}
-					}]
-				},
-				value1: '',
-				value2: '',
 				optionStatus:[
 					{value:1,label:"启用"},{value:0,label:"禁用"}
 				],
 				optionPerson:[
 					{value:1,label:"启用"},{value:0,label:"禁用"}
-				]
-				
+				],
+				contractnumber:0
 			}
 		},
 		computed: {},
@@ -386,17 +387,22 @@
 		methods: {
 			//新增框弹出
 			dialogVisibleAddview(){
-				this.$refs.addDialog.showAndHideDialog()
+				var obj=new Object();
+				if(this.contractnumber<=0){
+					obj.title="合同审批编辑";
+				}else{
+					obj.title="合同审批编辑"+this.contractnumber;
+				}
+				this.contractnumber++;
+				obj.content="approvalContractAdd";
+				this.$emit("clickSearch",obj)
 			},
 			//主表格单条修改
-			mainTableEdit(id){
-				this.tableData.forEach((it,index)=>{
-					if(id==it.Id){
-						this.buildSettlementCompany=it;
-						this.innerVisibleType=false;
-						this.innerVisible=true;
-					}
-				})
+			mainTableEdit(id,sn){
+				var obj=new Object();
+				obj.title="合同审批编辑("+sn+")";
+				obj.content="approvalContractAdd";
+				this.$emit("clickSearch",obj)
 			},
 			//主表格单条删除
 			mainTableSingleDelete(id){
@@ -479,7 +485,6 @@
 			}
 		},
 		components:{
-			approvalcontractadd:approvalContractAdd
 		}
 	}
 </script>

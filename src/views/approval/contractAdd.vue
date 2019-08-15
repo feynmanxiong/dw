@@ -1,211 +1,208 @@
 <template>
     <div class="box">
-        <el-dialog title="" class="dialogBackground" :visible.sync="dialogVisible" fullscreen :modal="true" :append-to-body="true">
-            <div class="buttonList">
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">保存</el-button>
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">合同预览</el-button>
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">提交</el-button>
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">短信呼</el-button>
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">打印审评记录</el-button>
-                <el-button size="mini" plain  type="primary" @click="handleProhibit">启用</el-button>
-                <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
-            </div>
-            <div class="registrationInformation" style="margin-top:10px;padding-bottom:10px;margin-bottom:10px;">
-                <div class="STableTitle">合同审批进度</div>
-                <el-steps :active="active"  class="steps" align-center finish-status="success">
-                    <el-step title="合同草拟" description="2019-09-19"></el-step>
-                    <el-step title="商务会签" description="2019-09-19"></el-step>
-                    <el-step title="业务会签" description="2019-09-19"></el-step>
-                    <el-step title="领导审评" description="2019-09-19"></el-step>
-                    <el-step title="合同归档" description="2019-09-19"></el-step>
-                </el-steps>
-            </div>
-            <div class="registrationInformation">
-                <div class="STableTitle">登记信息</div>
-                <el-form ref="registrationInformation" class="registrationInformation clearfix" :rules="rules" :model="registrationInformation"  label-width="100%"  size="small">
-					<div class="dialogFormItem">
-                        <el-form-item label="合同名称" prop="name">
-                            <el-input v-model="registrationInformation.name"></el-input>
-                        </el-form-item>
-                    </div>
-					<div class="dialogFormItem">
-                        <el-form-item label="对方合同号">
-                            <el-input v-model="registrationInformation.otherContractNumber"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem">
-                        <el-form-item label="结算公司" prop="clear_company_id">
-                            <el-input v-model="registrationInformation.clear_company_id"></el-input>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem">
-                        <el-form-item label="上传合同附件">
-                            <el-upload
-                                style="display:inline-block"
-                                :limit="1"
-                                class="upload-demo"
-                                ref="upload"
-                                accept=".xls,.xlsx"
-                                action="/hqx/knowledge/importKnowledge"
-                                :file-list="fileList"
-                                :http-request="uploadSectionFile"
-                                :auto-upload="false">
-                            <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
-                            </el-upload>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem">
-                        <el-form-item label="合同类型" prop="contractType">
-                            <el-select v-model="registrationInformation.contractType" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in contractType" :label="item.name" :key="item.id" :value="item.id"></el-option>
-							</el-select>
-                        </el-form-item>
-                    </div>
-                     <div class="dialogFormItem dialogFormItemList" v-if="registrationInformation.contractType==1">
-                        <el-form-item label="客户及结算信息">
-                            <div class="itemBox">
-                                <el-form ref="customerList" class="coustomerList clearfix"  label-width="100%"  size="small">
-                                    <el-form-item v-for="mess in registrationInformation.customerList" :key="mess.id">
-                                        <label class="el-form-item__label">客户名称</label>
-                                        <el-select v-model="mess.id" placeholder="请选择" class="selectInTable" :key="mess.id">
-                                            <el-option v-for="item in customerList" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                                        </el-select>
-                                        <label class="el-form-item__label" style="margin-left:20px;">结算单位</label>
-                                        <el-select v-model="mess.settlementUnit" placeholder="请选择" class="selectInTable">
-                                            <el-option :label="'是'" :value="1"></el-option>
-                                            <el-option :label="'否'" :value="0"></el-option>
-                                        </el-select>
-                                        <i class="fa fa-plus" title="添加" aria-hidden="true" @click="customerListAdd"></i>
-								        <i class="fa fa-trash" title="删除" aria-hidden="true" @click="customerListDelete(mess.id)"></i>
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem dialogFormItemList" v-if="registrationInformation.contractType==2">
-                        <el-form-item label="供应商及结算信息">
-                            <div class="itemBox">
-                                <el-form ref="customerList" class="coustomerList clearfix"  label-width="100%"  size="small">
-                                    <el-form-item v-for="mess in registrationInformation.supplierList" :key="mess.id">
-                                        <label class="el-form-item__label">供应商名称</label>
-                                        <el-select v-model="mess.id" placeholder="请选择" class="selectInTable" :key="mess.id">
-                                            <el-option v-for="item in supplierList" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                                        </el-select>
-                                        <label class="el-form-item__label" style="margin-left:20px;">结算单位</label>
-                                        <el-select v-model="mess.settlementUnit" placeholder="请选择" class="selectInTable">
-                                            <el-option :label="'是'" :value="1"></el-option>
-                                            <el-option :label="'否'" :value="0"></el-option>
-                                        </el-select>
-                                        <i class="fa fa-plus" title="添加" aria-hidden="true" @click="supplierListAdd"></i>
-								        <i class="fa fa-trash" title="删除" aria-hidden="true" @click="supplierListDelete(mess.id)"></i>
-                                    </el-form-item>
-                                </el-form>
-                            </div>
-                        </el-form-item>
-                    </div>
-				</el-form>
-            </div>
-            <div class="controlInformation">
-                <div class="STableTitle">信控协议</div>
-                <el-form ref="controlInformation" class="registrationInformation clearfix" :rules="controlRules" :model="controlInformation"  label-width="100%"  size="small">
-					<div class="dialogFormItem">
-                        <el-form-item label="合同名称" prop="contract">
-                            <el-input v-model="controlInformation.contract"></el-input>
-                        </el-form-item>
-                    </div>
-					<div class="dialogFormItem">
-                        <el-form-item label="合同生效日" prop="contractStart">
-                            <el-date-picker type="date" v-model="controlInformation.contractStart" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem">
-                        <el-form-item label="合同失效日" prop="contractInvalid">
-                            <el-date-picker type="date" v-model="controlInformation.contractInvalid" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem">
-                        <el-form-item label="信控基准日" prop="controlDate">
-                            <el-select v-model="controlInformation.controlDate" placeholder="请选择" class="selectInTable">
-								<el-option v-for="item in controlDateList" :label="item.name" :key="item.id" :value="item.id"></el-option>
-							</el-select>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem dialogFormItem_form_radio">
-                        <el-form-item label="" class="form_radio_box">
-                            <el-radio-group v-model="controlInformation.controlType">
-                                <el-radio :label="3" class="form_radio">
-                                    <span>延后月份:</span>
-                                    <el-select placeholder="请选择" v-model="controlInformation.controlTA.mouth" class="selectInTable" style="margin-right:10px;">
-                                        <el-option label="次月" :value="1"></el-option>
-                                        <el-option label="次月月底" :value="2"></el-option>
-                                        <el-option label="次月月" :value="3"></el-option>
-                                        <el-option label="次月月月底" :value="4"></el-option>
+        <div class="buttonList">
+            <el-button size="mini" plain  type="primary" >保存</el-button>
+            <el-button size="mini" plain  type="primary" >合同预览</el-button>
+            <el-button size="mini" plain  type="primary" >提交</el-button>
+            <el-button size="mini" plain  type="primary" >短信呼</el-button>
+            <el-button size="mini" plain  type="primary" >打印审评记录</el-button>
+            <el-button size="mini" plain  type="primary" >启用</el-button>
+            <el-button size="mini" plain  type="danger" >禁用</el-button>
+        </div>
+        <div class="registrationInformation" style="margin-top:10px;padding-bottom:10px;margin-bottom:10px;">
+            <div class="STableTitle">合同审批进度</div>
+            <el-steps :active="active"  class="steps" align-center finish-status="success">
+                <el-step title="合同草拟" description="2019-09-19"></el-step>
+                <el-step title="商务会签" description="2019-09-19"></el-step>
+                <el-step title="业务会签" description="2019-09-19"></el-step>
+                <el-step title="领导审评" description="2019-09-19"></el-step>
+                <el-step title="合同归档" description="2019-09-19"></el-step>
+            </el-steps>
+        </div>
+        <div class="registrationInformation">
+            <div class="STableTitle">登记信息</div>
+            <el-form ref="registrationInformation" class="registrationInformation clearfix" :rules="rules" :model="registrationInformation"  label-width="100%"  size="small">
+                <div class="dialogFormItem">
+                    <el-form-item label="合同名称" prop="name">
+                        <el-input v-model="registrationInformation.name"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="对方合同号">
+                        <el-input v-model="registrationInformation.otherContractNumber"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="结算公司" prop="clear_company_id">
+                        <el-input v-model="registrationInformation.clear_company_id"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="上传合同附件">
+                        <el-upload
+                            style="display:inline-block"
+                            :limit="1"
+                            class="upload-demo"
+                            ref="upload"
+                            accept=".xls,.xlsx"
+                            action="/hqx/knowledge/importKnowledge"
+                            :file-list="fileList"
+                            :http-request="uploadSectionFile"
+                            :auto-upload="false">
+                        <el-button slot="trigger" size="small" type="primary" plain>选取文件</el-button>
+                        </el-upload>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="合同类型" prop="contractType">
+                        <el-select v-model="registrationInformation.contractType" placeholder="请选择" class="selectInTable">
+                            <el-option v-for="item in contractType" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                    <div class="dialogFormItem dialogFormItemList" v-if="registrationInformation.contractType==1">
+                    <el-form-item label="客户及结算信息">
+                        <div class="itemBox">
+                            <el-form ref="customerList" class="coustomerList clearfix"  label-width="100%"  size="small">
+                                <el-form-item v-for="mess in registrationInformation.customerList" :key="mess.id">
+                                    <label class="el-form-item__label">客户名称</label>
+                                    <el-select v-model="mess.id" placeholder="请选择" class="selectInTable" :key="mess.id">
+                                        <el-option v-for="item in customerList" :label="item.name" :key="item.id" :value="item.id"></el-option>
                                     </el-select>
-                                    <span>延后月份结算日:</span>
-                                    <el-input-number v-model="controlInformation.controlTA.date" :min="1"  class="selectInTable"></el-input-number>
-                                </el-radio>
-                                <el-radio :label="6" class="form_radio">
-                                    <span>延后自然日数:</span>
-                                    <el-input-number v-model="controlInformation.controlTBTime" :min="1" class="selectInTable"></el-input-number>
-                                </el-radio>
-                                <el-radio :label="9" class="form_radio">
-                                    <span>延后工作日数:</span>
-                                    <el-input-number v-model="controlInformation.controlTCTime" :min="1" class="selectInTable"></el-input-number>
-                                </el-radio>
-                            </el-radio-group>
-                        </el-form-item>
-                    </div>
-                    <div class="dialogFormItem dialogFormItemList">
-                        <el-form-item label="合同/业务板块类型/价格协议关系">
-                            <div class="itemBox">
-                                <el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
-                                    <el-table-column align="center" prop="id" label="操作" width="80">
-                                        <template slot-scope="scope">
-                                            <i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.id)"></i>
-                                            <i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.id)"></i>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
-                                    <el-table-column align="center" prop="segment_business_id" label="业务板块">
-                                        <template slot-scope="scope">
-                                            <el-select v-model="scope.row.segment_business_id" @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"  placeholder="请选择" class="selectInTable">
-                                                <el-option v-for="item in businessModule" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                                            </el-select>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column align="center" prop="master_business_id" label="主业务类型">
-                                        <template slot-scope="scope">
-                                            <el-select v-model="scope.row.master_business_id" @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)" placeholder="请选择" class="selectInTable">
-                                                <el-option v-for="item in PortDataSon[scope.$index].master_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                                            </el-select>
-                                        </template>
-                                    </el-table-column>
-                                    <el-table-column align="center" prop="slaver_business_id" label="子业务类型">
-                                        <template slot-scope="scope"> 
-                                            <el-select v-model="scope.row.slaver_business_id" placeholder="请选择" class="selectInTable">
-                                                <el-option v-for="item in PortDataSon[scope.$index].slaver_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
-                                            </el-select>
-                                        </template>
-                                    </el-table-column>
-                                </el-table>
-                            </div>
-                        </el-form-item>
-                    </div>
-				</el-form>
-            </div>
-        </el-dialog>
+                                    <label class="el-form-item__label" style="margin-left:20px;">结算单位</label>
+                                    <el-select v-model="mess.settlementUnit" placeholder="请选择" class="selectInTable">
+                                        <el-option :label="'是'" :value="1"></el-option>
+                                        <el-option :label="'否'" :value="0"></el-option>
+                                    </el-select>
+                                    <i class="fa fa-plus" title="添加" aria-hidden="true" @click="customerListAdd"></i>
+                                    <i class="fa fa-trash" title="删除" aria-hidden="true" @click="customerListDelete(mess.id)"></i>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem dialogFormItemList" v-if="registrationInformation.contractType==2">
+                    <el-form-item label="供应商及结算信息">
+                        <div class="itemBox">
+                            <el-form ref="customerList" class="coustomerList clearfix"  label-width="100%"  size="small">
+                                <el-form-item v-for="mess in registrationInformation.supplierList" :key="mess.id">
+                                    <label class="el-form-item__label">供应商名称</label>
+                                    <el-select v-model="mess.id" placeholder="请选择" class="selectInTable" :key="mess.id">
+                                        <el-option v-for="item in supplierList" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                    </el-select>
+                                    <label class="el-form-item__label" style="margin-left:20px;">结算单位</label>
+                                    <el-select v-model="mess.settlementUnit" placeholder="请选择" class="selectInTable">
+                                        <el-option :label="'是'" :value="1"></el-option>
+                                        <el-option :label="'否'" :value="0"></el-option>
+                                    </el-select>
+                                    <i class="fa fa-plus" title="添加" aria-hidden="true" @click="supplierListAdd"></i>
+                                    <i class="fa fa-trash" title="删除" aria-hidden="true" @click="supplierListDelete(mess.id)"></i>
+                                </el-form-item>
+                            </el-form>
+                        </div>
+                    </el-form-item>
+                </div>
+            </el-form>
+        </div>
+        <div class="controlInformation">
+            <div class="STableTitle">信控协议</div>
+            <el-form ref="controlInformation" class="registrationInformation clearfix" :rules="controlRules" :model="controlInformation"  label-width="100%"  size="small">
+                <div class="dialogFormItem">
+                    <el-form-item label="合同名称" prop="contract">
+                        <el-input v-model="controlInformation.contract"></el-input>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="合同生效日" prop="contractStart">
+                        <el-date-picker type="date" v-model="controlInformation.contractStart" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="合同失效日" prop="contractInvalid">
+                        <el-date-picker type="date" v-model="controlInformation.contractInvalid" placeholder="申请开始时间" size="mini" class="date_input"> </el-date-picker>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem">
+                    <el-form-item label="信控基准日" prop="controlDate">
+                        <el-select v-model="controlInformation.controlDate" placeholder="请选择" class="selectInTable">
+                            <el-option v-for="item in controlDateList" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem dialogFormItem_form_radio">
+                    <el-form-item label="" class="form_radio_box">
+                        <el-radio-group v-model="controlInformation.controlType">
+                            <el-radio :label="3" class="form_radio">
+                                <span>延后月份:</span>
+                                <el-select placeholder="请选择" v-model="controlInformation.controlTA.mouth" class="selectInTable" style="margin-right:10px;">
+                                    <el-option label="次月" :value="1"></el-option>
+                                    <el-option label="次月月底" :value="2"></el-option>
+                                    <el-option label="次月月" :value="3"></el-option>
+                                    <el-option label="次月月月底" :value="4"></el-option>
+                                </el-select>
+                                <span>延后月份结算日:</span>
+                                <el-input-number v-model="controlInformation.controlTA.date" :min="1"  class="selectInTable"></el-input-number>
+                            </el-radio>
+                            <el-radio :label="6" class="form_radio">
+                                <span>延后自然日数:</span>
+                                <el-input-number v-model="controlInformation.controlTBTime" :min="1" class="selectInTable"></el-input-number>
+                            </el-radio>
+                            <el-radio :label="9" class="form_radio">
+                                <span>延后工作日数:</span>
+                                <el-input-number v-model="controlInformation.controlTCTime" :min="1" class="selectInTable"></el-input-number>
+                            </el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </div>
+                <div class="dialogFormItem dialogFormItemList">
+                    <el-form-item label="合同/业务板块类型/价格协议关系">
+                        <div class="itemBox">
+                            <el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
+                                <el-table-column align="center" prop="id" label="操作" width="80">
+                                    <template slot-scope="scope">
+                                        <i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.id)"></i>
+                                        <i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.id)"></i>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
+                                <el-table-column align="center" prop="segment_business_id" label="业务板块">
+                                    <template slot-scope="scope">
+                                        <el-select v-model="scope.row.segment_business_id" @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"  placeholder="请选择" class="selectInTable">
+                                            <el-option v-for="item in businessModule" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column align="center" prop="master_business_id" label="主业务类型">
+                                    <template slot-scope="scope">
+                                        <el-select v-model="scope.row.master_business_id" @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)" placeholder="请选择" class="selectInTable">
+                                            <el-option v-for="item in PortDataSon[scope.$index].master_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column align="center" prop="slaver_business_id" label="子业务类型">
+                                    <template slot-scope="scope"> 
+                                        <el-select v-model="scope.row.slaver_business_id" placeholder="请选择" class="selectInTable">
+                                            <el-option v-for="item in PortDataSon[scope.$index].slaver_business_list" :label="item.name" :key="item.id" :value="item.id"></el-option>
+                                        </el-select>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </el-form-item>
+                </div>
+            </el-form>
+        </div>
     </div>
 </template>
 <script>
     export default {
         data(){
             return {
-                
+                PortDataSon:[],
                 fileList:"",
                 uploadSectionFile:"",
                 customernew:1,//客户及结算信息新增下标
                 suppliernew:1,//客户及结算信息新增下标
-                dialogVisible:false,//控制dialog是否显示
                 active:2,//步骤条,
                 registrationInformation:{//登记信息数据
                     name:"编号001",//合同名称
@@ -372,4 +369,5 @@
     .fa-plus{margin-left:20px;}
     .fa-trash{position: relative;top:-1px;}
     .controlInformation{background-color: white;padding:0 20px;margin-top:10px;}
+    .buttonList{margin-top:20px;padding:0 30px;}
 </style>

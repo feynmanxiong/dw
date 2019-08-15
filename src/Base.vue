@@ -37,7 +37,7 @@
 			<el-tabs class="body_tab" v-model="current_tab" type="border-card" closable @tab-remove="removeTab" lazy>
 				<el-tab-pane class="tab_content" v-for="(item, index) in tabs" :key="item.title" :label="item.title" :name="item.title">
 					<keep-alive>
-						<component :is="item.content"></component>
+						<component :is="item.content" @clickSearch="showTab"></component>
 					</keep-alive>
 				</el-tab-pane>
 			</el-tabs>
@@ -122,6 +122,10 @@
 								content: "approvalContract"
 							},
 							{
+								title: "合同审批编辑",
+								content: "approvalContractAdd"
+							},
+							{
 								title: "费用报批管理",
 								content: "approvalCost"
 							}
@@ -136,6 +140,7 @@
 									// {title: "结算公司维护",	content: "basicsSettle"},
 									{title: "港口维护",	content: "basicsRecordPort"},
 									{title: "航线维护",	content: "basicsRecordRoute"},
+									{title: "航名维护", content:"basicsRecordBoat"},
 									{title: "品名维护",	content: "productName"},
 									{title: "装箱点维护", content:"packingPointMaintain"},
 								]

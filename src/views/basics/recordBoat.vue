@@ -33,7 +33,15 @@
 						</el-select>
 					</el-row>
 					<el-row>
-						<span class="span">航线</span>
+						<span class="span">船公司</span>
+						<div class="block">
+							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+							</el-select>
+						</div>			
+					</el-row>
+					<el-row>
+						<span class="span">船名</span>
 						<div class="block">
 							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
 								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
@@ -79,6 +87,8 @@
 					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
 					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
 					<el-button size="mini" plain  type="danger" @click="handleDelete">删除</el-button>
+					<el-button size="mini" plain  type="primary" @click="handleStart">启用</el-button>
+                    <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
 				</el-row>
 				<el-row>
 					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange" @row-click="mainTableTrClick">
@@ -92,7 +102,7 @@
 						<el-table-column align="center" prop="status" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="name" label="航线"></el-table-column>
+						<el-table-column align="center" prop="name" label="船名"></el-table-column>
 						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
 						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
@@ -108,7 +118,7 @@
 				</el-row>
 				<div class="STable" v-show="sonTableIsShow">
 					<div class="STableTitle clearfix">
-						<span>航线/业务板块类型关系 &nbsp;&nbsp;&nbsp;航线：{{checkPort}}</span>
+						<span>船名/业务板块类型关系 &nbsp;&nbsp;&nbsp;船名：{{checkPort}}</span>
 						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="editTableSon">编辑</el-button>
 					</div>
 					  <template>
@@ -124,9 +134,9 @@
 				</div>
 			</el-main>
 			<!--港口维护主表添加start-->
-			<el-dialog title="新建航线" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
+			<el-dialog title="新建船名" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="港口" prop="name">
+					<el-form-item label="船名" prop="name">
 						<el-input v-model="buildSettlementCompany.name"></el-input>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">
@@ -143,7 +153,7 @@
 			</el-dialog>
 			<!--港口维护主表添加end-->
 			<!--港口维护子表添加start-->
-			<el-dialog :title="'航线/业务板块类型关系 航线：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
+			<el-dialog :title="'船名/业务板块类型关系 船名：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
 				<el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
 					<el-table-column align="center" prop="id" label="操作" width="80">
 						<template slot-scope="scope">
@@ -215,9 +225,9 @@
 				SBusinessClass:[//子业务类型List
 				],
 				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
-				checkPort:"",//航线/业务板块类型关系    航线{{checkPort}}数据展示
-				chekcPortId:"",//航线/业务板块类型关系id
-				newid:1,////航线/业务板块类型关系编辑弹框新增数据 模拟id(自增)
+				checkPort:"",//船名/业务板块类型关系    船名{{checkPort}}数据展示
+				chekcPortId:"",//船名/业务板块类型关系id
+				newid:1,////船名/业务板块类型关系编辑弹框新增数据 模拟id(自增)
 				fileList:"",
 				params:"",
 				total: 7,
@@ -548,6 +558,50 @@
 				//this.PortDataSon=[];
 				this.innerVisibleSon=false;
 			},
+            //批量启用
+            handleStart(){
+                if(this.MainTableSelectChangeIdList.length>0){
+					this.$confirm("是否确定启用？", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消"
+					})
+					.then(() => {
+						var ids="";
+						this.MainTableSelectChangeIdList.forEach(item=>{
+							ids+=item.id+",";
+						})
+						ids=ids.substring(0,ids.length-1);
+						var _this=this;
+						_this.$postFunc("/products/status",{ids:ids,status:1},function(res){
+							_this.getMessage();
+						},function(){})
+					}).catch(()=>{})
+				}else{
+					this.$message({type:'error',message:'请选择启用的数据'});
+				}
+            },
+            //批量禁止
+            handleProhibit(){ 
+                 if(this.MainTableSelectChangeIdList.length>0){
+					this.$confirm("是否确定禁用？", "提示", {
+						confirmButtonText: "确定",
+						cancelButtonText: "取消"
+					})
+					.then(() => {
+						var ids="";
+						this.MainTableSelectChangeIdList.forEach(item=>{
+							ids+=item.id+",";
+						})
+						ids=ids.substring(0,ids.length-1);
+						var _this=this;
+						_this.$postFunc("/products/status",{ids:ids,status:0},function(res){
+							_this.getMessage();
+						},function(){})
+					}).catch(()=>{})
+				}else{
+					this.$message({type:'error',message:'请选择启用的数据'});
+				}
+            },
 			// handleChange(){
 			// 	if(this.MainTableSelectChangeIdList.length==1){
 			// 		this.innerVisibleType=false;
