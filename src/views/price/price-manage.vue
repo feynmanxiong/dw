@@ -22,6 +22,7 @@
           </el-row>
           <el-row>
             <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner" />
+  
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
@@ -237,6 +238,8 @@ export default {
       selectedData: [],
       //多选数据
       multipleSelection: [],
+      //价格编辑框
+      priceNumber: 0,
       total: 0,
       currentPage: 1,
       pageSize: 10
@@ -371,10 +374,22 @@ export default {
     console.log(this.total)
   },
   methods: {
-    //编辑按钮
-    dialogVisibleAddview() {
-      this.$refs.addDialog.showAndHideDialog();
-    },
+    //编辑按钮新增框
+			dialogVisibleAddview(){
+				var obj=new Object();
+				if(this.priceNumber<=0){
+					obj.title="价格协议编辑";
+				}else{
+					obj.title="价格协议编辑"+this.priceNumber;
+				}
+				this.priceNumber++;
+				obj.content="priceEdit";
+				this.$emit("clickSearch",obj)
+			},
+    // //编辑按钮
+    // dialogVisibleAddview() {
+    //   this.$refs.addDialog.showAndHideDialog();
+    // },
     //编辑图标
     handleEdit(index, row) {
       this.dialogVisibleAddview();
@@ -399,7 +414,8 @@ export default {
     // ----批量操作可进行封装----
     //批量删除
     mulSelectedDelete() {
-      this.$confirm("选定项是否确定删除？", "提示", {
+      if(this.multipleSelection.length > 0) {
+        this.$confirm("选定项是否确定删除？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       })
@@ -408,6 +424,7 @@ export default {
           this.total = this.tableData.length;
         })
         .catch(() => {});
+      }     
     },
     //批量审核
     mulSelectedCheck() {
