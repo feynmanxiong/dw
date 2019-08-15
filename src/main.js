@@ -13,12 +13,16 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router'
 import './assets/app.css'
 import './assets/css/font-awesome/css/font-awesome.min.css'
+// iconfont图标样式
+// import './assets/css/font/iconfont.css'
 window.axios = require('axios');
 
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 import Tool from './tools.js'
 
+// window.baseURL = 'http://localhost:8081';
+// axios.defaults.baseURL = window.baseURL + '/api';
 
 window.baseURL = 'http://demu-dev.dwood365.com';
 axios.defaults.baseURL = window.baseURL + '/api/v1/';

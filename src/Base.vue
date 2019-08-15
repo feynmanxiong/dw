@@ -2,12 +2,12 @@
 	<el-container class="flex_col_str">
 		<el-header class="header">
 			<el-menu :default-active="current_tab" class="menu" background-color="#0089d5" text-color="#fff" active-text-color="#ffd04b" mode="horizontal" >						
-				<el-submenu v-for="(item, index) in list" :index="item.title">					
+				<el-submenu v-for="(item, index) in list" :index="item.title" :key="item.title">					
 					<div class="elMenuTriangle"></div>
 					<template slot="title">					
 						<span>{{item.title}}</span>
 					</template>					
-					<template class="" v-for="(child, ind) in item.children" :index="child.title">
+					<template class="" v-for="(child, index) in item.children" :index="child.title">
 						<el-menu-item :index="child.title" @click="showTab(child)" v-if="!child.hasOwnProperty('children')">
 							{{child.title}}
 						</el-menu-item>
@@ -92,17 +92,21 @@
 						title: "价格管理",					
 						children: [
 							{
-								title: "合同信控管理",
-								content: "contractRun"
+								title: "价格协议管理",
+								content: "priceManagement"
 							},
 							{
-								title: "价格管理",
-								content: "contractPrice"
+								title: "价格协议编辑",
+								content: "priceEdit"
 							},
 							{
 								title: "费用控制管理",
-								content: "contractCost"
-							},						
+								content: "rateManagement"
+							},		
+							{
+								title: "费用控制编辑",
+								content: "rateEdit"
+							},					
 						]
 					},
 					{
