@@ -399,10 +399,12 @@
 			},
 			//主表格单条修改
 			mainTableEdit(id,sn){
-				var obj=new Object();
-				obj.title="合同审批编辑("+sn+")";
-				obj.content="approvalContractAdd";
-				this.$emit("clickSearch",obj)
+				this.$getEditMessageId(id,()=>{
+					var obj=new Object();
+					obj.title="合同审批编辑("+sn+")";
+					obj.content="approvalContractAdd";
+					this.$emit("clickSearch",obj)
+				});
 			},
 			//主表格单条删除
 			mainTableSingleDelete(id){
