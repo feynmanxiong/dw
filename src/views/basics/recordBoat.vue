@@ -35,16 +35,16 @@
 					<el-row>
 						<span class="span">船公司</span>
 						<div class="block">
-							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+							<el-select v-model="getKeyList.customer_supplier_id" @change="shipCompanyChange" filterable placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in shipCompany" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
 						<span class="span">船名</span>
 						<div class="block">
-							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+							<el-select v-model="getKeyList.customer_supplier_ship_data_id" filterable placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in Port.list" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
@@ -52,7 +52,7 @@
 						<span class="span">操作人</span>
 						<div class="block">
 							<el-select v-model="getKeyList.user" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in userlist" :key="item.value" :label="item.key" :value="item.value"> </el-option>
+								<el-option v-for="item in userlist" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
@@ -92,19 +92,20 @@
 				</el-row>
 				<el-row>
 					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange" @row-click="mainTableTrClick">
-						<el-table-column type="selection" prop="id" align="center" width="55"></el-table-column>
+						<el-table-column type="selection" prop="customer_supplier_ship_data_id" align="center" width="55"></el-table-column>
 						<el-table-column align="center" type="index" label="编辑" prop="id" width="80">
 							<template slot-scope="scope">
-								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id)"></i>
-								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
+								<i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.customer_supplier_ship_data_id)"></i>
+								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.customer_supplier_ship_data_id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="status" label="状态">
-							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
+						<el-table-column align="center" prop="customer_supplier_ship_data_status" label="状态">
+							<template slot-scope="scope">{{scope.row.customer_supplier_ship_data_status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="name" label="船名"></el-table-column>
-						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
-						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
+						<el-table-column align="center" prop="customer_supplier_name" label="船公司"></el-table-column>
+						<el-table-column align="center" prop="customer_supplier_ship_data_name" label="船名"></el-table-column>
+						<el-table-column align="center" prop="customer_supplier_ship_data_user_name" label="操作人"></el-table-column>
+						<el-table-column align="center" prop="customer_supplier_ship_data_updated_at" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
@@ -136,6 +137,11 @@
 			<!--港口维护主表添加start-->
 			<el-dialog title="新建船名" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
+					<el-form-item label="船公司" prop="customer_supplier_id">
+						<el-select v-model="buildSettlementCompany.customer_supplier_id" filterable placeholder="请选择" size="mini" class="date_box">
+							<el-option v-for="item in shipCompany" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+						</el-select>
+					</el-form-item>
 					<el-form-item label="船名" prop="name">
 						<el-input v-model="buildSettlementCompany.name"></el-input>
 					</el-form-item>
@@ -204,9 +210,8 @@
 					per_page:10,//每页记录数，默认是10
 					search:"",//模糊搜索
 					status:"",//状态0:禁用，1:启用
-					id:"",//航线id
-					user:"",//操作人
-					user_id:"",//操作人
+					customer_supplier_id:"",//船公司id
+					customer_supplier_ship_data_id:"",//船名id
 					segment_business_id:"",//主业务板块
 					master_business_id:"",//主业务类型
 					slaver_business_id:""//子业务类型
@@ -217,7 +222,7 @@
 				innerVisibleType:true,//港口维护主表添加弹框是添加还是删除状态  添加:true  删除:false
 				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
 				userlist:[],//操作人列表
-				Port:[],//航线列表
+				Port:[],//船名列表
 				businessModule:[//业务板块List数据
 				],
 				MBusinessClass:[//主业务类型List
@@ -235,7 +240,9 @@
 　　　　　　　　　pageSize: 10,
 				radio:'1',
 				buildSettlementCompany:{//新增修改弹框数据
-					name:"",//航线名称
+					customer_supplier_id:"",//船公司ID
+					id:null,//船id
+					name:"",//航名称
 					status:""//状态
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
@@ -250,11 +257,8 @@
 					// }
 				],
 				rules: {
-					name_code: [
-						{ required: true, message: '请输入助记码', trigger: 'blur' },
-					],
-					country: [
-						{required: true, message: '请输入国家', trigger: 'blur'  }
+					customer_supplier_id: [
+						{ required: true, message: '请选择船公司', trigger: 'blur' },
 					],
 					name: [
 						{ required: true, message: '请输入港口', trigger: 'blur' }
@@ -271,8 +275,8 @@
 					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
 					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"},
 					// {businessMoudle:"龙达",MBusinessClass:"龙达集团",SBusinessClass:"启用",operator:"person",time:"2019-09-19"}
-				]
-				
+				],
+				shipCompany:[]//船公司列表
 			}
 		},
 		computed: {},
@@ -281,9 +285,29 @@
 			this.$getBusinessModule(0).then((item,otherid)=>{
 				this.businessModule=item;
 			});
+			this.getBoatCompany();
 		},
 		mounted() {},
 		methods: {
+			//根据船公司获取船名
+			shipCompanyChange(){
+				var obj=new Object();
+				this.shipCompany.forEach(item=>{
+					if(item.id==this.getKeyList.customer_supplier_id){
+						obj.id=item.id;
+						obj.list=item.list;
+					}
+				})
+				this.Port=obj;
+				console.log(this.Port)
+			},
+			//获取船公司
+			getBoatCompany(){
+				this.$postFunc("/customerSupplierShipData/list/result",{},(res)=>{
+					console.log(res)
+					this.shipCompany=res.data.data;
+				},function(){})
+			},
 			//查询按钮
 			select(){
 				this.getMessage()
@@ -291,7 +315,7 @@
 			},
 			//重置按钮
 			reset(){
-				this.getKeyList={page:1,per_page:10,search:"",status:"",id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
+				this.getKeyList={page:1,per_page:10,search:"",status:"",customer_supplier_id:"",customer_supplier_ship_data_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
 				this.getMessage()
 				this.sonTableIsShow=false;
 			},
@@ -332,10 +356,11 @@
 			//获取数据
 			getMessage(){
 				var _this=this;
-				this.$postFunc("/routes/list",this.getKeyList,function(respones){
+				this.$postFunc("/customerSupplierShipData/list",this.getKeyList,function(respones){
+					console.log(respones)
 					_this.tableData=respones.data.data.result;
 					_this.userlist=respones.data.data.user;
-					_this.Port=respones.data.data.name;
+					//_this.Port=respones.data.data.name;
 					_this.total=respones.data.data.total;
 				},function(){
 
@@ -359,9 +384,9 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postFunc("/routes/destroy",{ids:id},function(res){
+					_this.$postFunc("/customerSupplierShipData/destroy",{ids:id},function(res){
 						_this.tableData.forEach((it,index)=>{
-							if(id==it.id){
+							if(id==it.customer_supplier_ship_data_id){
 								_this.tableData.splice(index,1)
 							}
 						})
@@ -371,7 +396,8 @@
 			//获取tr的表格数据
 			getTRMessage(trid,name){
 				var _this=this;
-				_this.$postFunc("/routes/show/business/"+trid,{},function(res){
+				_this.$postFunc("/customerSupplierShipData/show/business/"+trid,{},function(res){
+					console.log(res)
 					var data=res.data.data;
 					var dataT=new Array();
 					data.forEach(item=>{
@@ -396,7 +422,7 @@
 			},
 			//主表格tr点击展示次表格
 			mainTableTrClick(row){
-				this.getTRMessage(row.id,row.name)
+				this.getTRMessage(row.customer_supplier_ship_data_id,row.customer_supplier_ship_data_name)
 			},
 			//子表格点击编辑
 			editTableSon(){
@@ -458,9 +484,10 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postFunc("/routes/store",this.buildSettlementCompany,function(respones){
+							this.$postFunc("/customerSupplierShipData/update",this.buildSettlementCompany,function(respones){
+								console.log(respones)
 								let mess=respones.data.data;
-								mess.user_name=mess.users.name;
+								mess.customer_supplier_ship_data_user_name=mess.customer_supplier_ship_data_user_name;
 								_this.tableData.unshift(mess)
 								_this.handleDialogClose();
 							},function(){
@@ -468,11 +495,8 @@
 							})
 						}else{
 							//修改
-							this.$postFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
-								console.log(respones)
+							this.$postFunc("/customerSupplierShipData/update",this.buildSettlementCompany,function(respones){
 								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								console.log(tabledata)
-								console.log(_this.buildSettlementCompany)
 								tabledata.forEach((item,index)=>{
 									if(item.id==_this.buildSettlementCompany.id){
 										let mess=respones.data.data;
@@ -481,7 +505,6 @@
 									}
 								})
 								_this.tableData=tabledata;
-								console.log(tabledata)
 								_this.handleDialogClose();
 							},function(){
 							})
@@ -502,11 +525,11 @@
 					.then(() => {
 						var ids="";
 						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
+							ids+=item.customer_supplier_ship_data_id+",";
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/ports/destroy",{ids:ids},function(res){
+						_this.$postFunc("/customerSupplierShipData/destroy",{ids:ids},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})
@@ -532,7 +555,9 @@
 			handleDialogClose(){
 				this.$refs.buildSettlementCompany.resetFields();
 				this.buildSettlementCompany={//新增修改弹框数据
-					name:"",//航线名称
+					customer_supplier_id:"",//船公司ID
+					id:null,//船id
+					name:"",//航名称
 					status:""//状态
 				}
 				this.innerVisible=false;
@@ -548,7 +573,7 @@
 					obj.slaver_business_id=each.slaver_business_id;
 					list.push(obj)
 				})
-				_this.$postFunc("/routes/updateOrInsert/"+_this.chekcPortId,list,function(res){
+				_this.$postFunc("/customerSupplierShipData/update/business/"+_this.chekcPortId,list,function(res){
 					_this.getTRMessage(_this.chekcPortId,_this.chekcPort)
 					_this.innerVisibleSon=false;
 				},function(){})
@@ -568,7 +593,7 @@
 					.then(() => {
 						var ids="";
 						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
+							ids+=item.customer_supplier_ship_data_id+",";
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
@@ -590,7 +615,7 @@
 					.then(() => {
 						var ids="";
 						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
+							ids+=item.customer_supplier_ship_data_id+",";
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
