@@ -134,48 +134,64 @@
       </transition>
       <el-main>
         <el-row class="cont_block">
-          <el-button type="primary" plain size="mini" @click="toPriceEdit">编辑</el-button>
-          <el-button type="danger" plain size="mini">删除</el-button>
-          <el-button type="primary" plain size="mini">批量审核</el-button>
-          <el-button type="danger" plain size="mini">批量取消审核</el-button>
-          <el-button type="primary" plain size="mini">批量启用</el-button>
-          <el-button type="danger" plain size="mini">批量禁用</el-button>
+          <el-button type="primary" plain size="mini" @click="dialogVisibleAddview">编辑</el-button>
+          <el-button type="danger" plain size="mini" @click="mulSelectedDelete">批量删除</el-button>
+          <el-button type="primary" plain size="mini" @click="mulSelectedCheck">批量审核</el-button>
+          <el-button type="danger" plain size="mini" @click="mulSelectedCheckCancel">批量取消审核</el-button>
+          <el-button type="primary" plain size="mini" @click="mulSelectedAllow">批量启用</el-button>
+          <el-button type="danger" plain size="mini" @click="mulSelectedProhibit">批量禁用</el-button>
         </el-row>
         <el-row>
           <el-table
             :data="tableData"
             border
-            stripe
+            ref="multipleTable"
             style="width: 100%"
             size="mini"
             class="mainTable"
             :header-cell-style="{background:'#e0f4ff',color:'#000'}"
+            @selection-change="handleSelectionChange"
           >
             <el-table-column type="selection" align="center" width="55" prop="price_id"></el-table-column>
             <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
-            <el-table-column align="center" type="index" label="操作" prop="price_id" width="80">
+            <el-table-column align="center" type="index" label="操作" prop="id" width="80">
               <template slot-scope="scope">
-                <i class="fa fa-edit" aria-hidden="true" @click.stop="mainTableEdit(scope.row.id)"></i>
+                <i
+                  class="fa fa-edit"
+                  aria-hidden="true"
+                  @click.stop="handleEdit(scope.$index, scope.row)"
+                ></i>
                 <i
                   class="fa fa-trash"
                   aria-hidden="true"
-                  @click.stop="mainTableSingleDelete(scope.row.id)"
+                  @click.stop="handleDelete(scope.$index, scope.row)"
                 ></i>
               </template>
             </el-table-column>
+            <el-table-column prop="prohibit" label="禁用状态" align="center"></el-table-column>
             <el-table-column prop="status" label="审核状态" align="center"></el-table-column>
             <el-table-column prop="price_id" label="价格协议号" align="center"></el-table-column>
             <el-table-column prop="price_con" label="价格协议内容" align="center"></el-table-column>
-            <el-table-column prop="settle_com" label="结算公司" align="center"></el-table-column>
-            <el-table-column prop="business_type" label="业务板块" align="center"></el-table-column>
-            <el-table-column prop="main_business" label="主业务类型" align="center"></el-table-column>
-            <el-table-column prop="child_business" label="子业务类型" align="center"></el-table-column>
+            <el-table-column prop="settle_com" label="结算公司" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="business_type" label="业务板块" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column
+              prop="main_business"
+              label="主业务类型"
+              align="center"
+              show-overflow-tooltip
+            ></el-table-column>
+            <el-table-column
+              prop="child_business"
+              label="子业务类型"
+              align="center"
+              show-overflow-tooltip
+            ></el-table-column>
             <el-table-column prop="createman" label="创建人" align="center"></el-table-column>
-            <el-table-column prop="createdDate" label="创建时间" align="center"></el-table-column>
+            <el-table-column prop="createdDate" label="创建时间" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column prop="modifyman" label="修改人" align="center"></el-table-column>
-            <el-table-column prop="modifiedDate" label="修改时间" align="center"></el-table-column>
+            <el-table-column prop="modifiedDate" label="修改时间" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column prop="checkman" label="审核人" align="center"></el-table-column>
-            <el-table-column prop="checkedDate" label="审核时间" align="center"></el-table-column>
+            <el-table-column prop="checkedDate" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
           </el-table>
         </el-row>
         <el-pagination
@@ -189,43 +205,52 @@
           :total="total"
         ></el-pagination>
       </el-main>
+      <priceeditadd ref="addDialog"></priceeditadd>
     </el-container>
   </div>
 </template>
 
 <script>
-import getData from "./tool/ajax";
+// import getData from "./tool/ajax";
+import priceEditAdd from "./price-edit-add";
+/**
+ * 参数均为数组，arr1包含arr2
+ * 批量删除
+ */
+function removeByValue(arr1, arr2) {
+  for (var i = 0; i < arr1.length; i++) {
+    for (var j = 0; j < arr2.length; j++) {
+      if (arr1[i] == arr2[j]) {
+        arr1.splice(i, 1);
+      }
+    }
+  }
+}
 export default {
   data() {
     return {
       selectStatus: "1",
-      isShowAside: true, //是否展示侧边栏
+      //是否展示侧边栏
+      isShowAside: true,
       tableData: [],
-      MainTableSelectChangeIdList: [], //列表页多选框，选中的id
-      newid: 1,
-      fileList: "",
-      params: "",
-      total: 5,
+      //选中列表行数据
+      selectedData: [],
+      //多选数据
+      multipleSelection: [],
+      total: 0,
       currentPage: 1,
-      pageSize: 10,
-      radio: "1",
-      buildSettlementCompany: {
-        mnemonicCode: "",
-        descName: "",
-        name: "",
-        status: ""
-      }
+      pageSize: 10
     };
   },
   computed: {},
-  created() {
-    console.log(getData());
-  },
+  created() {},
   mounted() {
-    // this.tableData = getData();
+    // this.tableData = getData();  模拟后台数据
     this.tableData = [
       {
+        id: 1,
         status: "已审核",
+        prohibit: "启用",
         price_id: 1,
         price_con: "船代系统",
         settle_com: "张三结算公司",
@@ -240,7 +265,9 @@ export default {
         checkedDate: "2019-08-14"
       },
       {
+        id: 2,
         status: "未审核",
+        prohibit: "禁用",
         price_id: 2,
         price_con: "船代系统",
         settle_com: "赵六结算公司",
@@ -255,8 +282,78 @@ export default {
         checkedDate: "2019-08-14"
       },
       {
+        id: 3,
         status: "已审核",
+        prohibit: "启用",
         price_id: 3,
+        price_con: "船代系统",
+        settle_com: "王五结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        id: 4,
+        status: "未审核",
+        prohibit: "启用",
+        price_id: 4,
+        price_con: "船代系统",
+        settle_com: "王五结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        id: 5,
+        status: "未审核",
+        prohibit: "启用",
+        price_id: 5,
+        price_con: "船代系统",
+        settle_com: "王五结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        id: 6,
+        status: "未审核",
+        prohibit: "启用",
+        price_id: 6,
+        price_con: "船代系统",
+        settle_com: "王五结算公司",
+        business_type: "货运代理",
+        main_business: "外贸出口",
+        child_business: "外贸散货出口",
+        createman: "刘一",
+        createdDate: "2019-08-14",
+        modifyman: "牛二",
+        modifiedDate: "2019-08-14",
+        checkman: "李四",
+        checkedDate: "2019-08-14"
+      },
+      {
+        id: 7,
+        status: "未审核",
+        prohibit: "启用",
+        price_id: 7,
         price_con: "船代系统",
         settle_com: "王五结算公司",
         business_type: "货运代理",
@@ -270,34 +367,76 @@ export default {
         checkedDate: "2019-08-14"
       }
     ];
+    this.total = this.tableData.length;
+    console.log(this.total)
   },
   methods: {
-    //主表格单条修改
-    mainTableEdit(id) {
-      this.tableData.forEach((it, index) => {
-        if (id == it.Id) {
-          this.buildSettlementCompany = it;
-          this.innerVisibleType = false;
-          this.innerVisible = true;
-        }
-      });
+    //编辑按钮
+    dialogVisibleAddview() {
+      this.$refs.addDialog.showAndHideDialog();
     },
-    //主表格单条删除
-    mainTableSingleDelete(id) {
+    //编辑图标
+    handleEdit(index, row) {
+      this.dialogVisibleAddview();
+    },
+    //删除图标
+    handleDelete(index, row) {
       this.$confirm("是否确定删除？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       })
         .then(() => {
-          this.tableData.forEach((it, index) => {
-            if (id == it.Id) {
-              this.tableData.splice(index, 1);
-            }
-          });
+          this.tableData.splice(index, 1);
+          this.total = this.tableData.length;
         })
         .catch(() => {});
     },
-
+    //多选
+    handleSelectionChange(val) {
+      console.log(val);
+      this.multipleSelection = val;
+    },
+    // ----批量操作可进行封装----
+    //批量删除
+    mulSelectedDelete() {
+      this.$confirm("选定项是否确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          removeByValue(this.tableData, this.multipleSelection);
+          this.total = this.tableData.length;
+        })
+        .catch(() => {});
+    },
+    //批量审核
+    mulSelectedCheck() {
+      this.multipleSelection.forEach(item => {
+        item.status = "已审核";
+      });
+      this.$refs.multipleTable.clearSelection();
+    },
+    //批量取消审核
+    mulSelectedCheckCancel() {
+      this.multipleSelection.forEach(item => {
+        item.status = "未审核";
+      });
+      this.$refs.multipleTable.clearSelection();
+    },
+    //批量启用
+    mulSelectedAllow() {
+      this.multipleSelection.forEach(item => {
+        item.prohibit = "启用";
+      });
+      this.$refs.multipleTable.clearSelection();
+    },
+    //批量禁用
+    mulSelectedProhibit() {
+      this.multipleSelection.forEach(item => {
+        item.prohibit = "禁用";
+      });
+      this.$refs.multipleTable.clearSelection();
+    },
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -310,11 +449,10 @@ export default {
       this.currentPage = val;
       //this.fetchData(val, this.pageSize);
       // console.log(`当前页: ${val}`);
-    },
-
-    toPriceEdit(){
-      this.$router.push({ path: 'priceEdit' })
     }
+  },
+  components: {
+    priceeditadd: priceEditAdd
   }
 };
 </script>
