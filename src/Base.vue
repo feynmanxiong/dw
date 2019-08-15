@@ -114,11 +114,18 @@
 						children: [
 							{
 								title: "客户供应商管理",
-								content: "supplierCustomer"
+								content: "customerAdmin"
 							},
 							{
 								title: "客户供应商编辑",
+
 								content: "supplierCustomerEdit"
+
+							},
+							{
+								title: "demo",
+								content: "test"
+
 							}
 						]
 					},
