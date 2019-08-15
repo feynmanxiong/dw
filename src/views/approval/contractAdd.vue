@@ -198,6 +198,7 @@
     export default {
         data(){
             return {
+                id:null,
                 PortDataSon:[],
                 fileList:"",
                 uploadSectionFile:"",
@@ -315,6 +316,7 @@
                     },
 			}
         },
+        
 		methods:{
             //供应商及结算信息增加
             supplierListAdd(){
@@ -358,7 +360,11 @@
 			showAndHideDialog(){
 				this.dialogVisible=!this.dialogVisible;
 			}
-		}
+        },
+        created(){
+            this.id=this.$store.state.id;
+            console.log(this.id)
+        }
     }
 </script>
 <style scoped>

@@ -1,5 +1,5 @@
 import { Message, Loading  } from 'element-ui';
-
+import {mapState,mapAction} from 'vuex';
 
 function install(Vue) {
     Vue.mixin({
@@ -155,6 +155,10 @@ function install(Vue) {
     
             })                                           
         })
+    }
+    Vue.prototype.$getEditMessageId=function(id,func){
+        this.$store.dispatch("changeFunc",id)
+        func();
     }
 }
 

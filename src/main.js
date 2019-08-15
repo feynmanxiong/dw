@@ -20,6 +20,7 @@ window.axios = require('axios');
 Vue.use(ElementUI);
 Vue.config.productionTip = false
 import Tool from './tools.js'
+import store from './store'
 
 // window.baseURL = 'http://localhost:8081';
 // axios.defaults.baseURL = window.baseURL + '/api';
@@ -111,6 +112,7 @@ Vue.filter("key_color",function(value){
 
 const app = new Vue({
   router,
+  store,
   render: h => h(App)
 });
 app.$mount('#app');
