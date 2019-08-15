@@ -16,7 +16,7 @@ Vue.component('rateManagement',() => import('./views/price/rate-management.vue')
 Vue.component('rateEdit',() => import('./views/price/rate-edit.vue'));
 
 //供应商管理
-Vue.component('contractCost',() => import('./views/contract/cost.vue'));
+Vue.component('supplierCustomerEdit',() => import('./views/supplier/edit.vue'));
 Vue.component('supplierCustomer',() => import('./views/supplier/customer.vue'));
 //审批管理
 Vue.component('approvalContract',() => import('./views/approval/contract.vue'));//合同审批管理

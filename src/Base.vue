@@ -116,6 +116,10 @@
 								title: "客户供应商管理",
 								content: "supplierCustomer"
 							},
+							{
+								title: "客户供应商编辑",
+								content: "supplierCustomerEdit"
+							}
 						]
 					},
 					{

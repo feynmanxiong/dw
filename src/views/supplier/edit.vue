@@ -1,7 +1,5 @@
 <template>
-  <div>
-      客户供应商管理
-  </div>
+  <div>客户供应商编辑</div>
 </template>
 
 <script>
