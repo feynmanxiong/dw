@@ -114,7 +114,7 @@
 						children: [
 							{
 								title: "客户供应商管理",
-								content: "customerAdmin"
+								content: "supplierCustomer"
 							},
 							{
 								title: "客户供应商编辑",

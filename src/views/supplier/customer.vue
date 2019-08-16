@@ -26,98 +26,142 @@
           <el-row>
             <span class="span">审核状态</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               placeholder="请选择"
               size="mini"
               class="date_box"
               filterable
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+               <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">物流角色</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">客户标志</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">供应商标志</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">结算单位标志</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">业务板块</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               filterable
               placeholder="请选择"
               size="mini"
               class="date_box"
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">主业务类型</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               filterable
               placeholder="请选择"
               size="mini"
               class="date_box"
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">子业务类型</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">创建人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             
           </el-row>
           <el-row>
             <span class="span">修改人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             
           </el-row>
           <el-row>
             <span class="span">审核人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
            
           </el-row>
@@ -223,6 +267,18 @@ export default {
       selectStatus: "1",
       //是否展示侧边栏
       isShowAside: true,
+      //审核状态
+      options: [
+        {
+          value: "选项1",
+          label: "已审核"
+        },
+        {
+          value: "选项2",
+          label: "未审核"
+        }
+      ],
+      value: "",
       tableData: [],
       //选中列表行数据
       selectedData: [],
@@ -230,7 +286,9 @@ export default {
       multipleSelection: [],
       total: 0,
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      //新增编辑框数量
+      customerNumber: 0
     };
   },
   computed: {},
@@ -362,10 +420,22 @@ export default {
     console.log(this.total)
   },
   methods: {
-    //编辑按钮
-    dialogVisibleAddview() {
-      this.$refs.addDialog.showAndHideDialog();
-    },
+    // //编辑按钮
+    // dialogVisibleAddview() {
+    //   this.$refs.addDialog.showAndHideDialog();
+    // },
+    //编辑按钮新增框
+			dialogVisibleAddview(){
+				var obj=new Object();
+				if(this.customerNumber<=0){
+					obj.title="客户供应商编辑";
+				}else{
+					obj.title="客户供应商编辑"+this.customerNumber;
+				}
+				this.customerNumber++;
+				obj.content="supplierCustomerEdit";
+				this.$emit("clickSearch",obj)
+			},
     //编辑图标
     handleEdit(index, row) {
       this.dialogVisibleAddview();

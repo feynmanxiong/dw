@@ -22,111 +22,152 @@
           </el-row>
           <el-row>
             <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner" />
-  
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <el-select
-              v-model="selectStatus"
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-              filterable
-            >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <!-- <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option :label="已审核" :value="1"></el-option>
+              <el-option :label="未审核" :value="0"></el-option>
+            </el-select>-->
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">价格协议号</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">价格协议内容</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">结算公司</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">业务板块</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               filterable
               placeholder="请选择"
               size="mini"
               class="date_box"
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">主业务类型</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               filterable
               placeholder="请选择"
               size="mini"
               class="date_box"
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">子业务类型</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">创建人</span>
             <el-select
-              v-model="selectStatus"
+              v-model="value"
               filterable
               placeholder="请选择"
               size="mini"
               class="date_box"
             >
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">创建人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-date-picker type="date" placeholder="申请开始时间" size="mini" class="date_input"></el-date-picker>
             <el-date-picker type="date" placeholder="申请结束时间" size="mini" class="date_input"></el-date-picker>
           </el-row>
           <el-row>
             <span class="span">修改人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-date-picker type="date" placeholder="商务会签开始时间" size="mini" class="date_input"></el-date-picker>
             <el-date-picker type="date" placeholder="商务会签结束时间" size="mini" class="date_input"></el-date-picker>
           </el-row>
           <el-row>
             <span class="span">审核人</span>
-            <el-select v-model="selectStatus" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="'启用'" :value="1"></el-option>
-              <el-option :label="'禁用'" :value="0"></el-option>
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+             <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              ></el-option>
             </el-select>
             <el-date-picker type="date" placeholder="业务开始时间" size="mini" class="date_input"></el-date-picker>
             <el-date-picker type="date" placeholder="业务结束时间" size="mini" class="date_input"></el-date-picker>
@@ -233,6 +274,19 @@ export default {
       selectStatus: "1",
       //是否展示侧边栏
       isShowAside: true,
+      //审核状态
+      options: [
+        {
+          value: "选项1",
+          label: "已审核"
+        },
+        {
+          value: "选项2",
+          label: "未审核"
+        }
+      ],
+      value: "",
+
       tableData: [],
       //选中列表行数据
       selectedData: [],
@@ -371,21 +425,21 @@ export default {
       }
     ];
     this.total = this.tableData.length;
-    console.log(this.total)
+    console.log(this.total);
   },
   methods: {
     //编辑按钮新增框
-			dialogVisibleAddview(){
-				var obj=new Object();
-				if(this.priceNumber<=0){
-					obj.title="价格协议编辑";
-				}else{
-					obj.title="价格协议编辑"+this.priceNumber;
-				}
-				this.priceNumber++;
-				obj.content="priceEdit";
-				this.$emit("clickSearch",obj)
-			},
+    dialogVisibleAddview() {
+      var obj = new Object();
+      if (this.priceNumber <= 0) {
+        obj.title = "价格协议编辑";
+      } else {
+        obj.title = "价格协议编辑" + this.priceNumber;
+      }
+      this.priceNumber++;
+      obj.content = "priceEdit";
+      this.$emit("clickSearch", obj);
+    },
     // //编辑按钮
     // dialogVisibleAddview() {
     //   this.$refs.addDialog.showAndHideDialog();
@@ -414,17 +468,17 @@ export default {
     // ----批量操作可进行封装----
     //批量删除
     mulSelectedDelete() {
-      if(this.multipleSelection.length > 0) {
+      if (this.multipleSelection.length > 0) {
         this.$confirm("选定项是否确定删除？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(() => {
-          removeByValue(this.tableData, this.multipleSelection);
-          this.total = this.tableData.length;
+          confirmButtonText: "确定",
+          cancelButtonText: "取消"
         })
-        .catch(() => {});
-      }     
+          .then(() => {
+            removeByValue(this.tableData, this.multipleSelection);
+            this.total = this.tableData.length;
+          })
+          .catch(() => {});
+      }
     },
     //批量审核
     mulSelectedCheck() {
