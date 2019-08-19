@@ -66,7 +66,7 @@ export default new Router({
             path: '/',
             name: 'home',
             redirect : '/login',
-            // component: Home
+            component: Home
         },
         {
             path: '/console',
