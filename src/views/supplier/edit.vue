@@ -134,8 +134,8 @@
                     :value="item.value"
                   ></el-option>
                 </el-select>
-                <el-button size="mini" class="add-bank bankBtn">添加</el-button>
-                <el-button size="mini" class="bankBtn">删除</el-button>
+                <el-button size="mini" class="add-bank bankBtn" type="primary" plain>添加</el-button>
+                <el-button size="mini" class="bankBtn" type="danger" plain>删除</el-button>
               </el-form-item>
             </el-row>
             <el-row class="bankAccount">
@@ -153,6 +153,7 @@
           </div>
           <div class="left">
             <el-row>
+
               <el-form-item class="el-item" label="预计收款日:">
                 <el-input v-model="input" placeholder="请录入信控金额" size="mini" class="date_input"></el-input>
               </el-form-item>
@@ -293,85 +294,6 @@
         <el-table-column align="center" prop="test" label="操作人" width="180"></el-table-column>
         <el-table-column align="center" prop="test" label="操作时间" width="180"></el-table-column>
       </el-table>
-      <el-dialog
-        :title="供应商与业务板块类型关系"
-        :visible.sync="innerVisibleSon"
-        width="70%"
-        :append-to-body="true"
-        :modal="true"
-        :before-close="handleDialogCloseSon"
-      >
-        <el-table
-          :data="PortDataSon"
-          :header-cell-style="{background:'#e0f4ff',color:'#000'}"
-          border
-          size="mini"
-          class="PortDataSon"
-          style="margin-bottom:10px;"
-        >
-          <el-table-column align="center" prop="id" label="操作" width="80">
-            <template slot-scope="scope">
-              <i class="fa fa-plus" aria-hidden="true" @click="PortDataSonCopy(scope.row.id)"></i>
-              <i class="fa fa-trash" aria-hidden="true" @click="PortDataSonDelete(scope.row.id)"></i>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" type="index" label="序号" width="80"></el-table-column>
-          <el-table-column align="center" prop="segment_business_id" label="业务板块">
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.segment_business_id"
-                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
-                placeholder="请选择"
-                class="selectInTable"
-              >
-                <el-option
-                  v-for="item in businessModule"
-                  :label="item.name"
-                  :key="item.id"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="master_business_id" label="主业务类型">
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.master_business_id"
-                @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)"
-                placeholder="请选择"
-                class="selectInTable"
-              >
-                <el-option
-                  v-for="item in PortDataSon[scope.$index].master_business_list"
-                  :label="item.name"
-                  :key="item.id"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column align="center" prop="slaver_business_id" label="子业务类型">
-            <template slot-scope="scope">
-              <el-select
-                v-model="scope.row.slaver_business_id"
-                placeholder="请选择"
-                class="selectInTable"
-              >
-                <el-option
-                  v-for="item in PortDataSon[scope.$index].slaver_business_list"
-                  :label="item.name"
-                  :key="item.id"
-                  :value="item.id"
-                ></el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-        </el-table>
-        <span slot="footer" class="dialog-footer">
-          <el-button @click="handleDialogCloseSon" size="small">取 消</el-button>
-          <el-button type="primary" @click="handleDialogCommitSon" size="small">确 定</el-button>
-        </span>
-      </el-dialog>
     </template>
   </div>
 </template>
@@ -432,14 +354,12 @@ export default {
   margin-bottom: 10px;
 }
 .bank {
-  border: 1px solid rgb(218, 210, 210);
-  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid rgb(231, 226, 226);
   width: 410px !important;
   padding: 10px;
 }
 .add-bank {
   margin-left: 15px;
-  color: skyblue !important;
 }
 .bankAccount {
   margin-top: 0px;
@@ -447,6 +367,5 @@ export default {
 .bankBtn {
   padding-right: 5px !important;
   padding-left: 5px !important;
-  color: rgb(219, 121, 121);
 }
 </style>>

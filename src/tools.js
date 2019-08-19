@@ -161,6 +161,12 @@ function install(Vue) {
         this.$store.dispatch("changeFunc", id)
 
     }
+
+    //获取客户供应商列表
+    Vue.prototype.$getCustomerList = function () {
+        console.log('xiongwencheng');
+        return axios.post("/customerSuppliers");
+    }
 }
 
 export default install;

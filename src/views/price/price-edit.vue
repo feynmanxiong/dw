@@ -4,10 +4,10 @@
     <div class="header">
       <!-- 功能按钮区 -->
       <div class="left">
-        <el-button type="primary" plain size="mini">新增</el-button>
+        <!-- <el-button type="primary" plain size="mini" @click="dialogVisibleAddview">新增</el-button> -->
         <el-button type="primary" plain size="mini">复制</el-button>
         <el-button type="primary" plain size="mini">保存</el-button>
-        <el-button type="danger" plain size="mini">删除</el-button>
+        <!-- <el-button type="danger" plain size="mini">删除</el-button> -->
         <el-button type="primary" plain size="mini">审核</el-button>
         <el-button type="danger" plain size="mini">取消审核</el-button>
         <el-button type="primary" plain size="mini">启用</el-button>
@@ -44,53 +44,281 @@
             <el-option label="公司2" value="1"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="业务板块：" class="item">
-          <el-select v-model="formInline.business" placeholder size="mini">
-            <el-option label="业务1" value="0"></el-option>
-            <el-option label="业务2" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="主业务类型：" class="item">
-          <el-select v-model="formInline.mainBusiness" placeholder size="mini">
-            <el-option label="主业务1" value="0"></el-option>
-            <el-option label="主业务2" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="子业务类型：" class="item">
-          <el-select v-model="formInline.childBusiness" placeholder size="mini">
-            <el-option label="子业务1" value="0"></el-option>
-            <el-option label="子业务2" value="1"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-row>
+          <el-form-item label="业务板块：" class="item">
+            <el-select v-model="formInline.business" placeholder size="mini">
+              <el-option label="业务1" value="0"></el-option>
+              <el-option label="业务2" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="主业务类型：" class="item">
+            <el-select v-model="formInline.mainBusiness" placeholder size="mini">
+              <el-option label="主业务1" value="0"></el-option>
+              <el-option label="主业务2" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="子业务类型：" class="item">
+            <el-select v-model="formInline.childBusiness" placeholder size="mini">
+              <el-option label="子业务1" value="0"></el-option>
+              <el-option label="子业务2" value="1"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-row>
       </el-form>
     </div>
     <div class="priceRule">
       收费规则
       <el-row>
-        <el-table :data="tableData" border stripe size="mini" style="width: 100%" class="mainTable">
-          <el-table-column type="selection" align="center" width="55"></el-table-column>
-          <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
-          <el-table-column prop="test" label="收付标志" align="center"></el-table-column>
-          <el-table-column prop="test" label="免税标志" align="center"></el-table-column>
-          <el-table-column prop="test" label="费用项目" align="center"></el-table-column>
-          <el-table-column prop="test" label="应收单位来源" align="center"></el-table-column>
-          <el-table-column prop="test" label="应付单位来源" align="center"></el-table-column>
-          <el-table-column prop="test" label="固定应付单位" align="center"></el-table-column>
-          <el-table-column prop="test" label="币别" align="center"></el-table-column>
-          <el-table-column prop="test" label="开票类型" align="center"></el-table-column>
-          <el-table-column prop="test" label="税率" align="center"></el-table-column>
-          <el-table-column prop="test" label="单价表达式" align="center"></el-table-column>
+        <el-table
+          :data="tableData"
+          border
+          ref="multipleTable"
+          style="width: 100%"
+          size="mini"
+          class="mainTable"
+          :header-cell-style="{background:'#e0f4ff',color:'#000'}"
+        >
+          <el-table-column type="selection" align="center" width="45"></el-table-column>
+          <el-table-column align="center" type="index" label="操作" prop="id" width="70">
+            <template slot-scope="scope">
+              <i
+                class="fa fa-edit"
+                aria-hidden="true"
+                @click.stop="handleEdit(scope.$index, scope.row)"
+              ></i>
+              <i
+                class="fa fa-trash"
+                aria-hidden="true"
+                @click.stop="handleDelete(scope.$index, scope.row)"
+              ></i>
+            </template>
+          </el-table-column>
+          <el-table-column label="收付标志" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column label="免税标志" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop label="费用项目" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="应收单位来源" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="应付单位来源" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="固定应付单位" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop label="币别" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="开票类型" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="税率" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="单价表达式" align="center">
+            <template slot-scope="scope">
+              <el-input v-model="search" placeholder style="border:none;" size="mini" />
+            </template>
+          </el-table-column>
           <el-table-column prop="test" label="单价" align="center"></el-table-column>
-          <el-table-column prop="test" label="计费单位" align="center"></el-table-column>
-          <el-table-column prop="test" label="最小值开票金额" align="center"></el-table-column>
-          <el-table-column prop="test" label="最大值开票金额" align="center"></el-table-column>
-          <el-table-column prop="test" label="价格条件字段1" align="center"></el-table-column>
-          <el-table-column prop="test" label="操作符1" align="center"></el-table-column>
+          <el-table-column prop="test" label="计费单位" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop label="最小值开票金额" align="center">
+            <template slot-scope="scope">
+              <el-input v-model="search" placeholder style="border:none;" size="mini" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="最大值开票金额" align="center">
+            <template slot-scope="scope">
+              <el-input v-model="search" placeholder style="border:none;" size="mini" />
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="价格条件字段1" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column prop="test" label="操作符1" align="center">
+            <template slot-scope="scope">
+              <el-select
+                v-model="value"
+                @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)"
+                placeholder="请选择"
+                class="selectInTable"
+              >
+                <el-option
+                  v-for="item in options"
+                  :label="item.label"
+                  :key="item.value"
+                  :value="item.value"
+                ></el-option>
+              </el-select>
+            </template>
+          </el-table-column>
           <el-table-column prop="test" label="值1" align="center"></el-table-column>
-          <el-table-column prop="test" label="逻辑符" align="center"></el-table-column>
+          <el-table-column prop="test" label="添加/删除" align="center"></el-table-column>
+          <!-- <el-table-column prop="test" label="逻辑符" align="center"></el-table-column>
           <el-table-column prop="test" label="价格条件字段2" align="center"></el-table-column>
           <el-table-column prop="test" label="操作符2" align="center"></el-table-column>
-          <el-table-column prop="test" label="值2" align="center"></el-table-column>
+          <el-table-column prop="test" label="值2" align="center"></el-table-column>-->
         </el-table>
       </el-row>
     </div>
@@ -126,7 +354,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -156,8 +383,24 @@ export default {
         {
           test: 100
         }
-      ]
+      ],
+      priceNumber: 0,
+      search: ""
     };
+  },
+  methods: {
+    //新增按钮
+    dialogVisibleAddview() {
+      var obj = new Object();
+      if (this.priceNumber <= 0) {
+        obj.title = "价格协议编辑";
+      } else {
+        obj.title = "价格协议编辑" + this.priceNumber;
+      }
+      this.priceNumber++;
+      obj.content = "priceEdit";
+      this.$emit("clickSearch", obj);
+    }
   }
 };
 </script>
@@ -168,7 +411,7 @@ export default {
   justify-content: space-between;
   margin: 10px 0;
   padding: 0 10px;
-  border-bottom: 3px solid #e4e4e4;
+  border-bottom: 3px solid #eee;
 }
 .checkSelect {
   width: 100px;
@@ -178,18 +421,18 @@ export default {
   padding: 10px;
 }
 .item {
-  margin-right: 100px !important;
+  margin-right: 50px !important;
   margin-bottom: 10px !important;
 }
 .item.changeLength {
-  width: 700px;
+  width: 530px;
 }
 .item.changeLength .input {
-  width: 500px;
+  width: 400px;
 }
 .priceRule {
-  padding-bottom: 20px;
-  border-bottom: 3px solid #e4e4e4;
+  padding: 30px 0;
+  border-bottom: 3px solid #eee;
   color: red;
 }
 .man {

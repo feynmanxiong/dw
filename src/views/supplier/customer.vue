@@ -25,14 +25,8 @@
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <el-select
-              v-model="value"
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-              filterable
-            >
-               <el-option
+            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -65,7 +59,7 @@
           <el-row>
             <span class="span">供应商标志</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -76,7 +70,7 @@
           <el-row>
             <span class="span">结算单位标志</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -86,13 +80,7 @@
           </el-row>
           <el-row>
             <span class="span">业务板块</span>
-            <el-select
-              v-model="value"
-              filterable
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-            >
+            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -103,13 +91,7 @@
           </el-row>
           <el-row>
             <span class="span">主业务类型</span>
-            <el-select
-              v-model="value"
-              filterable
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-            >
+            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -121,7 +103,7 @@
           <el-row>
             <span class="span">子业务类型</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -139,31 +121,28 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            
           </el-row>
           <el-row>
             <span class="span">修改人</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-            
           </el-row>
           <el-row>
             <span class="span">审核人</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-           
           </el-row>
         </el-aside>
       </transition>
@@ -205,13 +184,13 @@
             <el-table-column prop="price_id" label="全称" align="center"></el-table-column>
             <el-table-column prop="price_con" label="简称" align="center"></el-table-column>
             <el-table-column prop="settle_com" label="助记码" align="center" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="business_type" label="纳税人识别号" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column
-              prop="main_business"
-              label="物流角色"
+              prop="business_type"
+              label="纳税人识别号"
               align="center"
               show-overflow-tooltip
             ></el-table-column>
+            <el-table-column prop="main_business" label="物流角色" align="center" show-overflow-tooltip></el-table-column>
             <el-table-column
               prop="child_business"
               label="客户标志"
@@ -242,7 +221,6 @@
           :total="total"
         ></el-pagination>
       </el-main>
-      <priceeditadd ref="addDialog"></priceeditadd>
     </el-container>
   </div>
 </template>
@@ -292,7 +270,16 @@ export default {
     };
   },
   computed: {},
-  created() {},
+  created() {
+    this.$getCustomerList()
+      .then(response => {
+        console.log("nashujulai");
+        console.log(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  },
   mounted() {
     // this.tableData = getData();  模拟后台数据
     this.tableData = [
@@ -417,7 +404,7 @@ export default {
       }
     ];
     this.total = this.tableData.length;
-    console.log(this.total)
+    console.log(this.total);
   },
   methods: {
     // //编辑按钮
@@ -425,17 +412,17 @@ export default {
     //   this.$refs.addDialog.showAndHideDialog();
     // },
     //编辑按钮新增框
-			dialogVisibleAddview(){
-				var obj=new Object();
-				if(this.customerNumber<=0){
-					obj.title="客户供应商编辑";
-				}else{
-					obj.title="客户供应商编辑"+this.customerNumber;
-				}
-				this.customerNumber++;
-				obj.content="supplierCustomerEdit";
-				this.$emit("clickSearch",obj)
-			},
+    dialogVisibleAddview() {
+      var obj = new Object();
+      if (this.customerNumber <= 0) {
+        obj.title = "客户供应商编辑";
+      } else {
+        obj.title = "客户供应商编辑" + this.customerNumber;
+      }
+      this.customerNumber++;
+      obj.content = "supplierCustomerEdit";
+      this.$emit("clickSearch", obj);
+    },
     //编辑图标
     handleEdit(index, row) {
       this.dialogVisibleAddview();
@@ -457,7 +444,9 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
+
     // ----批量操作可进行封装----
+
     //批量删除
     mulSelectedDelete() {
       this.$confirm("选定项是否确定删除？", "提示", {
@@ -512,9 +501,7 @@ export default {
       // console.log(`当前页: ${val}`);
     }
   },
-  components: {
-    
-  }
+  components: {}
 };
 </script>
 
