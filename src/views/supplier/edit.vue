@@ -439,6 +439,7 @@ export default {
 }
 .add-bank {
   margin-left: 15px;
+  color: skyblue !important;
 }
 .bankAccount {
   margin-top: 0px;
@@ -446,5 +447,6 @@ export default {
 .bankBtn {
   padding-right: 5px !important;
   padding-left: 5px !important;
+  color: rgb(219, 121, 121);
 }
 </style>>
