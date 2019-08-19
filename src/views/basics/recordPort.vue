@@ -22,9 +22,9 @@
 							<el-button type="success" plain size="mini" @click="select">查询</el-button>
 						</div>
 					</el-row>
-					<el-row>
+					<!-- <el-row>
 						<input type="text" v-model="getKeyList.search" placeholder="请输入内容" class="el-input__inner">
-					</el-row>
+					</el-row> -->
 					<el-row>
 						<span class="span">状态</span>
 						<el-select v-model="getKeyList.status" placeholder="请选择" size="mini" class="date_box">
@@ -91,14 +91,14 @@
 								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="status" label="状态">
+						<el-table-column align="center" prop="status" :sortable="true" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="name_code" label="助记码"></el-table-column>
-						<el-table-column align="center" prop="name" label="港口"></el-table-column>
-						<el-table-column align="center" prop="country" label="国家"></el-table-column>
-						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
-						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
+						<el-table-column align="center" prop="name_code" :sortable="true" label="助记码"></el-table-column>
+						<el-table-column align="center" prop="name" :sortable="true" label="港口"></el-table-column>
+						<el-table-column align="center" prop="country" :sortable="true" label="国家"></el-table-column>
+						<el-table-column align="center" prop="user_name" :sortable="true" label="操作人"></el-table-column>
+						<el-table-column align="center" prop="updated_at" :sortable="true" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
@@ -188,6 +188,7 @@
 					<el-button @click="handleDialogCloseSon" size="small">取 消</el-button>
 					<el-button type="primary" @click="handleDialogCommitSon" size="small">确 定</el-button>
 				</span>
+				<!-- <businessmodule :DataSon="PortDataSon"></businessmodule> -->
 			</el-dialog>
 			<!--港口维护子表添加end-->
 		</el-container>
@@ -195,6 +196,7 @@
 </template>
 
 <script>
+	import businessModule from '../public/businessModule.vue'
 	export default {
 		data() {
 			return {
@@ -218,8 +220,7 @@
 				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
 				countryList:[],//国家列表
 				Port:[],//港口列表
-				businessModule:[//业务板块List数据
-				],
+				businessModule:this.$store.state.businessModule,//业务板块List数据
 				MBusinessClass:[//主业务类型List
 				],
 				SBusinessClass:[//子业务类型List
@@ -280,11 +281,11 @@
 		computed: {},
 		created() {
 			this.getMessage();
-			this.$getBusinessModule(0).then((item,otherid)=>{
-				this.businessModule=item;
-			});
 		},
 		mounted() {},
+		components:{
+			// businessmodule:businessModule
+		},
 		methods: {
 			//查询按钮
 			select(){
@@ -390,6 +391,7 @@
 					})
 					_this.PortDataSon=data;
 					_this.PortData=dataT;
+					console.log(_this.PortDataSon)
 				},function(r){
 					console.log(r)
 				})
@@ -462,9 +464,10 @@
 						if(this.innerVisibleType){
 							//新增
 							this.$postFunc("/ports/store",this.buildSettlementCompany,function(respones){
-								let mess=respones.data.data;
-								mess.user_name=mess.users.name;
-								_this.tableData.unshift(mess)
+								// let mess=respones.data.data;
+								// mess.user_name=mess.users.name;
+								// _this.tableData.unshift(mess)
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 
@@ -472,15 +475,16 @@
 						}else{
 							//修改
 							this.$postFunc("/ports/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
-								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								tabledata.forEach((item,index)=>{
-									if(item.id==_this.buildSettlementCompany.id){
-										let mess=respones.data.data;
-										mess.user_name=mess.users.name;
-										tabledata[index]=mess;
-									}
-								})
-								_this.tableData=tabledata;
+								// let tabledata=JSON.parse(JSON.stringify(_this.tableData))
+								// tabledata.forEach((item,index)=>{
+								// 	if(item.id==_this.buildSettlementCompany.id){
+								// 		let mess=respones.data.data;
+								// 		mess.user_name=mess.users.name;
+								// 		tabledata[index]=mess;
+								// 	}
+								// })
+								// _this.tableData=tabledata;
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 							})
@@ -543,26 +547,44 @@
 				var list=new Array();
 				var _this=this;
 				var flag=true;
-				_this.PortDataSon.forEach(each=>{
+				for(let i=0;i<_this.PortDataSon.length;i++){
+					let datas=_this.PortDataSon[i];
+					let datasNext=_this.PortDataSon[i+1];
 					var obj=new Object();
-					if(each.segment_business_id==null||each.master_business_id==null||each.slaver_business_id==null){
+					if(datas.segment_business_id==null||datas.master_business_id==null||datas.slaver_business_id==null){
 						_this.$message({
 							message:"请完善选择数据",
 							type:"warning"
 						})
-						flag=false;
+						return;
+						//flag=false;
 					}
-					obj.segment_business_id=each.segment_business_id;
-					obj.master_business_id=each.master_business_id;
-					obj.slaver_business_id=each.slaver_business_id;
+					if(i<_this.PortDataSon.length&&datasNext!=undefined){
+						if(datas.segment_business_id==datasNext.segment_business_id){
+							if(datas.master_business_id==datasNext.master_business_id){
+								if(datas.slaver_business_id==datasNext.slaver_business_id){
+									_this.$message({
+										message:"业务板块类型不能选择重复",
+										type:"warning"
+									})
+									return;
+								}
+							}
+						}
+					}
+					obj.segment_business_id=datas.segment_business_id;
+					obj.master_business_id=datas.master_business_id;
+					obj.slaver_business_id=datas.slaver_business_id;
 					list.push(obj)
-				})
-				if(flag){
-					_this.$postFunc("/ports/updateOrInsert/"+_this.chekcPortId,list,function(res){
-						_this.getTRMessage(_this.chekcPortId,_this.chekcPort)
-						_this.innerVisibleSon=false;
-					},function(){})
 				}
+				// _this.PortDataSon.forEach(each=>{
+				// })
+				_this.$postFunc("/ports/updateOrInsert/"+_this.chekcPortId,list,function(res){
+					_this.getTRMessage(_this.chekcPortId,_this.chekcPort)
+					_this.innerVisibleSon=false;
+				},function(){})
+				// if(flag){
+				// }
 			},
 			//次表格编辑关闭
 			handleDialogCloseSon(){

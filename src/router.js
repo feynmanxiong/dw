@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 
-
+//Vue.component('businessModule',() => import('./views/public/businessModule.vue'));
 //start
 //业务管理
 Vue.component('businessFreight',() => import('./views/business/freight.vue'));
@@ -34,7 +34,8 @@ Vue.component('basicsOrgani',() => import('./views/basics/organi.vue'));
 //基础资料=>业务基础资料  start
 Vue.component('basicsRecordMain',() => import('./views/basics/recordMain.vue'));
 Vue.component('packingPointMaintain',() => import('./views/basics/packingPointMaintain.vue'));//装箱点维护
-Vue.component('basicsRecordPort',() => import('./views/basics/recordPort.vue'));
+Vue.component('basicsRecordPort',() => import('./views/basics/recordPort.vue'));//港口维护
+Vue.component('boxRelationship',() => import('./views/basics/boxRelationship.vue'));//箱型对应关系
 Vue.component('basicsRecordRoute',() => import('./views/basics/recordRoute.vue'));//航线维护
 Vue.component('basicsRecordCompany',() => import('./views/basics/recordCompany.vue'));
 Vue.component('basicsRecordChange',() => import('./views/basics/recordChange.vue'));
@@ -48,6 +49,7 @@ Vue.component('basicsRecordCurrency',() => import('./views/basics/recordCurrency
 Vue.component('basicsRecordPrice',() => import('./views/basics/recordPrice.vue'));
 Vue.component('basicsSettle',() => import('./views/basics/settle.vue'));//结算公司管理
 Vue.component('productName',() => import('./views/basics/productName.vue'));//品名维护
+Vue.component('givePointMaintain',() => import('./views/basics/givePointMaintain.vue'));
 //基础资料    end
 //权限管理    start
 Vue.component('powerUser',() => import('./views/power/user.vue'));

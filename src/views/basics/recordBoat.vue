@@ -22,9 +22,9 @@
 							<el-button type="success" plain size="mini" @click="select">查询</el-button>
 						</div>
 					</el-row>
-					<el-row>
+					<!-- <el-row>
 						<input type="text" v-model="getKeyList.search" placeholder="请输入内容" class="el-input__inner">
-					</el-row>
+					</el-row> -->
 					<el-row>
 						<span class="span">状态</span>
 						<el-select v-model="getKeyList.status" placeholder="请选择" size="mini" class="date_box">
@@ -99,13 +99,13 @@
 								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.customer_supplier_ship_data_id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="customer_supplier_ship_data_status" label="状态">
+						<el-table-column align="center" :sortable="true" prop="customer_supplier_ship_data_status" label="状态">
 							<template slot-scope="scope">{{scope.row.customer_supplier_ship_data_status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="customer_supplier_name" label="船公司"></el-table-column>
-						<el-table-column align="center" prop="customer_supplier_ship_data_name" label="船名"></el-table-column>
-						<el-table-column align="center" prop="customer_supplier_ship_data_user_name" label="操作人"></el-table-column>
-						<el-table-column align="center" prop="customer_supplier_ship_data_updated_at" label="操作时间"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="customer_supplier_name" label="船公司"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="customer_supplier_ship_data_name" label="船名"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="customer_supplier_ship_data_user_name" label="操作人"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="customer_supplier_ship_data_updated_at" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
@@ -142,11 +142,11 @@
 							<el-option v-for="item in shipCompany" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 						</el-select>
 					</el-form-item>
-					<el-form-item label="船名" prop="name">
-						<el-input v-model="buildSettlementCompany.name"></el-input>
+					<el-form-item label="船名" prop="customer_supplier_ship_data_name">
+						<el-input v-model="buildSettlementCompany.customer_supplier_ship_data_name"></el-input>
 					</el-form-item>
-					<el-form-item label="状态" prop="status">
-						<el-select v-model="buildSettlementCompany.status" placeholder="请选择状态">
+					<el-form-item label="状态" prop="customer_supplier_ship_data_status">
+						<el-select v-model="buildSettlementCompany.customer_supplier_ship_data_status" placeholder="请选择状态">
 							<el-option label="启用" :value="1"></el-option>
 							<el-option label="禁用" :value="0"></el-option>
 						</el-select>
@@ -223,8 +223,7 @@
 				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
 				userlist:[],//操作人列表
 				Port:[],//船名列表
-				businessModule:[//业务板块List数据
-				],
+				businessModule:this.$store.state.businessModule,//业务板块List数据
 				MBusinessClass:[//主业务类型List
 				],
 				SBusinessClass:[//子业务类型List
@@ -241,9 +240,9 @@
 				radio:'1',
 				buildSettlementCompany:{//新增修改弹框数据
 					customer_supplier_id:"",//船公司ID
-					id:null,//船id
-					name:"",//航名称
-					status:""//状态
+					customer_supplier_ship_data_id:null,//船id
+					customer_supplier_ship_data_name:"",//航名称
+					customer_supplier_ship_data_status:""//状态
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
 					// {
@@ -260,10 +259,10 @@
 					customer_supplier_id: [
 						{ required: true, message: '请选择船公司', trigger: 'blur' },
 					],
-					name: [
-						{ required: true, message: '请输入港口', trigger: 'blur' }
+					customer_supplier_ship_data_name: [
+						{ required: true, message: '请输入船名', trigger: 'blur' }
 					],
-					status: [
+					customer_supplier_ship_data_status: [
 						{required: true, message: '请选择状态',  trigger: 'change' }
 					]
 				},
@@ -282,9 +281,6 @@
 		computed: {},
 		created() {
 			this.getMessage();
-			this.$getBusinessModule(0).then((item,otherid)=>{
-				this.businessModule=item;
-			});
 			this.getBoatCompany();
 		},
 		mounted() {},
@@ -369,7 +365,7 @@
 			//主表格单条修改
 			mainTableEdit(id){
 				this.tableData.forEach((it,index)=>{
-					if(id==it.id){
+					if(id==it.customer_supplier_ship_data_id){
 						this.buildSettlementCompany=JSON.parse(JSON.stringify(it));
 						this.innerVisibleType=false;
 						this.innerVisible=true;
@@ -385,11 +381,12 @@
 				.then(() => {
 					var _this=this;
 					_this.$postFunc("/customerSupplierShipData/destroy",{ids:id},function(res){
-						_this.tableData.forEach((it,index)=>{
-							if(id==it.customer_supplier_ship_data_id){
-								_this.tableData.splice(index,1)
-							}
-						})
+						// _this.tableData.forEach((it,index)=>{
+						// 	if(id==it.customer_supplier_ship_data_id){
+						// 		_this.tableData.splice(index,1)
+						// 	}
+						// })
+						_this.getMessage()
 					},function(){})
 				}).catch(()=>{})
 			},
@@ -485,10 +482,11 @@
 						if(this.innerVisibleType){
 							//新增
 							this.$postFunc("/customerSupplierShipData/update",this.buildSettlementCompany,function(respones){
-								console.log(respones)
-								let mess=respones.data.data;
-								mess.customer_supplier_ship_data_user_name=mess.customer_supplier_ship_data_user_name;
-								_this.tableData.unshift(mess)
+								// console.log(respones)
+								// let mess=respones.data.data;
+								// mess.customer_supplier_ship_data_user_name=mess.customer_supplier_ship_data_user_name;
+								// _this.tableData.unshift(mess)
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 
@@ -496,15 +494,16 @@
 						}else{
 							//修改
 							this.$postFunc("/customerSupplierShipData/update",this.buildSettlementCompany,function(respones){
-								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								tabledata.forEach((item,index)=>{
-									if(item.id==_this.buildSettlementCompany.id){
-										let mess=respones.data.data;
-										mess.user_name=mess.users.name;
-										tabledata[index]=mess;
-									}
-								})
-								_this.tableData=tabledata;
+								// let tabledata=JSON.parse(JSON.stringify(_this.tableData))
+								// tabledata.forEach((item,index)=>{
+								// 	if(item.id==_this.buildSettlementCompany.id){
+								// 		let mess=respones.data.data;
+								// 		mess.user_name=mess.users.name;
+								// 		tabledata[index]=mess;
+								// 	}
+								// })
+								// _this.tableData=tabledata;
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 							})
@@ -597,7 +596,7 @@
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/products/status",{ids:ids,status:1},function(res){
+						_this.$postFunc("/customerSupplierShipData/status",{ids:ids,status:1},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})
@@ -619,7 +618,7 @@
 						})
 						ids=ids.substring(0,ids.length-1);
 						var _this=this;
-						_this.$postFunc("/products/status",{ids:ids,status:0},function(res){
+						_this.$postFunc("/customerSupplierShipData/status",{ids:ids,status:0},function(res){
 							_this.getMessage();
 						},function(){})
 					}).catch(()=>{})

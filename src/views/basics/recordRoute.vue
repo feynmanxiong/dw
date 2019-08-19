@@ -22,9 +22,9 @@
 							<el-button type="success" plain size="mini" @click="select">查询</el-button>
 						</div>
 					</el-row>
-					<el-row>
+					<!-- <el-row>
 						<input type="text" v-model="getKeyList.search" placeholder="请输入内容" class="el-input__inner">
-					</el-row>
+					</el-row> -->
 					<el-row>
 						<span class="span">状态</span>
 						<el-select v-model="getKeyList.status" placeholder="请选择" size="mini" class="date_box">
@@ -44,7 +44,7 @@
 						<span class="span">操作人</span>
 						<div class="block">
 							<el-select v-model="getKeyList.user" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in userlist" :key="item.value" :label="item.key" :value="item.value"> </el-option>
+								<el-option v-for="item in userlist" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
@@ -91,12 +91,12 @@
 								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" prop="status" label="状态">
+						<el-table-column align="center" :sortable="true" prop="status" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" prop="name" label="航线"></el-table-column>
-						<el-table-column align="center" prop="user_name" label="操作人"></el-table-column>
-						<el-table-column align="center" prop="updated_at" label="操作时间"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="name" label="航线"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="user_name" label="操作人"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
@@ -210,8 +210,7 @@
 				sonTableIsShow:false,//港口业务板块类型关系编辑是否展示 是true  否false
 				userlist:[],//操作人列表
 				Port:[],//航线列表
-				businessModule:[//业务板块List数据
-				],
+				businessModule:this.$store.state.businessModule,//业务板块List数据
 				MBusinessClass:[//主业务类型List
 				],
 				SBusinessClass:[//子业务类型List
@@ -270,9 +269,6 @@
 		computed: {},
 		created() {
 			this.getMessage();
-			this.$getBusinessModule(0).then((item,otherid)=>{
-				this.businessModule=item;
-			});
 		},
 		mounted() {},
 		methods: {
@@ -352,11 +348,12 @@
 				.then(() => {
 					var _this=this;
 					_this.$postFunc("/routes/destroy",{ids:id},function(res){
-						_this.tableData.forEach((it,index)=>{
-							if(id==it.id){
-								_this.tableData.splice(index,1)
-							}
-						})
+						// _this.tableData.forEach((it,index)=>{
+						// 	if(id==it.id){
+						// 		_this.tableData.splice(index,1)
+						// 	}
+						// })
+						_this.getTRMessage()
 					},function(){})
 				}).catch(()=>{})
 			},
@@ -364,6 +361,7 @@
 			getTRMessage(trid,name){
 				var _this=this;
 				_this.$postFunc("/routes/show/business/"+trid,{},function(res){
+					console.log(res)
 					var data=res.data.data;
 					var dataT=new Array();
 					data.forEach(item=>{
@@ -451,9 +449,10 @@
 						if(this.innerVisibleType){
 							//新增
 							this.$postFunc("/routes/store",this.buildSettlementCompany,function(respones){
-								let mess=respones.data.data;
-								mess.user_name=mess.users.name;
-								_this.tableData.unshift(mess)
+								// let mess=respones.data.data;
+								// mess.user_name=mess.users.name;
+								// _this.tableData.unshift(mess)
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 
@@ -461,19 +460,20 @@
 						}else{
 							//修改
 							this.$postFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
-								console.log(respones)
-								let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								console.log(tabledata)
-								console.log(_this.buildSettlementCompany)
-								tabledata.forEach((item,index)=>{
-									if(item.id==_this.buildSettlementCompany.id){
-										let mess=respones.data.data;
-										mess.user_name=mess.users.name;
-										tabledata[index]=mess;
-									}
-								})
-								_this.tableData=tabledata;
-								console.log(tabledata)
+								// console.log(respones)
+								// let tabledata=JSON.parse(JSON.stringify(_this.tableData))
+								// console.log(tabledata)
+								// console.log(_this.buildSettlementCompany)
+								// tabledata.forEach((item,index)=>{
+								// 	if(item.id==_this.buildSettlementCompany.id){
+								// 		let mess=respones.data.data;
+								// 		mess.user_name=mess.users.name;
+								// 		tabledata[index]=mess;
+								// 	}
+								// })
+								// _this.tableData=tabledata;
+								// console.log(tabledata)
+								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
 							})
@@ -534,6 +534,7 @@
 				var list=new Array();
 				var _this=this;
 				var flag=true;
+				console.log(_this.PortDataSon)
 				_this.PortDataSon.forEach(each=>{
 					var obj=new Object();
 					if(each.segment_business_id==null||each.master_business_id==null||each.slaver_business_id==null){

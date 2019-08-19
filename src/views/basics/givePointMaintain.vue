@@ -1,4 +1,4 @@
-<!--装箱点维护-->
+<!--送箱点维护-->
 <template>
 	<div>
 		<div class="container">
@@ -33,7 +33,7 @@
 						</el-select>
 					</el-row>
 					<el-row>
-						<span class="span">装箱门点</span>
+						<span class="span">送箱门点</span>
 						<div class="block">
 							<el-select v-model="getKeyList.address_id" filterable placeholder="请选择" size="mini" class="date_box">
 								<el-option v-for="item in Port" :key="item.id" :label="item.address" :value="item.id"> </el-option>
@@ -94,7 +94,7 @@
 						<el-table-column align="center" :sortable="true" prop="status" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" :sortable="true" prop="address" label="装箱门点"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="address" label="送箱门点"></el-table-column>
 						<el-table-column align="center" :sortable="true" prop="handle_man" label="操作人"></el-table-column>
 						<el-table-column align="center" :sortable="true" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
@@ -110,7 +110,7 @@
 				</el-row>
 				<div class="STable" v-show="sonTableIsShow">
 					<div class="STableTitle clearfix">
-						<span>集装箱箱型/业务板块类型关系 &nbsp;&nbsp;&nbsp;装箱门店：{{checkPort}}</span>
+						<span>集装箱箱型/业务板块类型关系 &nbsp;&nbsp;&nbsp;送箱门店：{{checkPort}}</span>
 						<el-button plain class="STableTitle_btn" type="primary" size="small" @click="editTableSon">编辑</el-button>
 					</div>
 					  <template>
@@ -128,7 +128,7 @@
 			<!--港口维护主表添加start-->
 			<el-dialog title="新建集装箱箱型" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="装箱门点" prop="address">
+					<el-form-item label="送箱门点" prop="address">
 						<el-input v-model="buildSettlementCompany.address"></el-input>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">
@@ -145,7 +145,7 @@
 			</el-dialog>
 			<!--港口维护主表添加end-->
 			<!--港口维护子表添加start-->
-			<el-dialog :title="'装箱门点/业务板块类型关系 装箱门店：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
+			<el-dialog :title="'送箱门点/业务板块类型关系 送箱门店：'+checkPort" :visible.sync="innerVisibleSon" width="70%" :append-to-body="true" :modal="true" :before-close="handleDialogCloseSon">
 				<el-table :data="PortDataSon" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border size="mini" class="PortDataSon"  style="margin-bottom:10px;">
 					<el-table-column align="center" prop="id" label="操作" width="80">
 						<template slot-scope="scope">
@@ -202,7 +202,7 @@
 					segment_business_id:"",//主业务板块
 					master_business_id:"",//主业务类型
                     slaver_business_id:"",//子业务类型
-                    category_status:0//箱子状态 装箱0  送箱1
+                    category_status:1//箱子状态 装箱0  送箱1
 				},
 				isShowAside:true,//是否展示侧边栏
 				innerVisible:false,//港口维护主表添加弹框是否显示
@@ -217,9 +217,9 @@
 				SBusinessClass:[//子业务类型List
 				],
 				MainTableSelectChangeIdList:[],//列表页多选框，选中的id
-				checkPort:"",//装箱门点/业务板块类型关系    装箱门点{{checkPort}}数据展示
-				chekcPortId:"",//装箱门点/业务板块类型关系id
-				newid:1,////装箱门点/业务板块类型关系编辑弹框新增数据 模拟id(自增)
+				checkPort:"",//送箱门点/业务板块类型关系    送箱门点{{checkPort}}数据展示
+				chekcPortId:"",//送箱门点/业务板块类型关系id
+				newid:1,////送箱门点/业务板块类型关系编辑弹框新增数据 模拟id(自增)
 				fileList:"",
 				params:"",
 				total: 7,
@@ -229,8 +229,8 @@
 				buildSettlementCompany:{//新增修改弹框数据
 					address:"",//航线名称
                     status:"",//状态
-					is_up:1,//箱子状态 装箱0  送箱1
-					is_down:0
+					is_up:0,//箱子状态 送箱0  送箱1
+					is_down:1
 				},
 				PortDataSon:[//港口业务板块类型关系编辑 数据
 					// {
@@ -276,7 +276,7 @@
 			},
 			//重置按钮
 			reset(){
-				this.getKeyList={page:1,per_page:10,search:"",status:"",address_id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:"",category_status:0}
+				this.getKeyList={page:1,per_page:10,search:"",status:"",address_id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:"",category_status:1}
 				this.getMessage()
 				this.sonTableIsShow=false;
 			},
@@ -508,8 +508,8 @@
 				this.buildSettlementCompany={//新增修改弹框数据
 					address:"",//航线名称
                     status:"",//状态
-					is_up:1,//箱子状态 装箱0  送箱1
-					is_down:0
+					is_up:0,//箱子状态 送箱0  送箱1
+					is_down:1
 				}
 				this.innerVisible=false;
 			},

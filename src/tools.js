@@ -16,7 +16,6 @@ function install(Vue) {
     Vue.prototype.$login = function (param) {
         var _this=this;
         axios.post('/login',param).then((response) => {
-            console.log(response)
             if (response.data.code == 200) {
                 // localStorage.setItem("dw_erp_user_name",response.data.data.name);
                 // localStorage.setItem("dw_erp_user_username",response.data.data.username);
@@ -160,6 +159,7 @@ function install(Vue) {
         this.$store.dispatch("changeFunc",id)
         func();
     }
+
 }
 
 export default install;
