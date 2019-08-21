@@ -1,9 +1,22 @@
 <template>
   <div class="edit">
-    <el-form :inline="true" :model="params" label-position="right" label-width="110px">
+    <el-form
+      :inline="true"
+      :model="customerEditList"
+      :rules="rules"
+      ref="ruleForm"
+      label-position="right"
+      label-width="110px"
+    >
       <el-row class="cont_button">
         <div class="cont_border cont_top cont_bm">
-          <el-button type="primary" size="mini" plain class="btn-left">保存</el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            class="btn-left"
+            @click="submitForm('ruleForm')"
+          >保存</el-button>
           <el-button type="primary" size="mini" plain>审核</el-button>
           <el-button type="danger" size="mini" plain>取消审核</el-button>
         </div>
@@ -11,7 +24,7 @@
       <el-row class="cont_border">
         <div class="cont_bottom_b">
           <el-row>
-            <el-form-item class="el-item" label="全称:">
+            <el-form-item class="el-item" label="全称:" prop="fullname">
               <el-input
                 v-model="customerEditList.fullname"
                 placeholder="请录入全称"
@@ -19,7 +32,7 @@
                 class="date_input"
               ></el-input>
             </el-form-item>
-            <el-form-item class="el-item" label="简称:">
+            <el-form-item class="el-item" label="简称:" prop="forshort">
               <el-input
                 v-model="customerEditList.forshort"
                 placeholder="请录入简称"
@@ -27,7 +40,7 @@
                 class="date_input"
               ></el-input>
             </el-form-item>
-            <el-form-item class="el-item" label="助记码:">
+            <el-form-item class="el-item" label="助记码:" prop="mnemonic">
               <el-input
                 v-model="customerEditList.mnemonic"
                 placeholder="请输入助记码"
@@ -189,7 +202,7 @@
             <el-row v-for="(num, index) in bankNum" :key="num">
               <el-form-item label="开户行:">
                 <el-select
-                  v-model="customerEditList.bank"
+                  v-model="num.bank"
                   placeholder="请选择"
                   size="mini"
                   class="date_input"
@@ -204,13 +217,13 @@
               </el-form-item>
               <el-form-item label="银行账号:">
                 <el-input
-                  v-model="customerEditList.bankcounter"
+                  v-model="num.bankcounter"
                   placeholder="请录入银行账号"
                   size="mini"
                   class="date_input"
                 ></el-input>
               </el-form-item>
-              <span  class="icon_span">
+              <span class="icon_span">
                 <i class="fa fa-plus" title="添加" @click="addBank(index)"></i>
                 <i class="fa fa-trash" title="删除" @click="deleteBank(index)"></i>
               </span>
@@ -290,7 +303,7 @@
                 ></el-input>
               </el-form-item>
             </el-row>
-            <el-row>
+            <el-row class="time_left">
               <el-form-item label="创建时间：">2019-6-17</el-form-item>
             </el-row>
           </div>
@@ -305,7 +318,7 @@
                 ></el-input>
               </el-form-item>
             </el-row>
-            <el-row>
+            <el-row class="time_left">
               <el-form-item label="修改时间：">2019-6-17</el-form-item>
             </el-row>
           </div>
@@ -320,7 +333,7 @@
                 ></el-input>
               </el-form-item>
             </el-row>
-            <el-row>
+            <el-row class="time_left">
               <el-form-item label="审核时间：">2019-6-17</el-form-item>
             </el-row>
           </div>
@@ -450,7 +463,12 @@ export default {
         checktman: ""
       },
       multipleSelection: [],
-      bankNum: [1,2]
+      bankNum: [{ bank: "", bankcounter: "" }],
+      rules: {
+        fullname: [{ required: true, message: "请输入全称", trigger: "blur" }],
+        forshort: [{ required: true, message: "请输入简称", trigger: "blur" }],
+        mnemonic: [{ required: true, message: "请输入助记符", trigger: "blur" }]
+      }
     };
   },
   methods: {
@@ -467,7 +485,6 @@ export default {
 
     //删除按钮
     mulSelectedDelete() {
-      alert("delete it");
       if (this.multipleSelection.length > 0) {
         this.$confirm("选定项是否确定删除？", "提示", {
           confirmButtonText: "确定",
@@ -488,12 +505,26 @@ export default {
     },
 
     //添加银行信息
-    addBank(){
-     this.bankNum.push(1);
+    addBank() {
+      this.bankNum.push({ bank: "", bankcounter: "" });
     },
     //删除银行信息
-    deleteBank(){
-     this.bankNum.pop();
+    deleteBank() {
+      if (this.bankNum.length > 1) {
+        this.bankNum.pop();
+      } else {
+        return;
+      }
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     }
   },
   mounted() {
@@ -539,14 +570,17 @@ export default {
   padding: 20px;
 }
 
-.icon_span{
+.icon_span {
   margin-left: 10px;
-  line-height: 40px; 
+  line-height: 40px;
 }
 .btn-left {
   margin-left: 40px;
 }
 .logistic_ {
   padding-left: 20px;
+}
+.time_left {
+  margin-left: 20px;
 }
 </style>>

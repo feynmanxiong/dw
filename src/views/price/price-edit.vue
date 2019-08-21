@@ -612,7 +612,6 @@ export default {
 
     //删除按钮
     mulSelectedDelete() {
-      alert("delete it");
       if (this.multipleSelection.length > 0) {
         this.$confirm("选定项是否确定删除？", "提示", {
           confirmButtonText: "确定",
