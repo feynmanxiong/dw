@@ -1,11 +1,12 @@
-import { Message, Loading  } from 'element-ui';
-import {mapState,mapAction} from 'vuex';
+import { Message, Loading } from 'element-ui';
+import { mapState, mapAction } from 'vuex';
+let axios = require('axios');
 
 function install(Vue) {
     Vue.mixin({
         created: function () {
         },
-        data(){
+        data() {
             return {
             }
         },
@@ -15,14 +16,14 @@ function install(Vue) {
 
     Vue.prototype.$login = function (param) {
         var _this=this;
-        axios.post('/login',param).then((response) => {
+        axios.post('/login',param).then((response) => {      
             if (response.data.code == 200) {
                 // localStorage.setItem("dw_erp_user_name",response.data.data.name);
                 // localStorage.setItem("dw_erp_user_username",response.data.data.username);
                 // localStorage.setItem("dw_erp_user_token",response.data.data.token);
-                localStorage.setItem("dw_erp_user_name",response.data.data.name);
+                localStorage.setItem("dw_erp_user_name", response.data.data.name);
                 //localStorage.setItem("dw_erp_user_username",response.data.data.username);
-                localStorage.setItem("dw_erp_user_token",response.data.data.api_token);
+                localStorage.setItem("dw_erp_user_token", response.data.data.api_token);
                 _this.$router.replace("/console");
             }
         }).catch((error) => {
@@ -64,10 +65,10 @@ function install(Vue) {
     // }
     Vue.prototype.$checkingOpetate = {};
     Vue.prototype.$canOperate = function () {
-        Vue.prototype.$checkingOpetate = Loading.service({ fullscreen: true, lock: true, text:"正在同步ERP数据请稍后···" });
+        Vue.prototype.$checkingOpetate = Loading.service({ fullscreen: true, lock: true, text: "正在同步ERP数据请稍后···" });
         return new Promise((resolve, reject) => {
             axios.post("/goods.can.operate").then((response) => {
-                if(response.data.code == 0){
+                if (response.data.code == 0) {
                     resolve(response.data.data.operate);
                 }
             }).catch((error) => {
@@ -79,51 +80,51 @@ function install(Vue) {
 
     Vue.prototype.$checkOpetate = function () {
         Vue.prototype.$canOperate().then((operate) => {
-            if(operate == 1){
+            if (operate == 1) {
                 Vue.prototype.$checkingOpetate.close();
             } else {
                 setTimeout(() => {
                     Vue.prototype.$checkOpetate();
-                },1000);
+                }, 1000);
             }
         })
     }
 
-    Vue.prototype.$getBreed = function(){
+    Vue.prototype.$getBreed = function () {
         return axios.post("/breed.port");
     }
-    Vue.prototype.$getBrand = function(){
+    Vue.prototype.$getBrand = function () {
         return axios.post("/brand.lst");
     }
-    Vue.prototype.$getGrade = function(){
-        return axios.post("/grade.lst",{
-            status : 1
+    Vue.prototype.$getGrade = function () {
+        return axios.post("/grade.lst", {
+            status: 1
         });
     }
-    Vue.prototype.$gethouse = function(){
+    Vue.prototype.$gethouse = function () {
         return axios.post("/warehouse.port")
     }
-    Vue.prototype.$getPortList = function(){
-        return axios.post("/port.port",{
-            company : "true"
+    Vue.prototype.$getPortList = function () {
+        return axios.post("/port.port", {
+            company: "true"
         });
     }
-    Vue.prototype.$getCurrencyList = function(){
+    Vue.prototype.$getCurrencyList = function () {
         return axios.post("/currency.lst");
     }
 
-    Vue.prototype.$getAdminList = function(){
+    Vue.prototype.$getAdminList = function () {
         return axios.post("/admin.port");
     }
 
     //laughing
 
-    Vue.prototype.$getFunc=function(url,data,success,errorF){
-        axios.get(url,data).then(response=>{
-            if(response.status==200&&response.data.code==200){
+    Vue.prototype.$getFunc = function (url, data, success, errorF) {
+        axios.get(url, data).then(response => {
+            if (response.status == 200 && response.data.code == 200) {
                 success(response)
             }
-        }).catch(error=>{
+        }).catch(error => {
             errorF(error)
         })
     }
@@ -131,14 +132,16 @@ function install(Vue) {
     Vue.prototype.$postFunc=function(url,data,success,errorF){
         axios.post(url,data).then(response=>{
             if(response.status==200&&response.data.code==200){
+
                 success(response)
-            }else{
+            } else {
                 console.log(response)
             }
-        }).catch(error=>{
+        }).catch(error => {
             errorF(error)
         })
     }
+
     //post请求带message提示
     Vue.prototype.$postHasMessageFunc=function(url,data,success,errorF){
         axios.post(url,data).then(response=>{
@@ -176,6 +179,11 @@ function install(Vue) {
     Vue.prototype.$getEditMessageId=function(id,func){
         this.$store.dispatch("changeFunc",id)
         func();
+    }
+    //获取客户供应商列表
+    Vue.prototype.$getCustomerList = function () {
+        console.log('xiongwencheng');
+        return axios.post("/customerSuppliers");
     }
     //基础模块批量删除
     Vue.prototype.$batchDelete=function(dataList,url,func){

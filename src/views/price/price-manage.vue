@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="container"></div>
@@ -16,7 +15,7 @@
           <div class="cont_t">自定义查询区</div>
           <el-row class="el-m publicSelect">
             <div align="center">
-              <el-button type="info" plain size="mini">重置</el-button>
+              <el-button type="info" plain size="mini" @click="clearAll">重置</el-button>
               <el-button type="success" plain size="mini">查询</el-button>
             </div>
           </el-row>
@@ -25,24 +24,22 @@
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <!-- <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="已审核" :value="1"></el-option>
-              <el-option :label="未审核" :value="0"></el-option>
-            </el-select>-->
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="status.status_value" placeholder="请选择" size="mini" class="date_box">
+              <el-option :label="'已审核'" :value="1"></el-option>
+              <el-option :label="'未审核'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">价格协议号</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
+            <el-select
+              v-model="status.price_num_value"
+              placeholder="模糊查询"
+              size="mini"
+              class="date_box"
+              filterable
+            >
               <el-option
-                v-for="item in options"
+                v-for="item in price_num_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -51,9 +48,15 @@
           </el-row>
           <el-row>
             <span class="span">价格协议内容</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
+            <el-select
+              v-model="status.price_proxy_value"
+              placeholder="模糊查询"
+              size="mini"
+              class="date_box"
+              filterable
+            >
               <el-option
-                v-for="item in options"
+                v-for="item in price_proxy_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -62,9 +65,9 @@
           </el-row>
           <el-row>
             <span class="span">结算公司</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <el-select v-model="settle_value" placeholder="请选择" size="mini" class="date_box">
               <el-option
-                v-for="item in options"
+                v-for="item in settle_options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -73,13 +76,7 @@
           </el-row>
           <el-row>
             <span class="span">业务板块</span>
-            <el-select
-              v-model="value"
-              filterable
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-            >
+            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -90,13 +87,7 @@
           </el-row>
           <el-row>
             <span class="span">主业务类型</span>
-            <el-select
-              v-model="value"
-              filterable
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-            >
+            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -108,24 +99,7 @@
           <el-row>
             <span class="span">子业务类型</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
-            </el-select>
-          </el-row>
-          <el-row>
-            <span class="span">创建人</span>
-            <el-select
-              v-model="value"
-              filterable
-              placeholder="请选择"
-              size="mini"
-              class="date_box"
-            >
-            <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
@@ -143,8 +117,13 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-date-picker type="date" placeholder="申请开始时间" size="mini" class="date_input"></el-date-picker>
-            <el-date-picker type="date" placeholder="申请结束时间" size="mini" class="date_input"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="创建时间"
+              size="mini"
+              class="date_input"
+              v-model="status.created_date"
+            ></el-date-picker>
           </el-row>
           <el-row>
             <span class="span">修改人</span>
@@ -156,21 +135,32 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-date-picker type="date" placeholder="商务会签开始时间" size="mini" class="date_input"></el-date-picker>
-            <el-date-picker type="date" placeholder="商务会签结束时间" size="mini" class="date_input"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="修改时间"
+              size="mini"
+              class="date_input"
+              v-model="status.updated_date"
+            ></el-date-picker>
           </el-row>
           <el-row>
             <span class="span">审核人</span>
             <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-             <el-option
+              <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-date-picker type="date" placeholder="业务开始时间" size="mini" class="date_input"></el-date-picker>
-            <el-date-picker type="date" placeholder="业务结束时间" size="mini" class="date_input"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="审核时间"
+              size="mini"
+              class="date_input"
+              v-model="status.checked_date"
+            ></el-date-picker>
+            <!-- <el-date-picker type="date" placeholder="业务结束时间" size="mini" class="date_input"></el-date-picker> -->
           </el-row>
         </el-aside>
       </transition>
@@ -254,7 +244,7 @@
 
 <script>
 // import getData from "./tool/ajax";
-import priceEditAdd from "./price-edit-add";
+
 /**
  * 参数均为数组，arr1包含arr2
  * 批量删除
@@ -271,29 +261,95 @@ function removeByValue(arr1, arr2) {
 export default {
   data() {
     return {
-      selectStatus: "1",
-      //是否展示侧边栏
-      isShowAside: true,
-      //审核状态
-      options: [
+      isShowAside: true, //是否展示侧边栏
+
+      //获取查询关键字列表
+      getKeyList: {
+        page: 1, //第几页，默认第一页
+        per_page: 10, //每页记录数，默认是10
+        search: "", //模糊搜索
+        check_status: "", //状态0:未审核，1:已审核
+        proxy_id: "", //协议号
+        proxy_content: "", //协议内容
+        settle_company: "", //操作人
+        segment_business: "", //主业务板块
+        master_business: "", //主业务类型
+        slaver_business: "", //子业务类型
+        created_man: "", //创建人
+        modify_man: "", //修改人
+        checked_man: "", //审核人
+        created_date: "", //创建时间
+        modified_date: "", //修改时间
+        checked_date: "" //审核时间
+      },
+
+      //查询状态
+      status: {
+        status_value: "", //审核状态 0:未审核，1:已审核
+        price_num_value: "", //价格协议号
+        price_proxy_value: "", //价格协议内容
+        checked_date: "", //审核时间
+        updated_date: "", //修改时间
+        created_data: "" //创建时间
+      },
+
+      //价格协议号
+      price_num_options: [
         {
           value: "选项1",
-          label: "已审核"
+          label: "1"
         },
         {
           value: "选项2",
-          label: "未审核"
+          label: "2"
+        },
+        {
+          value: "选项3",
+          label: "3"
+        },
+        {
+          value: "选项4",
+          label: "4"
+        },
+        {
+          value: "选项5",
+          label: "5"
+        },
+        {
+          value: "选项6",
+          label: "6"
+        },
+        {
+          value: "选项7",
+          label: "7"
         }
       ],
-      value: "",
 
+      //价格协议内容
+      price_proxy_options: [
+        {
+          value: "选项1",
+          label: "xiuda"
+        },
+        {
+          value: "选项2",
+          label: "xiulai"
+        }
+      ],
+
+      //列表数据
       tableData: [],
+
       //选中列表行数据
       selectedData: [],
+
       //多选数据
       multipleSelection: [],
-      //价格编辑框
+
+      //新增编辑数量
       priceNumber: 0,
+      
+      //分页
       total: 0,
       currentPage: 1,
       pageSize: 10
@@ -428,6 +484,17 @@ export default {
     console.log(this.total);
   },
   methods: {
+    //重置按钮
+    clearAll() {
+      this.status = {
+        status_value: "",
+        price_num_value: "",
+        price_proxy_value: "",
+        checked_date: "",
+        updated_date: "",
+        created_data: ""
+      };
+    },
     //编辑按钮新增框
     dialogVisibleAddview() {
       var obj = new Object();
@@ -440,10 +507,6 @@ export default {
       obj.content = "priceEdit";
       this.$emit("clickSearch", obj);
     },
-    // //编辑按钮
-    // dialogVisibleAddview() {
-    //   this.$refs.addDialog.showAndHideDialog();
-    // },
     //编辑图标
     handleEdit(index, row) {
       this.dialogVisibleAddview();
@@ -465,7 +528,6 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
-    // ----批量操作可进行封装----
     //批量删除
     mulSelectedDelete() {
       if (this.multipleSelection.length > 0) {
@@ -523,7 +585,6 @@ export default {
     }
   },
   components: {
-    priceeditadd: priceEditAdd
   }
 };
 </script>
@@ -541,7 +602,6 @@ export default {
 .cont_block {
   display: block;
 }
-
 .STableTitle_btn {
   float: right;
   margin-bottom: 0;
