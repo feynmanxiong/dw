@@ -362,8 +362,10 @@
 			}
         },
         created(){
-            this.id=this.$store.state.id;
-            console.log(this.id)
+            if(this.$store.state.id!=null){
+                this.id=this.$store.state.id;
+                this.$store.dispatch("changeFunc",null)
+            }
         }
     }
 </script>

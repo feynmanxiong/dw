@@ -1,4 +1,4 @@
-<!--基础资料=>业务基础数据=>航线维护   recordRoute -->
+<!--送箱点维护-->
 <template>
 	<div>
 		<div class="container">
@@ -23,7 +23,7 @@
 						</div>
 					</el-row>
 					<!-- <el-row>
-						<input type="text" v-model="getKeyList.search" placeholder="请输入内容" class="el-input__inner">
+						<input type="text" v-model="getKeyList.keyword" placeholder="请输入内容" class="el-input__inner">
 					</el-row> -->
 					<el-row>
 						<span class="span">状态</span>
@@ -33,17 +33,17 @@
 						</el-select>
 					</el-row>
 					<el-row>
-						<span class="span">航线</span>
+						<span class="span">送箱门点</span>
 						<div class="block">
-							<el-select v-model="getKeyList.id" filterable placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in Port" :key="item.key" :label="item.value" :value="item.key"> </el-option>
+							<el-select v-model="getKeyList.address_id" filterable placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in Port" :key="item.id" :label="item.address" :value="item.id"> </el-option>
 							</el-select>
 						</div>			
 					</el-row>
 					<el-row>
 						<span class="span">操作人</span>
 						<div class="block">
-							<el-select v-model="getKeyList.user" placeholder="请选择" size="mini" class="date_box">
+							<el-select v-model="getKeyList.user_id" placeholder="请选择" size="mini" class="date_box">
 								<el-option v-for="item in userlist" :key="item.key" :label="item.value" :value="item.key"> </el-option>
 							</el-select>
 						</div>			
@@ -94,8 +94,8 @@
 						<el-table-column align="center" :sortable="true" prop="status" label="状态">
 							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
 						</el-table-column>
-						<el-table-column align="center" :sortable="true" prop="name" label="航线"></el-table-column>
-						<el-table-column align="center" :sortable="true" prop="user_name" label="操作人"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="address" label="送箱门点"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="handle_man" label="操作人"></el-table-column>
 						<el-table-column align="center" :sortable="true" prop="updated_at" label="操作时间"></el-table-column>
 					</el-table>
 					<el-pagination background
@@ -113,10 +113,10 @@
 				</div>
 			</el-main>
 			<!--港口维护主表添加start-->
-			<el-dialog title="新建航线" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
+			<el-dialog title="新建送箱门点" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="航线" prop="name">
-						<el-input v-model="buildSettlementCompany.name"></el-input>
+					<el-form-item label="送箱门点" prop="address">
+						<el-input v-model="buildSettlementCompany.address"></el-input>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">
 						<el-select v-model="buildSettlementCompany.status" placeholder="请选择状态">
@@ -136,7 +136,7 @@
 </template>
 
 <script>
-	import businessModule from '../public/businessModule.vue'
+	import businessModule from '../public/businessModule.vue'	
 	export default {
 		data() {
 			return {
@@ -144,14 +144,15 @@
 				getKeyList:{
 					page:1,//第几页，默认第一页
 					per_page:10,//每页记录数，默认是10
-					search:"",//模糊搜索
+					keyword:"",//模糊搜索
 					status:"",//状态0:禁用，1:启用
-					id:"",//航线id
-					user:"",//操作人
+					address_id:"",//集装箱箱型id
 					user_id:"",//操作人
+					handle_man:"",//操作人
 					segment_business_id:"",//主业务板块
 					master_business_id:"",//主业务类型
-					slaver_business_id:""//子业务类型
+                    slaver_business_id:"",//子业务类型
+                    category_status:1//箱子状态 装箱0  送箱1
 				},
 				isShowAside:true,//是否展示侧边栏
 				innerVisible:false,//港口维护主表添加弹框是否显示
@@ -169,28 +170,32 @@
                 currentPage: 1,
 　　　　　　　　　pageSize: 10,
 				buildSettlementCompany:{//新增修改弹框数据
-					name:"",//航线名称
-					status:""//状态
+					address:"",//航线名称
+                    status:"",//状态
+					is_up:0,//箱子状态 送箱0  送箱1
+					is_down:1
 				},
 				rules: {
-					name: [
-						{ required: true, message: '请输入航线', trigger: 'blur' }
+					address: [
+						{ required: true, message: '请输入送箱门点', trigger: 'blur' },
 					],
 					status: [
 						{required: true, message: '请选择状态',  trigger: 'change' }
 					]
 				},
-				tableData: []//列表数据
+				tableData: [//列表数据
+					
+				]
 			}
 		},
 		computed: {},
 		created() {
 			this.getMessage();
 		},
+		mounted() {},
 		components:{
 			businessmodule:businessModule
 		},
-		mounted() {},
 		methods: {
 			//查询按钮
 			select(){
@@ -199,7 +204,7 @@
 			},
 			//重置按钮
 			reset(){
-				this.getKeyList={page:1,per_page:10,search:"",status:"",id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
+				this.getKeyList={page:1,per_page:10,search:"",status:"",address_id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:"",category_status:1}
 				this.getMessage()
 				this.sonTableIsShow=false;
 			},
@@ -240,10 +245,10 @@
 			//获取数据
 			getMessage(){
 				var _this=this;
-				this.$postFunc("/routes/list",this.getKeyList,function(respones){
+				this.$postFunc("/containerAddresses/list",this.getKeyList,function(respones){
 					_this.tableData=respones.data.data.result;
 					_this.userlist=respones.data.data.user;
-					_this.Port=respones.data.data.name;
+					_this.Port=respones.data.data.addresslist;
 					_this.total=respones.data.data.total;
 				},function(){
 
@@ -251,7 +256,7 @@
 			},
 			//主表格单条修改
 			mainTableEdit(id){
-				this.tableData.forEach((it)=>{
+				this.tableData.forEach((it,index)=>{
 					if(id==it.id){
 						this.buildSettlementCompany=JSON.parse(JSON.stringify(it));
 						this.innerVisibleType=false;
@@ -267,8 +272,12 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postHasMessageFunc("/routes/destroy",{ids:id},function(){
-						_this.getMessage()
+					_this.$postHasMessageFunc("/containerAddresses/destroy",{ids:id},function(res){
+						_this.tableData.forEach((it,index)=>{
+							if(id==it.id){
+								_this.tableData.splice(index,1)
+							}
+						})
 					},function(){})
 				}).catch(()=>{})
 			},
@@ -276,15 +285,15 @@
 			getTRMessage(trid,name){
 				var obj=new Object();
 				obj.id=trid;
-				obj.url="/routes/show/business/"+trid;
-				obj.name='航线/业务板块类型关系 航线：'+name;
-				obj.submitUrl="/routes/updateOrInsert/"+trid;
+				obj.url="/containerAddresses/businessshow/"+trid;
+				obj.name='装箱门点/业务板块类型关系 装箱门点：'+name;
+				obj.submitUrl="/containerAddresses/detailsupdate/"+trid;
 				this.sonTableIsShow=true;
 				this.$refs.publicbussinessmodule.getTRMessage(obj)
 			},
 			//主表格tr点击展示次表格
 			mainTableTrClick(row){
-				this.getTRMessage(row.id,row.name)
+				this.getTRMessage(row.id,row.address)
 			},
 			//主表格选择框点击
 			MainTableSelectChange(e){
@@ -300,7 +309,7 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postHasMessageFunc("/routes/store",this.buildSettlementCompany,function(){
+							this.$postHasMessageFunc("/containerAddresses/listadd",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -308,7 +317,7 @@
 							})
 						}else{
 							//修改
-							this.$postHasMessageFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(){
+							this.$postHasMessageFunc("/containerAddresses/listupdate",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -323,41 +332,43 @@
 			//主表格多条删除
 			handleDelete() {
 				var _this=this;
-				this.$batchDelete(this.MainTableSelectChangeIdList,"/routes/destroy",function(){
+				this.$batchDelete(this.MainTableSelectChangeIdList,"/containerAddresses/destroy",function(){
 					_this.getMessage();
 				})
 			},
 			//分页
 			handleSizeChange(val){
-				this.getKeyList.per_page = val;
-				this.getKeyList.page = 1;
-				this.getMessage();
+              this.getKeyList.per_page = val;
+			  this.getKeyList.page = 1;
+			  this.getMessage();
 			},
 			//分页
             handleCurrentChange(val){
-				this.getKeyList.page = val;
-				this.getMessage();
+			  this.getKeyList.page = val;
+			  this.getMessage();
 			},
 			//主表格新增和修改关闭
 			handleDialogClose(){
 				this.$refs.buildSettlementCompany.resetFields();
 				this.buildSettlementCompany={//新增修改弹框数据
-					name:"",//航线名称
-					status:""//状态
+					address:"",//航线名称
+                    status:"",//状态
+					is_up:0,//箱子状态 送箱0  送箱1
+					is_down:1
 				}
 				this.innerVisible=false;
 			},
-			//批量启用
+			 //批量启用
             handleStart(){
-				var _this=this;
-				this.$batchEnable(this.MainTableSelectChangeIdList,"/routes/status",function(){
+                var _this=this;
+				this.$batchEnable(this.MainTableSelectChangeIdList,"/containerAddresses/statusupdate",function(){
 					_this.getMessage();
 				})
             },
             //批量禁止
             handleProhibit(){
-				var _this=this;
-				this.$batchProhibit(this.MainTableSelectChangeIdList,"/routes/status",function(){
+                var _this=this;
+				this.$batchProhibit(this.MainTableSelectChangeIdList,"/containerAddresses/statusupdate",function(){
 					_this.getMessage();
 				})
             }

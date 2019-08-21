@@ -152,3 +152,4 @@ input{outline: none;}
 .dialogFormItem .form_radio_box{background-color:#f1f4f5;padding:10px 20px;}
 .dialogFormItem_form_radio{width:100%;}
 .dialogFormItem .form_radio{display: block;}
+/* .el-table th>.cell{word-break: keep-all;} */

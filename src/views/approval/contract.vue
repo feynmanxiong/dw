@@ -167,12 +167,12 @@
 			<el-main>
 				<el-row class="cont_block">
 					<el-button type="primary" plain @click="dialogVisibleAddview" size="mini">新增</el-button>
-					<el-button type="primary" plain size="mini">批量同意</el-button>
-					<el-button type="primary" plain size="mini">批量取消同意</el-button>
-					<el-button type="primary" plain size="mini">批量退签</el-button>
-					<el-button type="primary" plain size="mini">批量短信呼</el-button>
-					<el-button type="primary" plain size="mini">批量启用</el-button>
-					<el-button type="danger" plain size="mini">批量禁止</el-button>
+					<el-button type="primary" plain size="mini">同意</el-button>
+					<el-button type="primary" plain size="mini">取消同意</el-button>
+					<el-button type="primary" plain size="mini">退签</el-button>
+					<el-button type="primary" plain size="mini">短信呼</el-button>
+					<el-button type="primary" plain size="mini">启用</el-button>
+					<el-button type="danger" plain size="mini">禁用</el-button>
 					<el-button type="danger" plain size="mini">删除</el-button>
 					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
 				</el-row>

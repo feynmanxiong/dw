@@ -1,4 +1,4 @@
-<!--基础资料=>商务基础数据=>开票类型维护  merchantInvoice-->                                                                                                                                                                                                                                                     
+<!--箱型对应关系-->
 <template>
 	<div>
 		<div class="container">
@@ -26,37 +26,22 @@
 						<input type="text" v-model="getKeyList.keyword" placeholder="请输入内容" class="el-input__inner">
 					</el-row> -->
 					<el-row>
-						<span class="span">收付标志</span>
+						<span class="span">箱型分类</span>
 						<div class="block">
-							<el-select v-model="getKeyList.direction" placeholder="收付标志">
-								<el-option v-for="item in direction" :key="item.key" :label="item.value" :value="item.key"></el-option>
-							</el-select>
+							<el-select v-model="getKeyList.category_id" placeholder="请选择箱型分类">
+							<el-option label="小箱" :value="1"></el-option>
+							<el-option label="大箱" :value="2"></el-option>
+                            <el-option label="特大箱" :value="3"></el-option>
+						</el-select>
 						</div>			
-					</el-row>
-					<el-row>
-						<span class="span">开票类型</span>
-						<div class="block">
-							<el-select v-model="getKeyList.name" placeholder="开票类型">
-								<el-option v-for="item in name" :key="item" :label="item" :value="item"></el-option>
-							</el-select>
-						</div>			
-					</el-row>
-					<el-row>
-						<span class="span">税率</span>
-						<div class="block">
-							<el-select v-model="getKeyList.tax_rate" placeholder="税率">
-								<el-option v-for="item in tax_rate" :key="item" :label="item+'%'" :value="item"></el-option>
-							</el-select>
-						</div>		
 					</el-row>
 				</el-aside>
 			</transition>
 			<el-main>
 				<el-row class="cont_block">
 					<el-button type="primary" plain @click="innerVisible=true;innerVisibleType=true;" size="mini">新增</el-button>
+					<!-- <el-button type="primary" plain @click="handleChange"  size="mini">修改</el-button> -->
 					<el-button size="mini" plain  type="danger" @click="handleDelete">删除</el-button>
-					<el-button size="mini" plain  type="primary" @click="handleStart">启用</el-button>
-                    <el-button size="mini" plain  type="danger" @click="handleProhibit">禁用</el-button>
 				</el-row>
 				<el-row>
 					<el-table  :data="tableData" :header-cell-style="{background:'#e0f4ff',color:'#000'}" border class="mainTable" size="mini" @selection-change="MainTableSelectChange">
@@ -67,18 +52,11 @@
 								<i class="fa fa-trash" aria-hidden="true" @click.stop="mainTableSingleDelete(scope.row.id)"></i>
 							</template>
 						</el-table-column>
-						<el-table-column align="center" :sortable="true" prop="status" label="状态">
-							<template slot-scope="scope">{{scope.row.status==1?"启用":"禁用"}}</template>
-						</el-table-column>
-						<el-table-column align="center" :sortable="true" prop="direction" label="收付标志">
-                            <template slot-scope="scope">{{scope.row.direction==1?"收":scope.row.direction==2?"付":"收付"}}</template>
+						<el-table-column align="center" :sortable="true" prop="category_id" label="箱型分类">
+                            <template slot-scope="scope">{{scope.row.category_id==1?"小箱":scope.row.category_id==2?"大箱":scope.row.category_id==3?"特大箱":"自然箱"}}</template>
                         </el-table-column>
-						<el-table-column align="center" :sortable="true" prop="name" label="开票类型"></el-table-column>
-						<el-table-column align="center" :sortable="true" prop="tax_rate" label="税率">
-							<template slot-scope="scope">{{scope.row.tax_rate+'%'}}</template>
-						</el-table-column>
-						<el-table-column align="center" :sortable="true" prop="user_name" label="操作人"></el-table-column>
-						<el-table-column align="center" :sortable="true" prop="updated_at" label="操作时间"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="size" label="箱型代码"></el-table-column>
+						<el-table-column align="center" :sortable="true" prop="name" label="集装箱箱型"></el-table-column>
 					</el-table>
 					<el-pagination background
 						@size-change="handleSizeChange"
@@ -92,24 +70,20 @@
 				</el-row>
 			</el-main>
 			<!--港口维护主表添加start-->
-			<el-dialog title="新建开票类型" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
+			<el-dialog title="新建集装箱箱型" :visible.sync="innerVisible" :append-to-body="true" :modal="true" :before-close="handleDialogClose">
 				<el-form ref="buildSettlementCompany" :rules="rules" :model="buildSettlementCompany"  label-width="80px"  size="small">
-					<el-form-item label="开票类型" prop="name">
+					<el-form-item label="集装箱箱型" prop="name">
 						<el-input v-model="buildSettlementCompany.name"></el-input>
 					</el-form-item>
-					<el-form-item label="收付标志" prop="direction">
-						<el-select v-model="buildSettlementCompany.direction" placeholder="请选择收付标志">
-							<el-option v-for="item in direction" :key="item.key" :label="item.value" :value="item.key"></el-option>
+					<el-form-item label="箱型分类" prop="category_id">
+						<el-select v-model="buildSettlementCompany.category_id" placeholder="请选择箱型分类">
+							<el-option label="小箱" :value="1"></el-option>
+							<el-option label="大箱" :value="2"></el-option>
+                            <el-option label="特大箱" :value="3"></el-option>
 						</el-select>
 					</el-form-item>
-                    <el-form-item label="税率" prop="tax_rate">
-						<el-input v-model="buildSettlementCompany.tax_rate" @keyup.native="proving"></el-input>
-					</el-form-item>
-					<el-form-item label="状态" prop="status">
-						<el-select v-model="buildSettlementCompany.status" placeholder="请选择状态">
-							<el-option label="启用" :value="1"></el-option>
-							<el-option label="禁用" :value="0"></el-option>
-						</el-select>
+                    <el-form-item label="箱型代码" prop="size">
+						<el-input v-model="buildSettlementCompany.size"></el-input>
 					</el-form-item>
 					 <el-form-item size="small">
 						<el-button type="primary" @click="onSubmit">{{innerVisibleType?"添加":"保存"}}</el-button>
@@ -126,15 +100,12 @@
 	export default {
 		data() {
 			return {
-				direction:[],//收付列表
-				name:[],//开票类型列表
-				tax_rate:[],//税率列表
+
 				getKeyList:{
 					page:1,//第几页，默认第一页
 					per_page:10,//每页记录数，默认是10
-					direction:"",//收付标志 1：收，2：付，3：收付
-					tax_rate:"",//税率
-					name:""//开票类型
+					keyword:"",//模糊搜索
+					category_id:"",//箱型分类
 				},
 				isShowAside:true,//是否展示侧边栏
 				innerVisible:false,//港口维护主表添加弹框是否显示
@@ -146,28 +117,21 @@
 				total: 7,
                 currentPage: 1,
 　　　　　　　　　pageSize: 10,
-				buildSettlementCompany:{//新增修改弹框数据
-					id:"",
-                    status:"",
-					name:"",
-                    direction:"",
-                    tax_rate:""
+                buildSettlementCompany:{//新增修改弹框数据
+                    containerType:"",//箱型id
+					name:"",//航线名称
+                    category_id:"",//箱型分类
+                    size:""//箱型尺寸
 				},
 				rules: {
-					tax_rate: [
-						{ required: true, message: '请输入税率', trigger: 'blur' },
+					size: [
+						{ required: true, message: '请输入尺寸', trigger: 'blur' },
 					],
-					direction: [
-						{required: true, message: '请选择收付标志', trigger: 'blur'  }
-					],
-					name: [
-						{ required: true, message: '请输入开票类型', trigger: 'blur' }
+					category_id: [
+						{required: true, message: '请选择箱型分类', trigger: 'blur'  }
 					],
 					name: [
-						{ required: true, message: '请输入开票类型', trigger: 'blur' }
-					],
-					status: [
-						{ required: true, message: '请选择状态', trigger: 'blur' }
+						{ required: true, message: '请输入集装箱箱型', trigger: 'blur' }
 					]
 				},
 				tableData: [//列表数据
@@ -182,11 +146,6 @@
 		},
 		mounted() {},
 		methods: {
-			//验证只能输入正整数
-			proving(){
-				this.buildSettlementCompany.tax_rate=this.buildSettlementCompany.tax_rate.replace(/[^\.\d]/g,'');
-				this.buildSettlementCompany.tax_rate=this.buildSettlementCompany.tax_rate.replace('.','');
-			},
 			//查询按钮
 			select(){
 				this.getMessage()
@@ -194,18 +153,18 @@
 			},
 			//重置按钮
 			reset(){
-				this.getKeyList={page:1,per_page:10,direction:"",tax_rate:"",name:""}
+				this.getKeyList={page:1,per_page:10,search:"",status:"",id:"",country:"",user_id:"",segment_business_id:"",master_business_id:"",slaver_business_id:""}
 				this.getMessage()
 				this.sonTableIsShow=false;
 			},
 			//获取数据
 			getMessage(){
 				var _this=this;
-				this.$postFunc("/InvoiceType/list",this.getKeyList,function(respones){
+				this.$postFunc("/containerTypes",this.getKeyList,function(respones){
 					_this.tableData=respones.data.data.result;
-					_this.direction=respones.data.data.direction;
-					_this.name=respones.data.data.name;
-					_this.tax_rate=respones.data.data.tax_rate;
+					_this.userlist=respones.data.data.user;
+					_this.Port=respones.data.data.name;
+					_this.total=respones.data.data.total;
 				},function(){
 
 				})
@@ -228,7 +187,7 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postHasMessageFunc("/InvoiceType/destroy",{ids:id},function(res){
+					_this.$postHasMessageFunc("/containerTypes/destroy",{ids:id},function(res){
 						_this.getMessage()
 					},function(){})
 				}).catch(()=>{})
@@ -247,7 +206,7 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postHasMessageFunc("/InvoiceType/invoiceadd",this.buildSettlementCompany,function(respones){
+							this.$postHasMessageFunc("/containerTypes/store",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -255,7 +214,7 @@
 							})
 						}else{
 							//修改
-							this.$postHasMessageFunc("/InvoiceType/invoiceupdate",this.buildSettlementCompany,function(respones){
+							this.$postHasMessageFunc("/containerTypes/update",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -270,7 +229,7 @@
 			//主表格多条删除
 			handleDelete() {
 				var _this=this;
-				this.$batchDelete(this.MainTableSelectChangeIdList,"/InvoiceType/destroy",function(){
+				this.$batchDelete(this.MainTableSelectChangeIdList,"/containerTypes/destroy",function(){
 					_this.getMessage();
 				})
 			},
@@ -289,27 +248,13 @@
 			handleDialogClose(){
 				this.$refs.buildSettlementCompany.resetFields();
                 this.buildSettlementCompany={//新增修改弹框数据
-                    status:"",
-					name:"",
-                    direction:"",
-                    tax_rate:""
+                    containerType:"",//箱型id
+					name:"",//航线名称
+                    category_id:"",//箱型分类
+                    size:""//箱型尺寸
 				}
 				this.innerVisible=false;
-			},
-			//批量启用
-            handleStart(){
-				var _this=this;
-				this.$batchEnable(this.MainTableSelectChangeIdList,"/InvoiceType/statusupdate",function(){
-					_this.getMessage();
-				})
-            },
-            //批量禁止
-            handleProhibit(){ 
-				var _this=this;
-				this.$batchProhibit(this.MainTableSelectChangeIdList,"/InvoiceType/statusupdate",function(){
-					_this.getMessage();
-				})
-            },
+			}
 		}
 	}
 </script>

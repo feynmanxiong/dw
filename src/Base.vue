@@ -155,9 +155,11 @@
 									// {title: "结算公司维护",	content: "basicsSettle"},
 									{title: "港口维护",	content: "basicsRecordPort"},
 									{title: "航线维护",	content: "basicsRecordRoute"},
-									{title: "航名维护", content:"basicsRecordBoat"},
+									{title: "船名维护", content:"basicsRecordBoat"},
 									{title: "品名维护",	content: "productName"},
 									{title: "装箱点维护", content:"packingPointMaintain"},
+									{title: "送箱点维护", content:"givePointMaintain"},
+									{title: "箱型对应关系", content:"boxRelationship"},
 								]
 							},
 							{
@@ -206,6 +208,9 @@
 			}
 		},
 		created() {
+			    this.$getBusinessModule(0).then((item,otherid)=>{
+					this.$store.dispatch("getBusinessModuleFunc",item);
+				});
 		},
 		methods: {
 			addTab(item) {
