@@ -25,13 +25,9 @@
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box" filterable>
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="getKeyList.check_status" placeholder="请选择" size="mini" class="date_box" filterable>
+              <el-option :label="'已审核'" :value="1"></el-option>
+              <el-option :label="'未审核'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
@@ -242,29 +238,39 @@ function removeByValue(arr1, arr2) {
 export default {
   data() {
     return {
-      selectStatus: "1",
       //是否展示侧边栏
       isShowAside: true,
-      //审核状态
-      options: [
-        {
-          value: "选项1",
-          label: "已审核"
-        },
-        {
-          value: "选项2",
-          label: "未审核"
-        }
-      ],
-      value: "",
+  
+      //获取查询关键字列表
+      getKeyList: {
+        page: 1, //第几页，默认第一页
+        per_page: 10, //每页记录数，默认是10
+        search: "", //模糊搜索
+        check_status: "", //状态0:未审核，1:已审核
+        logistic_role: "", //物流角色
+        customer_logo: "", //客户角色
+        supplier_logo: "", //供应商角色
+        settle_company: "", //结算单位标志
+        segment_business: "", //主业务板块
+        master_business: "", //主业务类型
+        slaver_business: "", //子业务类型
+        created_man: "", //创建人
+        modify_man: "", //修改人
+        checked_man: "", //审核人
+      },
       tableData: [],
+
       //选中列表行数据
       selectedData: [],
+
       //多选数据
       multipleSelection: [],
+
+      //分页
       total: 0,
       currentPage: 1,
       pageSize: 10,
+
       //新增编辑框数量
       customerNumber: 0
     };
@@ -281,7 +287,6 @@ export default {
       });
   },
   mounted() {
-    // this.tableData = getData();  模拟后台数据
     this.tableData = [
       {
         id: 1,
@@ -316,93 +321,7 @@ export default {
         modifiedDate: "2019-08-14",
         checkman: "李四",
         checkedDate: "2019-08-14"
-      },
-      {
-        id: 3,
-        status: "已审核",
-        prohibit: "启用",
-        price_id: 3,
-        price_con: "船代系统",
-        settle_com: "王五结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      },
-      {
-        id: 4,
-        status: "未审核",
-        prohibit: "启用",
-        price_id: 4,
-        price_con: "船代系统",
-        settle_com: "王五结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      },
-      {
-        id: 5,
-        status: "未审核",
-        prohibit: "启用",
-        price_id: 5,
-        price_con: "船代系统",
-        settle_com: "王五结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      },
-      {
-        id: 6,
-        status: "未审核",
-        prohibit: "启用",
-        price_id: 6,
-        price_con: "船代系统",
-        settle_com: "王五结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      },
-      {
-        id: 7,
-        status: "未审核",
-        prohibit: "启用",
-        price_id: 7,
-        price_con: "船代系统",
-        settle_com: "王五结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      }
-    ];
+      }];
     this.total = this.tableData.length;
     console.log(this.total);
   },

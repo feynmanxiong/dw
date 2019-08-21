@@ -1,4 +1,3 @@
-
 <template>
   <div>
     <div class="container"></div>
@@ -20,22 +19,14 @@
               <el-button type="success" plain size="mini">查询</el-button>
             </div>
           </el-row>
-          <!-- <el-row>
+          <el-row>
             <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner" />
-          </el-row> -->
+          </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <!-- <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option :label="已审核" :value="1"></el-option>
-              <el-option :label="未审核" :value="0"></el-option>
-            </el-select>-->
             <el-select v-model="status.status_value" placeholder="请选择" size="mini" class="date_box">
-              <el-option
-                v-for="item in status_options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+              <el-option :label="'已审核'" :value="1"></el-option>
+              <el-option :label="'未审核'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
@@ -133,13 +124,6 @@
               class="date_input"
               v-model="status.created_date"
             ></el-date-picker>
-            <!-- <el-date-picker
-              type="date"
-              placeholder="申请结束时间"
-              size="mini"
-              class="date_input"
-              v-model="status.apply_e_d"
-            ></el-date-picker> -->
           </el-row>
           <el-row>
             <span class="span">修改人</span>
@@ -151,8 +135,13 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-date-picker type="date" placeholder="修改时间" size="mini" class="date_input"  v-model="status.updated_date"></el-date-picker>
-            <!-- <el-date-picker type="date" placeholder="商务会签结束时间" size="mini" class="date_input" v-model="status.business_e_d"></el-date-picker> -->
+            <el-date-picker
+              type="date"
+              placeholder="修改时间"
+              size="mini"
+              class="date_input"
+              v-model="status.updated_date"
+            ></el-date-picker>
           </el-row>
           <el-row>
             <span class="span">审核人</span>
@@ -164,7 +153,13 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-date-picker type="date" placeholder="审核时间" size="mini" class="date_input" v-model="status.checked_date"></el-date-picker>
+            <el-date-picker
+              type="date"
+              placeholder="审核时间"
+              size="mini"
+              class="date_input"
+              v-model="status.checked_date"
+            ></el-date-picker>
             <!-- <el-date-picker type="date" placeholder="业务结束时间" size="mini" class="date_input"></el-date-picker> -->
           </el-row>
         </el-aside>
@@ -249,7 +244,7 @@
 
 <script>
 // import getData from "./tool/ajax";
-import priceEditAdd from "./price-edit-add";
+
 /**
  * 参数均为数组，arr1包含arr2
  * 批量删除
@@ -266,29 +261,38 @@ function removeByValue(arr1, arr2) {
 export default {
   data() {
     return {
-      selectStatus: "1",
-      //是否展示侧边栏
-      isShowAside: true,
+      isShowAside: true, //是否展示侧边栏
+
+      //获取查询关键字列表
+      getKeyList: {
+        page: 1, //第几页，默认第一页
+        per_page: 10, //每页记录数，默认是10
+        search: "", //模糊搜索
+        check_status: "", //状态0:未审核，1:已审核
+        proxy_id: "", //协议号
+        proxy_content: "", //协议内容
+        settle_company: "", //操作人
+        segment_business: "", //主业务板块
+        master_business: "", //主业务类型
+        slaver_business: "", //子业务类型
+        created_man: "", //创建人
+        modify_man: "", //修改人
+        checked_man: "", //审核人
+        created_date: "", //创建时间
+        modified_date: "", //修改时间
+        checked_date: "" //审核时间
+      },
+
       //查询状态
       status: {
-        status_value: "", //审核状态
+        status_value: "", //审核状态 0:未审核，1:已审核
         price_num_value: "", //价格协议号
         price_proxy_value: "", //价格协议内容
         checked_date: "", //审核时间
-        updated_date: "",//修改时间
-        created_data: "", //创建时间
+        updated_date: "", //修改时间
+        created_data: "" //创建时间
       },
-      //审核状态
-      status_options: [
-        {
-          value: "选项1",
-          label: "已审核"
-        },
-        {
-          value: "选项2",
-          label: "未审核"
-        }
-      ],
+
       //价格协议号
       price_num_options: [
         {
@@ -320,6 +324,7 @@ export default {
           label: "7"
         }
       ],
+
       //价格协议内容
       price_proxy_options: [
         {
@@ -332,13 +337,19 @@ export default {
         }
       ],
 
+      //列表数据
       tableData: [],
+
       //选中列表行数据
       selectedData: [],
+
       //多选数据
       multipleSelection: [],
-      //价格编辑框
+
+      //新增编辑数量
       priceNumber: 0,
+      
+      //分页
       total: 0,
       currentPage: 1,
       pageSize: 10
@@ -474,15 +485,15 @@ export default {
   },
   methods: {
     //重置按钮
-    clearAll(){
-      this.status={
+    clearAll() {
+      this.status = {
         status_value: "",
-        price_num_value: "", 
-        price_proxy_value: "", 
-        checked_date: "", 
+        price_num_value: "",
+        price_proxy_value: "",
+        checked_date: "",
         updated_date: "",
-        created_data: "",
-      }
+        created_data: ""
+      };
     },
     //编辑按钮新增框
     dialogVisibleAddview() {
@@ -496,10 +507,6 @@ export default {
       obj.content = "priceEdit";
       this.$emit("clickSearch", obj);
     },
-    // //编辑按钮
-    // dialogVisibleAddview() {
-    //   this.$refs.addDialog.showAndHideDialog();
-    // },
     //编辑图标
     handleEdit(index, row) {
       this.dialogVisibleAddview();
@@ -521,7 +528,6 @@ export default {
       console.log(val);
       this.multipleSelection = val;
     },
-    // ----批量操作可进行封装----
     //批量删除
     mulSelectedDelete() {
       if (this.multipleSelection.length > 0) {
@@ -579,7 +585,6 @@ export default {
     }
   },
   components: {
-    priceeditadd: priceEditAdd
   }
 };
 </script>
@@ -597,7 +602,6 @@ export default {
 .cont_block {
   display: block;
 }
-
 .STableTitle_btn {
   float: right;
   margin-bottom: 0;
