@@ -143,9 +143,6 @@
 		computed: {},
 		created() {
 			this.getMessage();
-			this.$getBusinessModule(0).then((item,otherid)=>{
-				this.businessModule=item;
-			});
 		},
 		mounted() {},
 		methods: {
@@ -164,7 +161,6 @@
 			getMessage(){
 				var _this=this;
 				this.$postFunc("/containerTypes",this.getKeyList,function(respones){
-                    console.log(respones)
 					_this.tableData=respones.data.data.result;
 					_this.userlist=respones.data.data.user;
 					_this.Port=respones.data.data.name;
@@ -191,12 +187,7 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postFunc("/containerTypes/destroy",{ids:id},function(res){
-						// _this.tableData.forEach((it,index)=>{
-						// 	if(id==it.id){
-						// 		_this.tableData.splice(index,1)
-						// 	}
-						// })
+					_this.$postHasMessageFunc("/containerTypes/destroy",{ids:id},function(res){
 						_this.getMessage()
 					},function(){})
 				}).catch(()=>{})
@@ -215,10 +206,7 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postFunc("/containerTypes/store",this.buildSettlementCompany,function(respones){
-                                // console.log(respones)
-								// let mess=respones.data.data;
-								// _this.tableData.unshift(mess)
+							this.$postHasMessageFunc("/containerTypes/store",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -226,16 +214,7 @@
 							})
 						}else{
 							//修改
-							this.$postFunc("/containerTypes/update",this.buildSettlementCompany,function(respones){
-								// console.log(respones)
-								// let tabledata=JSON.parse(JSON.stringify(_this.tableData))
-								// tabledata.forEach((item,index)=>{
-								// 	if(item.id==_this.buildSettlementCompany.id){
-								// 		let mess=respones.data.data;
-								// 		tabledata[index]=mess;
-								// 	}
-								// })
-								// _this.tableData=tabledata;
+							this.$postHasMessageFunc("/containerTypes/update",this.buildSettlementCompany,function(respones){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -249,28 +228,10 @@
 			},
 			//主表格多条删除
 			handleDelete() {
-				if(this.MainTableSelectChangeIdList.length>0){
-					this.$confirm("是否确定删除？", "提示", {
-						confirmButtonText: "确定",
-						cancelButtonText: "取消"
-					})
-					.then(() => {
-						var ids="";
-						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
-						})
-						ids=ids.substring(0,ids.length-1);
-						var _this=this;
-						_this.$postFunc("/containerTypes/destroy",{ids:ids},function(res){
-							_this.getMessage();
-						},function(){})
-					}).catch(()=>{})
-				}else{
-					this.$message({type:'error',message:'请选择删除的数据'});
-				}
-			},
-			add() {
-				
+				var _this=this;
+				this.$batchDelete(this.MainTableSelectChangeIdList,"/containerTypes/destroy",function(){
+					_this.getMessage();
+				})
 			},
 			//分页
 			handleSizeChange(val){
@@ -293,51 +254,7 @@
                     size:""//箱型尺寸
 				}
 				this.innerVisible=false;
-			},
-			 //批量启用
-            handleStart(){
-                if(this.MainTableSelectChangeIdList.length>0){
-					this.$confirm("是否确定启用？", "提示", {
-						confirmButtonText: "确定",
-						cancelButtonText: "取消"
-					})
-					.then(() => {
-						var ids="";
-						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
-						})
-						ids=ids.substring(0,ids.length-1);
-						var _this=this;
-						_this.$postFunc("/routes/status",{ids:ids,status:1},function(res){
-							_this.getMessage();
-						},function(){})
-					}).catch(()=>{})
-				}else{
-					this.$message({type:'error',message:'请选择启用的数据'});
-				}
-            },
-            //批量禁止
-            handleProhibit(){
-                 if(this.MainTableSelectChangeIdList.length>0){
-					this.$confirm("是否确定禁用？", "提示", {
-						confirmButtonText: "确定",
-						cancelButtonText: "取消"
-					})
-					.then(() => {
-						var ids="";
-						this.MainTableSelectChangeIdList.forEach(item=>{
-							ids+=item.id+",";
-						})
-						ids=ids.substring(0,ids.length-1);
-						var _this=this;
-						_this.$postFunc("/routes/status",{ids:ids,status:0},function(res){
-							_this.getMessage();
-						},function(){})
-					}).catch(()=>{})
-				}else{
-					this.$message({type:'error',message:'请选择启用的数据'});
-				}
-            },
+			}
 		}
 	}
 </script>
@@ -346,6 +263,4 @@
 	.container { padding: 10px; width:100%;}  
 	.cont_border { border-bottom: 2px solid #eeeeee; padding-bottom: 10px; width: 100%; }
 	.cont_block{display: block;}
-	.STable{}
-	.STableTitle_btn{float: right;margin-bottom:0;}
 </style>

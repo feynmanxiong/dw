@@ -42,12 +42,12 @@ axios.interceptors.request.use(function(config){
 
 axios.interceptors.response.use(
 	response => {
-		if(response.data.code != 0){
-			Message({
-				message: response.data.message,
-				type: 'warning'
-			})
-		}
+		// if(response.data.code != 0){
+		// 	Message({
+		// 		message: response.data.message,
+		// 		type: 'warning'
+		// 	})
+		// }
 		return response;
 	},
 	error => {

@@ -117,14 +117,6 @@ function install(Vue) {
     }
 
     //laughing
-    //json迭代
-    Vue.prototype.$getJsonFunc=function(json){
-        let data="";
-        for(let i in json){
-            data+=i+"="+json[i]+"&";
-        }
-        return data
-    }
 
     Vue.prototype.$getFunc=function(url,data,success,errorF){
         axios.get(url,data).then(response=>{
@@ -135,6 +127,7 @@ function install(Vue) {
             errorF(error)
         })
     }
+    //post请求不带message提示
     Vue.prototype.$postFunc=function(url,data,success,errorF){
         axios.post(url,data).then(response=>{
             if(response.status==200&&response.data.code==200){
@@ -146,6 +139,30 @@ function install(Vue) {
             errorF(error)
         })
     }
+    //post请求带message提示
+    Vue.prototype.$postHasMessageFunc=function(url,data,success,errorF){
+        axios.post(url,data).then(response=>{
+            if(response.status==200&&response.data.code==200){
+                success(response)
+                this.$messageTip('成功','success');
+            }else{
+                console.log(response)
+                this.$messageTip(response.data.message,'error');
+            }
+        }).catch(error=>{
+            errorF(error)
+            this.$messageTip(response.data.message,'error');
+        })
+    }
+    //message提示
+    Vue.prototype.$messageTip=function(message,type){
+        this.$message({
+            message: message,
+            type: type,
+            duration:2000
+        });
+    }
+    //获取主业务模块3级联动 一级为0  二三级为上级id
     Vue.prototype.$getBusinessModule=function(id,otherid){
         return new Promise((resolve, reject) => {     
             this.$getFunc("/businesses/list/result",{params:{parent_id:id}},function(response){
@@ -155,11 +172,77 @@ function install(Vue) {
             })                                           
         })
     }
+    //修改时获取修改模块id
     Vue.prototype.$getEditMessageId=function(id,func){
         this.$store.dispatch("changeFunc",id)
         func();
     }
-
+    //基础模块批量删除
+    Vue.prototype.$batchDelete=function(dataList,url,func){
+        if(dataList.length>0){
+            this.$confirm("是否确定删除？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+            })
+            .then(() => {
+                var ids="";
+                dataList.forEach(item=>{
+                    ids+=item.id+",";
+                })
+                ids=ids.substring(0,ids.length-1);
+                this.$postHasMessageFunc(url,{ids:ids},function(res){
+                    func(res);
+                },function(){})
+            }).catch(()=>{})
+        }else{
+            this.$messageTip('error','请选择删除的数据');
+        }
+    }
+    //基础模块批量启用
+    Vue.prototype.$batchEnable=function(dataList,url,func){
+        if(dataList.length>0){
+            this.$confirm("是否确定启用？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+            })
+            .then(() => {
+                var ids="";
+                dataList.forEach(item=>{
+                    ids+=item.id+",";
+                })
+                ids=ids.substring(0,ids.length-1);
+                this.$postHasMessageFunc(url,{ids:ids,status:1},function(res){
+                    func(res)
+                },function(){})
+            }).catch(()=>{})
+        }else{
+            this.$messageTip('error','请选择启用的数据');
+        }
+    }
+    //基础模块批量禁用
+    Vue.prototype.$batchProhibit=function(dataList,url,func){
+        console.log(dataList)
+        console.log(url)
+        if(dataList.length>0){
+            this.$confirm("是否确定禁用？", "提示", {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消"
+            })
+            .then(() => {
+                var ids="";
+                dataList.forEach(item=>{
+                    ids+=item.id+",";
+                })
+                ids=ids.substring(0,ids.length-1);
+                this.$postHasMessageFunc(url,{ids:ids,status:0},function(res){
+                    console.log(res)
+                    func(res)
+                },function(){})
+            }).catch(()=>{})
+        }else{
+            this.$messageTip('error','请选择禁用的数据');
+        }
+    }
 }
 
 export default install;
