@@ -180,10 +180,7 @@
 						{required: true, message: '请选择状态',  trigger: 'change' }
 					]
 				},
-				tableData: [//列表数据
-					
-				]
-				
+				tableData: []//列表数据
 			}
 		},
 		computed: {},
@@ -254,7 +251,7 @@
 			},
 			//主表格单条修改
 			mainTableEdit(id){
-				this.tableData.forEach((it,index)=>{
+				this.tableData.forEach((it)=>{
 					if(id==it.id){
 						this.buildSettlementCompany=JSON.parse(JSON.stringify(it));
 						this.innerVisibleType=false;
@@ -270,7 +267,7 @@
 				})
 				.then(() => {
 					var _this=this;
-					_this.$postHasMessageFunc("/routes/destroy",{ids:id},function(res){
+					_this.$postHasMessageFunc("/routes/destroy",{ids:id},function(){
 						_this.getMessage()
 					},function(){})
 				}).catch(()=>{})
@@ -303,7 +300,7 @@
 						var _this=this;
 						if(this.innerVisibleType){
 							//新增
-							this.$postHasMessageFunc("/routes/store",this.buildSettlementCompany,function(respones){
+							this.$postHasMessageFunc("/routes/store",this.buildSettlementCompany,function(){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -311,7 +308,7 @@
 							})
 						}else{
 							//修改
-							this.$postHasMessageFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(respones){
+							this.$postHasMessageFunc("/routes/update/"+this.buildSettlementCompany.id,this.buildSettlementCompany,function(){
 								_this.getMessage()
 								_this.handleDialogClose();
 							},function(){
@@ -330,19 +327,16 @@
 					_this.getMessage();
 				})
 			},
-			add() {
-				
-			},
 			//分页
 			handleSizeChange(val){
-              this.getKeyList.per_page = val;
-			  this.getKeyList.page = 1;
-			  this.getMessage();
+				this.getKeyList.per_page = val;
+				this.getKeyList.page = 1;
+				this.getMessage();
 			},
 			//分页
             handleCurrentChange(val){
-			  this.getKeyList.page = val;
-			  this.getMessage();
+				this.getKeyList.page = val;
+				this.getMessage();
 			},
 			//主表格新增和修改关闭
 			handleDialogClose(){
@@ -353,7 +347,7 @@
 				}
 				this.innerVisible=false;
 			},
-			 //批量启用
+			//批量启用
             handleStart(){
 				var _this=this;
 				this.$batchEnable(this.MainTableSelectChangeIdList,"/routes/status",function(){

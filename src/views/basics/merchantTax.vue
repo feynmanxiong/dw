@@ -1,4 +1,4 @@
-<!--基础资料=>商务基础数据=>费用科目与税率关系维护       merchantTax-->                                                                                                                                                                                                                                                     
+<!--基础资料=>商务基础数据=>价格条件字段       merchantTax-->                                                                                                                                                                                                                                                     
 <template>
 	<div>
 		<div class="container">
