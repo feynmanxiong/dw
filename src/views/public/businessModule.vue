@@ -208,6 +208,7 @@ export default {
                     data.id="N"+this.newid;
                     this.newid++;
                     this.PortDataSon.push(data);
+                    console.log(this.PortDataSon)
                 }
             })
         },

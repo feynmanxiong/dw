@@ -34,7 +34,7 @@
             <span class="span">物流角色</span>
             <el-select v-model="getKeyList.logistics_role" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
-                v-for="item in options"
+                v-for="item in logistecsList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
@@ -279,10 +279,24 @@ export default {
     },
     //重置
     reset(){
-      alert('xiong')
-      this.$getKeyList = {page: 1,per_page: 10, search: "",is_lock: "", search:"",logistics_role: "", is_customer: "", 
-        is_supplier: "",is_invoice: "", segment_business_id: "", master_business_id: "", slaver_business_id: "", 
-        created_user_id: "", updated_user_id: "",lock_user_id: "" }
+      this.getKeyList = {
+        page: 1, //第几页，默认第一页
+        per_page: 10, //每页记录数，默认是10
+        // search: "", //模糊搜索
+        is_lock: "", //状态0:未审核，1:已审核
+        search:"",
+        logistics_role: "", //物流角色
+        is_customer: "", //客户角色
+        is_supplier: "", //供应商角色
+        is_invoice: "", //结算单位标志
+        segment_business_id: "", //主业务板块
+        master_business_id: "", //主业务类型
+        slaver_business_id: "", //子业务类型
+        created_user_id: "", //创建人
+        updated_user_id: "", //修改人
+        lock_user_id: "", //审核人
+      };
+      this.getCustomerList();
     },
 
     //业务板块change事件

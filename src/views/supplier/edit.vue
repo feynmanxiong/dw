@@ -196,7 +196,7 @@
             <el-row v-for="(num, index) in bankNum" :key="num">
               <el-form-item label="开户行:">
                 <el-input
-                  v-model="getKeysList.bank[0].name"
+                  v-model="bankNum[index].name"
                   placeholder="请录入银行账号"
                   size="mini"
                   class="date_input"
@@ -204,7 +204,7 @@
               </el-form-item>
               <el-form-item label="银行账号:">
                 <el-input
-                  v-model="getKeysList.bank[0].account"
+                  v-model="bankNum[index].account"
                   placeholder="请录入银行账号"
                   size="mini"
                   class="date_input"
@@ -212,7 +212,7 @@
               </el-form-item>
               <el-form-item label="币别:">
                 <el-select
-                  v-model="getKeysList.bank[0].currency"
+                  v-model="bankNum[index].currency"
                   placeholder="请选择"
                   size="mini"
                   class="date_input"
@@ -358,7 +358,7 @@
     <div class="logistic_">
       <template>
         <el-table
-          :data="tableData"
+          :data="businessList"
           border
           size="mini"
           :header-cell-style="{background:'#e0f4ff',color:'#000'}"
@@ -369,22 +369,22 @@
           <el-table-column align="center" type="index" label="序号" width="70"></el-table-column>
           <el-table-column align="center" prop="segment_business_name" label="业务模块" width="240">
             <template slot-scope="scope">
-               <el-select @change="bussinessMouble" v-model="businessList.segment_business_id" placeholder="请选择" size="mini" class="date_box">
+               <el-select @change="businessModuleChange(scope.row.segment_business_id,scope.row.id)" v-model="scope.row.segment_business_id" placeholder="请选择" size="mini" class="date_box">
 								<el-option v-for="item in businessModule" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="test" label="主业务类型" width="240">
+          <el-table-column align="center" prop="master_business_name" label="主业务类型" width="240">
             <template slot-scope="scope">
-             <el-select @change="MBussinessClassFunc" v-model="businessList.master_business_id" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in MBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+             <el-select @change="MBusinessClassChange(scope.row.master_business_id,scope.row.id)" v-model="scope.row.master_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in businessList[scope.$index].master_business_list" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
             </template>
           </el-table-column>
-          <el-table-column align="center" prop="test" label="子业务类型" width="240">
+          <el-table-column align="center" prop="slaver_business_name" label="子业务类型" width="240">
             <template slot-scope="scope">
-               <el-select v-model="businessList.slaver_business_id" placeholder="请选择" size="mini" class="date_box">
-								<el-option v-for="item in SBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+               <el-select v-model="scope.row.slaver_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in businessList[scope.$index].slaver_business_list" :key="item.id" :label="item.name" :value="item.id"> </el-option>
 							</el-select>
             </template>
           </el-table-column>
@@ -426,7 +426,7 @@ export default {
       ],
 
       multipleSelection: [],
-      bankNum: [{ bank: "", bankcounter: "" }],
+      bankNum: [{ "bank": "", "bankcounter": "","currency": "" }],
       rules: {
         fullname: [{ required: true, message: "请输入全称", trigger: "blur" }],
         forshort: [{ required: true, message: "请输入简称", trigger: "blur" }],
@@ -488,9 +488,7 @@ export default {
         credit_max_money: 100,
         credit_max_time: 10
       },
-      tableData: [
-        {test:1}
-      ],
+      
       //业务模块
       businessModule: [],
 
@@ -501,11 +499,13 @@ export default {
       SBusinessClass: [],
 
       //
-      businessList: {
+      businessList: [{
         segment_business_id: '',
+        master_business_list: [],
         master_business_id: '',
+        slaver_business_list: [],
         slaver_business_id: ''
-      }
+      }]
     };
   },
   computed(){
@@ -530,11 +530,16 @@ export default {
     handleSelectionChange(val) {
       console.log(val);
       this.multipleSelection = val;
+      console.log(this.businessList)
     },
     //业务模块新增BUTTON
     addBusiness() {
-      let test = { test: 1 };
-      this.tableData.push(test);
+      this.businessList.push({
+        segment_business_id: '',
+        master_business_id: '',
+        slaver_business_id: ''
+      });
+      console.log(this.businessList)
     },
 
     //删除按钮
@@ -572,14 +577,14 @@ export default {
     },
     //保存
     submitForm(formName) {
-      // this.$refs[formName].validate(valid => {
-      //   if (valid) {
-      //     alert("submit!");
-      //   } else {
-      //     console.log("error submit!!");
-      //     return false;
-      //   }
-      // });
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          alert("submit!");
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
       console.log(this.getKeysList.logistics_role)
       var new_ = this.getKeysList.logistics_role.join(',');
       console.log(new_);
@@ -596,7 +601,29 @@ export default {
         function() {}
       );
       console.log(this.getKeysList);
-    }
+    },
+      //主业务类型列表change事件
+        businessModuleChange(id,listid){
+            var _this=this;
+            _this.$getBusinessModule(id).then((item)=>{
+                _this.businessList.forEach((each,index)=>{
+                    if(each.id==listid){
+                        _this.businessList[index].master_business_list=item;
+                    }
+                })
+            })
+        },
+        //子业务板块列表change事件
+        MBusinessClassChange(id,listid){
+            var _this=this;
+            _this.$getBusinessModule(id).then((item)=>{
+                _this.businessList.forEach((each,index)=>{
+                    if(each.id==listid){
+                        _this.businessList[index].slaver_business_list=item;
+                    }
+                })
+            })
+        }
   },
   mounted() {
     this.getUserName();
