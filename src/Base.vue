@@ -210,7 +210,9 @@
 		created() {
 			    this.$getBusinessModule(0).then((item,otherid)=>{
 					this.$store.dispatch("getBusinessModuleFunc",item);
+					
 				});
+				
 		},
 		methods: {
 			addTab(item) {

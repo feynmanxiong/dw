@@ -16,23 +16,23 @@
           <div class="cont_t">自定义查询区</div>
           <el-row class="el-m publicSelect">
             <div align="center">
-              <el-button type="info" plain size="mini">重置</el-button>
-              <el-button type="success" plain size="mini">查询</el-button>
+              <el-button type="info" plain size="mini" @click="reset">重置</el-button>
+              <el-button type="success" plain size="mini" @click="selectSearch">查询</el-button>
             </div>
           </el-row>
           <el-row>
-            <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner" />
+            <input type="text" autocomplete="off" placeholder="请输入内容" class="el-input__inner"  v-model="getKeyList.search"/>
           </el-row>
           <el-row>
             <span class="span">审核状态</span>
-            <el-select v-model="getKeyList.check_status" placeholder="请选择" size="mini" class="date_box" filterable>
+            <el-select v-model="getKeyList.is_lock" placeholder="请选择" size="mini" class="date_box"  clearable>
               <el-option :label="'已审核'" :value="1"></el-option>
               <el-option :label="'未审核'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">物流角色</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <el-select v-model="getKeyList.logistics_role" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -43,73 +43,70 @@
           </el-row>
           <el-row>
             <span class="span">客户标志</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="getKeyList.is_customer" placeholder="请选择" size="mini" class="date_box" clearable>
+              <el-option :label="'是'" :value="1"></el-option>
+              <el-option :label="'否'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">供应商标志</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="getKeyList.is_supplier" placeholder="请选择" size="mini" class="date_box" clearable>
+             <el-option :label="'是'" :value="1"></el-option>
+              <el-option :label="'否'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">结算单位标志</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              ></el-option>
+            <el-select v-model="getKeyList.is_invoice" placeholder="请选择" size="mini" class="date_box" clearable>
+             <el-option :label="'是'" :value="1"></el-option>
+              <el-option :label="'否'" :value="0"></el-option>
             </el-select>
           </el-row>
           <el-row>
             <span class="span">业务板块</span>
-            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
+            <!-- <el-select v-model="getKeyList.segment_business_id" filterable placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
-            </el-select>
+            </el-select> -->
+            <el-select @change="bussinessMouble" v-model="getKeyList.segment_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in businessModule" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+							</el-select>
           </el-row>
           <el-row>
             <span class="span">主业务类型</span>
-            <el-select v-model="value" filterable placeholder="请选择" size="mini" class="date_box">
+            <!-- <el-select v-model="getKeyList.master_business_id" filterable placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
-            </el-select>
+            </el-select> -->
+            <el-select @change="MBussinessClassFunc" v-model="getKeyList.master_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in MBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+							</el-select>
           </el-row>
           <el-row>
             <span class="span">子业务类型</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <!-- <el-select v-model="getKeyList.slaver_business_id" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value"
               ></el-option>
-            </el-select>
+            </el-select> -->
+            <el-select v-model="getKeyList.slaver_business_id" placeholder="请选择" size="mini" class="date_box">
+								<el-option v-for="item in SBusinessClass" :key="item.id" :label="item.name" :value="item.id"> </el-option>
+							</el-select>
           </el-row>
           <el-row>
             <span class="span">创建人</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <el-select v-model="getKeyList.created_user_id" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -120,7 +117,7 @@
           </el-row>
           <el-row>
             <span class="span">修改人</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <el-select v-model="getKeyList.updated_user_id" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -131,7 +128,7 @@
           </el-row>
           <el-row>
             <span class="span">审核人</span>
-            <el-select v-model="value" placeholder="请选择" size="mini" class="date_box">
+            <el-select v-model="getKeyList.lock_user_id" placeholder="请选择" size="mini" class="date_box" clearable>
               <el-option
                 v-for="item in options"
                 :key="item.value"
@@ -144,10 +141,9 @@
       </transition>
       <el-main>
         <el-row class="cont_block">
-          <el-button type="primary" plain size="mini" @click="dialogVisibleAddview">编辑</el-button>
-          <el-button type="danger" plain size="mini" @click="mulSelectedDelete">批量删除</el-button>
-          <el-button type="primary" plain size="mini" @click="mulSelectedCheck">批量审核</el-button>
-          <el-button type="danger" plain size="mini" @click="mulSelectedCheckCancel">批量取消审核</el-button>
+          <el-button type="danger" plain size="mini" @click="mulSelectedDelete">删除</el-button>
+          <el-button type="primary" plain size="mini" @click="mulSelectedCheck">审核</el-button>
+          <el-button type="danger" plain size="mini" @click="mulSelectedCheckCancel">取消审核</el-button>
         </el-row>
         <el-row>
           <el-table
@@ -164,46 +160,28 @@
             <el-table-column label="序号" type="index" width="50" align="center"></el-table-column>
             <el-table-column align="center" type="index" label="操作" prop="id" width="80">
               <template slot-scope="scope">
-                <i
-                  class="fa fa-edit"
-                  aria-hidden="true"
-                  @click.stop="handleEdit(scope.$index, scope.row)"
-                ></i>
-                <i
-                  class="fa fa-trash"
-                  aria-hidden="true"
-                  @click.stop="handleDelete(scope.$index, scope.row)"
-                ></i>
+                <i class="fa fa-edit" aria-hidden="true" @click.stop="handleEdit(scope.$index, scope.row)"></i>
+                <i class="fa fa-trash" aria-hidden="true" @click.stop="handleDelete(scope.$index, scope.row)"></i>
               </template>
             </el-table-column>
-            <el-table-column prop="status" label="审核状态" align="center"></el-table-column>
-            <el-table-column prop="price_id" label="全称" align="center"></el-table-column>
-            <el-table-column prop="price_con" label="简称" align="center"></el-table-column>
-            <el-table-column prop="settle_com" label="助记码" align="center" show-overflow-tooltip></el-table-column>
-            <el-table-column
-              prop="business_type"
-              label="纳税人识别号"
-              align="center"
-              show-overflow-tooltip
-            ></el-table-column>
-            <el-table-column prop="main_business" label="物流角色" align="center" show-overflow-tooltip></el-table-column>
-            <el-table-column
-              prop="child_business"
-              label="客户标志"
-              align="center"
-              show-overflow-tooltip
-            ></el-table-column>
-            <el-table-column prop="createman" label="供应商标志" align="center"></el-table-column>
-            <el-table-column prop="createman" label="结算单位标志" align="center"></el-table-column>
-            <el-table-column prop="createman" label="业务板块" align="center"></el-table-column>
-            <el-table-column prop="createman" label="主业务类型" align="center"></el-table-column>
-            <el-table-column prop="createman" label="子业务类型" align="center"></el-table-column>
-            <el-table-column prop="createman" label="创建人" align="center"></el-table-column>
-            <el-table-column prop="createdDate" label="创建时间" align="center" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="modifyman" label="修改人" align="center"></el-table-column>
-            <el-table-column prop="modifiedDate" label="修改时间" align="center" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="checkman" label="审核人" align="center"></el-table-column>
-            <el-table-column prop="checkedDate" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="is_lock_alias" label="审核状态" align="center"></el-table-column>
+            <el-table-column prop="name" label="全称" align="center"></el-table-column>
+            <el-table-column prop="name_abbreviation" label="简称" align="center"></el-table-column>
+            <el-table-column prop="name_code" label="助记码" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="tax_identification_number" label="纳税人识别号" align="center"></el-table-column>
+            <el-table-column prop="role" label="物流角色" align="center"></el-table-column>
+            <el-table-column prop="is_customer_alias" label="客户标志" align="center"></el-table-column>
+            <el-table-column prop="is_supplier_alias" label="供应商标志" align="center"></el-table-column>
+            <el-table-column prop="is_invoice_alias" label="结算单位标志" align="center"></el-table-column>
+            <el-table-column prop="master_business_name" label="业务板块" align="center"></el-table-column>
+            <el-table-column prop="segment_business_name" label="主业务类型" align="center"></el-table-column>
+            <el-table-column prop="slaver_business_name" label="子业务类型" align="center"></el-table-column>
+            <el-table-column prop="created_user_name" label="创建人" align="center"></el-table-column>
+            <el-table-column prop="created_time" label="创建时间" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="updated_user_name" label="修改人" align="center"></el-table-column>
+            <el-table-column prop="updated_time" label="修改时间" align="center" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="lock_user_name" label="审核人" align="center"></el-table-column>
+            <el-table-column prop="lock_time" label="审核时间" align="center" show-overflow-tooltip></el-table-column>
           </el-table>
         </el-row>
         <el-pagination
@@ -222,19 +200,6 @@
 </template>
 
 <script>
-/**
- * 参数均为数组，arr1包含arr2
- * 批量删除
- */
-function removeByValue(arr1, arr2) {
-  for (var i = 0; i < arr1.length; i++) {
-    for (var j = 0; j < arr2.length; j++) {
-      if (arr1[i] == arr2[j]) {
-        arr1.splice(i, 1);
-      }
-    }
-  }
-}
 export default {
   data() {
     return {
@@ -245,19 +210,22 @@ export default {
       getKeyList: {
         page: 1, //第几页，默认第一页
         per_page: 10, //每页记录数，默认是10
-        search: "", //模糊搜索
-        check_status: "", //状态0:未审核，1:已审核
-        logistic_role: "", //物流角色
-        customer_logo: "", //客户角色
-        supplier_logo: "", //供应商角色
-        settle_company: "", //结算单位标志
-        segment_business: "", //主业务板块
-        master_business: "", //主业务类型
-        slaver_business: "", //子业务类型
-        created_man: "", //创建人
-        modify_man: "", //修改人
-        checked_man: "", //审核人
+        // search: "", //模糊搜索
+        is_lock: "", //状态0:未审核，1:已审核
+        search:"",
+        logistics_role: "", //物流角色
+        is_customer: "", //客户角色
+        is_supplier: "", //供应商角色
+        is_invoice: "", //结算单位标志
+        segment_business_id: "", //主业务板块
+        master_business_id: "", //主业务类型
+        slaver_business_id: "", //子业务类型
+        created_user_id: "", //创建人
+        updated_user_id: "", //修改人
+        lock_user_id: "", //审核人
       },
+
+      //列表数据
       tableData: [],
 
       //选中列表行数据
@@ -265,6 +233,15 @@ export default {
 
       //多选数据
       multipleSelection: [],
+
+      //业务模块
+      businessModule: [],
+
+      //主业务
+      MBusinessClass: [],
+      
+      //子业务
+      SBusinessClass: [],
 
       //分页
       total: 0,
@@ -277,55 +254,67 @@ export default {
   },
   computed: {},
   created() {
-    this.$getCustomerList()
-      .then(response => {
-        console.log("nashujulai");
-        console.log(response.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
   },
   mounted() {
-    this.tableData = [
-      {
-        id: 1,
-        status: "已审核",
-        prohibit: "启用",
-        price_id: 1,
-        price_con: "船代系统",
-        settle_com: "张三结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      },
-      {
-        id: 2,
-        status: "未审核",
-        prohibit: "禁用",
-        price_id: 2,
-        price_con: "船代系统",
-        settle_com: "赵六结算公司",
-        business_type: "货运代理",
-        main_business: "外贸出口",
-        child_business: "外贸散货出口",
-        createman: "刘一",
-        createdDate: "2019-08-14",
-        modifyman: "牛二",
-        modifiedDate: "2019-08-14",
-        checkman: "李四",
-        checkedDate: "2019-08-14"
-      }];
-    this.total = this.tableData.length;
-    console.log(this.total);
+    this.businessModule = this.$store.state.businessModule;
+    this.getCustomerList();
+     
   },
   methods: {
+    //获取列表数据  
+    getCustomerList(){
+      this.$postFunc("customerSuppliers/list",{}, (response)=>{
+        this.tableData = response.data.data.result;
+        this.total = this.tableData.length; 
+        console.log(this.tableData);
+      }, function(){}); 
+    },
+    //查询
+    selectSearch() {
+      this.$postFunc("customerSuppliers/list",this.getKeyList, (response)=>{
+        this.tableData = response.data.data.result;
+        this.total = this.tableData.length; 
+        console.log(this.tableData);
+      }, function(){}); 
+    },
+    //重置
+    reset(){
+      alert('xiong')
+      this.$getKeyList = {page: 1,per_page: 10, search: "",is_lock: "", search:"",logistics_role: "", is_customer: "", 
+        is_supplier: "",is_invoice: "", segment_business_id: "", master_business_id: "", slaver_business_id: "", 
+        created_user_id: "", updated_user_id: "",lock_user_id: "" }
+    },
+
+    //业务板块change事件
+			bussinessMouble(){
+				this.$getBusinessModule(this.getKeyList.segment_business_id).then(item=>{
+					this.MBusinessClass=item;
+				});
+      },
+      
+      //主业务类型change事件
+			MBussinessClassFunc(){
+				this.$getBusinessModule(this.getKeyList.master_business_id).then(item=>{
+					this.SBusinessClass=item;
+				});
+			},
+    //删除图标
+    handleDelete(index, row) {
+      this.$confirm("是否确定删除？", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      })
+        .then(() => {
+          console.log(row);
+          this.$postFunc("customerSuppliers/destroy",{ids: row.id},(response)=>{
+            console.log(response);
+            this.getCustomerList();
+          },()=>{})
+          
+        })
+        .catch(() => {});
+    },
+
     // //编辑按钮
     // dialogVisibleAddview() {
     //   this.$refs.addDialog.showAndHideDialog();
@@ -346,44 +335,39 @@ export default {
     handleEdit(index, row) {
       this.dialogVisibleAddview();
     },
-    //删除图标
-    handleDelete(index, row) {
-      this.$confirm("是否确定删除？", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消"
-      })
-        .then(() => {
-          this.tableData.splice(index, 1);
-          this.total = this.tableData.length;
-        })
-        .catch(() => {});
-    },
+    
     //多选
     handleSelectionChange(val) {
       console.log(val);
       this.multipleSelection = val;
     },
-
-    // ----批量操作可进行封装----
-
-    //批量删除
+    //删除
     mulSelectedDelete() {
       this.$confirm("选定项是否确定删除？", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消"
       })
         .then(() => {
-          removeByValue(this.tableData, this.multipleSelection);
-          this.total = this.tableData.length;
+          let idArray = [], str = '';
+          this.multipleSelection.forEach((item)=>{
+            idArray.push(item.id);            
+          })
+          str = idArray.join(',');
+          console.log(str);
+          this.$postFunc("customerSuppliers/destroy",{ids: str},(response)=>{
+          console.log(response);
+            this.getCustomerList();
+          },()=>{})
         })
         .catch(() => {});
     },
-    //批量审核
+    //审核
     mulSelectedCheck() {
+      let lockArray = []
       this.multipleSelection.forEach(item => {
         item.status = "已审核";
       });
-      this.$refs.multipleTable.clearSelection();
+      
     },
     //批量取消审核
     mulSelectedCheckCancel() {
@@ -392,20 +376,7 @@ export default {
       });
       this.$refs.multipleTable.clearSelection();
     },
-    //批量启用
-    mulSelectedAllow() {
-      this.multipleSelection.forEach(item => {
-        item.prohibit = "启用";
-      });
-      this.$refs.multipleTable.clearSelection();
-    },
-    //批量禁用
-    mulSelectedProhibit() {
-      this.multipleSelection.forEach(item => {
-        item.prohibit = "禁用";
-      });
-      this.$refs.multipleTable.clearSelection();
-    },
+    
     //分页
     handleSizeChange(val) {
       this.pageSize = val;
@@ -419,8 +390,7 @@ export default {
       //this.fetchData(val, this.pageSize);
       // console.log(`当前页: ${val}`);
     }
-  },
-  components: {}
+  }
 };
 </script>
 
